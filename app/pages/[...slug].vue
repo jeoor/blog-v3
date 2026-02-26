@@ -57,9 +57,9 @@ if (import.meta.dev) {
 		tag="article"
 	/>
 
-	<PostFooter v-bind="post" />
+   <PostFooter v-if="post.postfooter" v-bind="post" />
 	<PostSurround />
-	<PostComment />
+	<PostComment v-if="post.comment" />
 </template>
 
 <ZError

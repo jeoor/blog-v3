@@ -51,7 +51,7 @@ const blogConfig = {
 			// title: '标题',
 		},
 		/** 使用 pnpm new 新建文章时自动生成自定义链接（permalink/abbrlink） */
-		useRandomPremalink: false,
+		useRandomPremalink: true,
 		/** 隐藏基于文件路由（不是自定义链接）的 URL /post 路径前缀 */
 		hidePostPrefix: true,
 		/** 禁止搜索引擎收录的路径 */
@@ -66,6 +66,13 @@ const blogConfig = {
 		enableStyle: true,
 	},
 
+	/** 打赏配置 */
+	donation: {
+		enable: true,
+		items: {},
+		message: '感谢你的支持。',
+	},
+
 	/** 向 <head> 中添加脚本 */
 	scripts: [
 		// 自己部署的 Umami 统计服务
@@ -73,13 +80,13 @@ const blogConfig = {
 		// 自己网站的 Cloudflare Insights 统计服务
 		{ 'src': 'https://static.cloudflareinsights.com/beacon.min.js', 'data-cf-beacon': '{"token": "97a4fe32ed8240ac8284e9bffaf03962"}', 'defer': true },
 		// Twikoo 评论系统
-		{ src: 'https://lib.baomitu.com/twikoo/1.6.44/twikoo.min.js', defer: true },
+		{ src: 'https://registry.npmmirror.com/twikoo/1.6.45/files/dist/twikoo.min.js', defer: true },
 	],
 
 	/** 自己部署的 Twikoo 服务 */
 	twikoo: {
-		envId: 'https://twikoo.example.site/',
-		preload: 'https://twikoo.example.site/',
+		envId: 'https://twikoo-eo.kayro.cn/',
+		preload: 'https://twikoo-eo.kayro.cn/',
 	},
 }
 

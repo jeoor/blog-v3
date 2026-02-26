@@ -4,6 +4,7 @@ import {
 	LazyWidgetBlogLog,
 	LazyWidgetBlogStats,
 	LazyWidgetBlogTech,
+	LazyWidgetCountdown,
 	LazyWidgetCommGroup,
 	LazyWidgetEmpty,
 	LazyWidgetToc,
@@ -16,6 +17,7 @@ const rawWidgets = {
 	LazyWidgetBlogStats,
 	LazyWidgetBlogTech,
 	LazyWidgetCommGroup,
+	LazyWidgetCountdown,
 	LazyWidgetEmpty,
 	LazyWidgetToc,
 }
