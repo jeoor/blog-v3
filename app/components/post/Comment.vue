@@ -12,6 +12,7 @@ const showUndo = ref(false)
 
 const popoverBind = ref<TippyComponent['$props']>({})
 const modalStore = useModalStore()
+const twikooScriptSrc = 'https://s4.zstatic.net/npm/twikoo-js@16.45.33/twikoo.min.js'
 
 /** 评论区链接守卫与图片放大 */
 useEventListener(commentEl, 'click', (e) => {
@@ -66,12 +67,40 @@ function confirmOpen() {
 	window.open(popoverInputEl.value?.textContent, '_blank')
 }
 
-onMounted(() => {
-	window.twikoo?.init?.({
-		envId: appConfig.twikoo?.envId,
-		// twikoo 会把挂载后的元素变为 #twikoo
-		el: '#twikoo',
+function loadTwikooScript() {
+	if (window.twikoo?.init)
+		return Promise.resolve()
+
+	const scriptEl = document.querySelector<HTMLScriptElement>(`script[src="${twikooScriptSrc}"]`)
+	if (scriptEl) {
+		return new Promise<void>((resolve, reject) => {
+			scriptEl.addEventListener('load', () => resolve(), { once: true })
+			scriptEl.addEventListener('error', () => reject(new Error('Twikoo 脚本加载失败')), { once: true })
+		})
+	}
+
+	return new Promise<void>((resolve, reject) => {
+		const script = document.createElement('script')
+		script.src = twikooScriptSrc
+		script.defer = true
+		script.onload = () => resolve()
+		script.onerror = () => reject(new Error('Twikoo 脚本加载失败'))
+		document.head.appendChild(script)
 	})
+}
+
+onMounted(async () => {
+	try {
+		await loadTwikooScript()
+		window.twikoo?.init?.({
+			envId: appConfig.twikoo?.envId,
+			// twikoo 会把挂载后的元素变为 #twikoo
+			el: '#twikoo',
+		})
+	}
+	catch (error) {
+		console.error(error)
+	}
 })
 </script>
 

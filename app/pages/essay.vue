@@ -2,7 +2,7 @@
 import essays from '~/essay'
 
 const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'countdown'])
+layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
 const title = '说说'
 const description = '记录生活点滴，一些想法。'

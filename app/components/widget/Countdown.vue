@@ -85,6 +85,7 @@ function isLeapYear(year: number) {
 
 const targetName = '春节'
 const now = ref(new Date())
+const hydrated = ref(false)
 
 const targetDate = computed(() => resolveSpringFestivalDate(now.value))
 const daysUntil = computed(() => {
@@ -148,6 +149,7 @@ function stopTimer() {
 }
 
 onMounted(() => {
+	hydrated.value = true
 	startTimer()
 	document.addEventListener('visibilitychange', onVisibilityChange)
 })
@@ -168,8 +170,8 @@ function onVisibilityChange() {
 </script>
 
 <template>
-<BlogWidget card title="节日倒计时">
-	<div class="countdown">
+<BlogWidget card title="倒计时">
+	<div v-if="hydrated" class="countdown">
 		<div class="left">
 			<div class="text">距离</div>
 			<div class="name">{{ targetName }}</div>
@@ -184,6 +186,26 @@ function onVisibilityChange() {
 					<div class="bar" :style="item.style" />
 						<span class="percent" :class="{ 'on-bar': item.highlight }">{{ item.percentage.toFixed(2) }}%</span>
 						<span class="remain" :class="{ 'on-bar': item.highlight }">还剩{{ item.remaining }}{{ item.unit }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div v-else class="countdown">
+		<div class="left">
+			<div class="text">距离</div>
+			<div class="name">春节</div>
+			<div class="days">--</div>
+			<div class="date">----</div>
+		</div>
+
+		<div class="right">
+			<div v-for="item in units" :key="item.key" class="row">
+				<div class="row-name">{{ item.text }}</div>
+				<div class="bar-wrap">
+					<div class="bar" style="width: 0%; opacity: 0.62" />
+					<span class="percent">--%</span>
+					<span class="remain">还剩--{{ item.unit }}</span>
 				</div>
 			</div>
 		</div>
@@ -212,8 +234,8 @@ function onVisibilityChange() {
 		right: -.4rem;
 		height: 80%;
 		width: 2px;
-		background-color: var(--c-text-3);
-		opacity: .4;
+		background-color: var(--c-border);
+		opacity: .8;
 	}
 }
 
@@ -226,6 +248,7 @@ function onVisibilityChange() {
 	font-size: 1.8rem;
 	font-weight: 700;
 	line-height: 1.2;
+	color: var(--c-text-1);
 }
 
 .days {
@@ -255,7 +278,7 @@ function onVisibilityChange() {
 }
 
 .row-name {
-	font-size: .95rem;
+	font-size: .9rem;
 	white-space: nowrap;
 	color: var(--c-text-2);
 }
@@ -266,7 +289,7 @@ function onVisibilityChange() {
 	flex: 1;
 	border-radius: 8px;
 	overflow: hidden;
-	background-color: var(--c-bg);
+	background-color: var(--c-bg-soft);
 }
 
 .bar {
@@ -284,7 +307,7 @@ function onVisibilityChange() {
 	font-size: .8rem;
 	font-weight: 600;
 	color: var(--c-text-2);
-	transition: opacity .2s, transform .2s;
+	transition: opacity .3s ease-in-out, transform .3s ease-in-out;
 }
 
 .percent {
@@ -294,12 +317,11 @@ function onVisibilityChange() {
 .remain {
 	inset-inline-end: .45rem;
 	opacity: 0;
-	transform: translateY(-50%) translateX(.3rem);
+	transform: translateY(-50%) translateX(.625rem);
 }
 
 .on-bar {
 	color: var(--c-text);
-	text-shadow: 0 1px 0 rgb(0 0 0 / 18%);
 }
 
 .countdown:hover {
@@ -310,7 +332,7 @@ function onVisibilityChange() {
 
 	.percent {
 		opacity: 0;
-		transform: translateY(-50%) translateX(-.3rem);
+		transform: translateY(-50%) translateX(-.625rem);
 	}
 }
 

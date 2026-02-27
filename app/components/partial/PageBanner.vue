@@ -1,13 +1,14 @@
 <script setup lang="ts">
 defineProps<{
-  image: String
-  title: String
-  description?: String
+  image: string
+  title: string
+  description?: string
 }>()
 </script>
 
 <template>
-<div class="page-banner" :style="{ backgroundImage: `url(${image})` }">
+<div class="page-banner">
+  <NuxtImg class="banner-image" :src="image" :alt="title" format="webp" sizes="(max-width: 768px) 100vw, 1200px" placeholder />
   <div class="banner-content">
     <h1>{{ title }}</h1>
     <p v-if="description">{{ description }}</p>
@@ -20,14 +21,20 @@ defineProps<{
 
 <style lang="scss" scoped>
 .page-banner {
-  background-position: 50%;
-  background-size: cover;
   border-radius: 8px;
   margin: 1rem;
   max-height: 320px;
   min-height: 256px;
   overflow: hidden;
   position: relative;
+
+  .banner-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   .banner-content {
     color: #eee;
@@ -40,6 +47,7 @@ defineProps<{
     padding: 1rem;
     position: absolute;
     text-shadow: 0 4px 5px rgba(#000, .5);
+    z-index: 1;
 
     p {
       opacity: .9;
@@ -54,6 +62,7 @@ defineProps<{
     justify-content: flex-end;
     margin: 1rem;
     position: absolute;
+    z-index: 1;
   }
 }
 </style>

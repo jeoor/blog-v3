@@ -58,10 +58,10 @@ export default defineAppConfig({
 		/** 侧边栏底部图标导航 */
 		iconNav: [
 			{ icon: 'ph:house-bold', text: '个人主页', url: blogConfig.author.homepage },
-			{ icon: 'ri:qq-line', text: '交流群: 169994096', url: 'https://jq.qq.com/?_wv=1027&k=lQfNSeEd' },
-			{ icon: 'ph:github-logo-bold', text: 'GitHub: octocat', url: 'https://github.com/octocat' },
+			{ icon: 'ri:bilibili-fill', text: '哔哩哔哩: 敖苛', url: 'https://space.bilibili.com/513671572' },
+			{ icon: 'ph:github-logo-bold', text: 'GitHub: jeoor', url: 'https://github.com/jeoor' },
 			{ icon: 'ph:rss-simple-bold', text: 'Atom订阅', url: '/atom.xml' },
-			{ icon: 'ph:subway-bold', text: '开往', url: 'https://www.travellings.cn/' },
+			{ icon: 'ph:envelope-simple-bold', text: blogConfig.author.email, url: `mailto:${blogConfig.author.email}` },
 		] satisfies NavItem[],
 		/** 页脚站点地图 */
 		nav: [
@@ -69,23 +69,24 @@ export default defineAppConfig({
 				title: '探索',
 				items: [
 					{ icon: 'ph:rss-simple-bold', text: 'Atom订阅', url: '/atom.xml' },
-					{ icon: 'ph:subway-bold', text: '开往', url: 'https://www.travellings.cn/' },
+					{icon: 'ph:map-trifold-bold', text: '站点地图', url: '/sitemap.xml' },
+					{ icon: 'ph:planet-bold', text: '异次元之旅', url: 'https://travel.moe/go.html?travel=on' },
 				],
 			},
 			{
-				title: '社交',
+				title: '主题',
 				items: [
-					{ icon: 'ph:github-logo-bold', text: 'octocat', url: 'https://github.com/octocat' },
-					{ icon: 'ri:qq-line', text: '群: 169994096', url: 'https://jq.qq.com/?_wv=1027&k=lQfNSeEd' },
-					{ icon: 'ph:envelope-simple-bold', text: blogConfig.author.email, url: `mailto:${blogConfig.author.email}` },
-				],
-			},
-			{
-				title: '信息',
-				items: [
-					{ icon: 'simple-icons:nuxt', text: `主题: ${pascal(name)} ${version}`, url: 'https://github.com/L33Z22L11/blog-v3' },
+					{ icon: 'simple-icons:nuxt', text: `${pascal(name)} ${version}`, url: 'https://github.com/L33Z22L11/blog-v3' },
+					{ icon: 'ri:blogger-line', text: '作者博客', url: 'https://blog.zhilu.site/' },
 					{ icon: 'ph:swatches-bold', text: '主题和组件文档', url: 'https://blog.zhilu.site/theme' },
-					{ icon: 'ph:certificate-bold', text: '备案', url: 'https://beian.miit.gov.cn/' },
+				],
+			},
+			{
+				title: '备案',
+				items: [
+					{ icon: 'ph:certificate-bold', text: '冀ICP备2026002497号-1', url: 'https://beian.miit.gov.cn/' },
+					{ icon: 'ri:police-badge-line', text: '冀公网安备13112502001042号', url: 'https://beian.mps.gov.cn/#/query/webSearch?code=13112502001042' },
+					{ icon: 'material-symbols:shield-with-heart-outline', text: '萌ICP备20261311号', url: 'https://icp.gov.moe/?keyword=20261311' },
 				],
 			},
 		] satisfies Nav,
@@ -97,7 +98,7 @@ export default defineAppConfig({
 		/** 展示标题文本，否则展示纯 Logo */
 		showTitle: true,
 		subtitle: blogConfig.subtitle,
-		emojiTail: ['📄', '🦌', '🙌', '🐟', '🏖️'],
+		emojiTail: ['☁️', '🌈', '☀️', '❄️', '🪁'],
 	},
 
 	/** 友链页面 */
@@ -116,11 +117,10 @@ export default defineAppConfig({
 				{ icon: 'ph:files-bold', text: '文章', url: '/' },
 				{ icon: 'ph:archive-bold', text: '归档', url: '/archive' },
 				{ icon: 'ph:tag-bold', text: '标签', url: '/tags' },
-				{ icon: 'ph:pencil-line-bold', text: '说说', url: '/essay' },
+				{ icon: 'ph:pencil-line-bold', text: '日记', url: '/essay' },
 				{ icon: 'ph:images-square-bold', text: '相册', url: '/gallery' },
-				{ icon: 'ph:globe-hemisphere-west-bold', text: '友圈', url: '/fcircle' },
 				{ icon: 'ph:link-bold', text: '友链', url: '/link' },
-				{ icon: 'ph:chat-centered-text-bold', text: '留言', url: '/talk' },
+				{ icon: 'ph:globe-hemisphere-west-bold', text: '友圈', url: '/fcircle' },
 				{ icon: 'ph:user-circle-bold', text: '关于', url: '/about' },
 			],
 		},

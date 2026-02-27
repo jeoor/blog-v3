@@ -18,7 +18,7 @@ interface FriendCircleApiResponse {
 }
 
 const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'countdown'])
+layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
 const title = '朋友圈'
 const description = '发现更多有趣的博主。'

@@ -7,6 +7,7 @@ import {
 	LazyWidgetCountdown,
 	LazyWidgetCommGroup,
 	LazyWidgetEmpty,
+	LazyWidgetTagCloud,
 	LazyWidgetToc,
 } from '#components'
 import { pascal } from 'radash'
@@ -19,6 +20,7 @@ const rawWidgets = {
 	LazyWidgetCommGroup,
 	LazyWidgetCountdown,
 	LazyWidgetEmpty,
+	LazyWidgetTagCloud,
 	LazyWidgetToc,
 }
 

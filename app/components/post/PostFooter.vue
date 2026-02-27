@@ -45,8 +45,6 @@ const appConfig = useAppConfig()
 		</p>
 	</ReuseTemplate>
 </div>
-
-<PostDonation v-if="donation" class="post-donation" />
 </template>
 
 <style lang="scss" scoped>
@@ -55,10 +53,6 @@ const appConfig = useAppConfig()
 	border: 1px solid var(--c-border);
 	border-radius: 1rem;
 	background-color: var(--c-bg-2);
-}
-
-.post-donation {
-	margin: 2rem 0.5rem;
 }
 
 section {

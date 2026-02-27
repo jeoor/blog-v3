@@ -2,7 +2,7 @@
 import { sort } from 'radash'
 
 const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'countdown'])
+layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
 const appConfig = useAppConfig()
 const title = '标签'
@@ -11,8 +11,25 @@ useSeoMeta({ title, description })
 
 const { data: listRaw } = await useAsyncData('index_posts', () => useArticleIndexOptions(), { default: () => [] })
 
+const route = useRoute()
+const router = useRouter()
+const hydrated = ref(false)
+
 // 选中的标签
 const selectedTag = ref<string>('')
+
+// 监听路由变化
+watch(() => route.query.tag, (newTag) => {
+	if (!hydrated.value)
+		return
+
+	selectedTag.value = (newTag as string) || ''
+})
+
+onMounted(() => {
+	hydrated.value = true
+	selectedTag.value = (route.query.tag as string) || ''
+})
 
 // 计算每个标签对应的文章
 const articlesByTag = computed(() => {
@@ -46,7 +63,7 @@ function getTagSize(count: number): string {
 	const minCount = Math.min(...Object.values(articlesByTag.value).map(articles => articles.length))
 	const range = maxCount - minCount
 	if (range === 0) return 'medium'
-	
+
 	const ratio = (count - minCount) / range
 	if (ratio < 0.33) return 'small'
 	if (ratio < 0.66) return 'medium'
@@ -56,6 +73,7 @@ function getTagSize(count: number): string {
 // 点击标签显示对应文章
 function handleTagClick(tag: string) {
 	selectedTag.value = tag
+	router.push({ query: { tag } })
 	// 滚动到页面顶部
 	window.scrollTo({ top: 0, behavior: 'smooth' })
 }
@@ -63,6 +81,7 @@ function handleTagClick(tag: string) {
 // 取消选中标签，返回标签云视图
 function clearSelectedTag() {
 	selectedTag.value = ''
+	router.push({ query: {} })
 }
 </script>
 
@@ -81,7 +100,7 @@ function clearSelectedTag() {
 		<div class="tag-selected-info">
 			共 {{ articlesByTag[selectedTag]?.length }} 篇文章
 		</div>
-		
+
 		<menu class="archive-list">
 			<TransitionGroup appear name="float-in">
 				<PostArchive
@@ -103,14 +122,14 @@ function clearSelectedTag() {
 				v-for="tag in sortedTags"
 				:key="tag"
 				class="tag-cloud-item gradient-card"
-				:class="getTagSize(articlesByTag[tag]?.length)"
+				:class="getTagSize(articlesByTag[tag]?.length || 0)"
 				@click="handleTagClick(tag)"
 			>
 				# {{ tag }}
-                <span class="tag-count">{{ articlesByTag[tag]?.length }}</span>
+               <span class="tag-count">{{ articlesByTag[tag]?.length }}</span>
 			</button>
 		</div>
-		
+
 		<div class="tag-cloud-stats">
 			共 {{ sortedTags.length }} 个标签
 		</div>

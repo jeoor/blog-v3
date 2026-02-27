@@ -56,6 +56,11 @@ const { copy, copied } = useCopy(shareText)
 				<Icon name="ph:paragraph-bold" />
 				{{ formatNumber(readingTime?.words) }} 字
 			</span>
+
+			<span>
+				<Icon name="ph:eye-bold" />
+				<span id="busuanzi_page_pv">--</span> 次浏览
+			</span>
 		</div>
 	</div>
 

@@ -3,7 +3,7 @@ import albums from '~/albums'
 import type { AlbumImage } from '~/types/album'
 
 const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'countdown'])
+layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
 const route = useRoute()
 const router = useRouter()
@@ -15,9 +15,11 @@ useSeoMeta({ title, description, ogImage: image })
 
 const activeFolderId = ref('')
 const shuffledImages = ref<AlbumImage[]>([])
+const hydrated = ref(false)
 
-watch(() => route.query.folder, (value) => {
-	const target = Array.isArray(value) ? value[0] : value
+function applyFolderFromQuery(value: string | null | (string | null)[] | undefined) {
+	const targetRaw = Array.isArray(value) ? value[0] : value
+	const target = targetRaw || ''
 	if (!target) {
 		activeFolderId.value = ''
 		return
@@ -25,7 +27,14 @@ watch(() => route.query.folder, (value) => {
 
 	const exists = albums.some(folder => folder.id === target)
 	activeFolderId.value = exists ? target : ''
-}, { immediate: true })
+}
+
+watch(() => route.query.folder, (value) => {
+	if (!hydrated.value)
+		return
+
+	applyFolderFromQuery(value)
+})
 
 const activeFolder = computed(() => albums.find(folder => folder.id === activeFolderId.value))
 const showingFolder = computed(() => Boolean(activeFolder.value))
@@ -46,8 +55,19 @@ function refreshOrder() {
 }
 
 watch(activeFolder, () => {
+	if (!hydrated.value) {
+		shuffledImages.value = []
+		return
+	}
+
 	refreshOrder()
 }, { immediate: true })
+
+onMounted(() => {
+	hydrated.value = true
+	applyFolderFromQuery(route.query.folder)
+	refreshOrder()
+})
 
 function openFolder(id: string) {
 	router.replace({

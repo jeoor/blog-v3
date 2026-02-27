@@ -10,3 +10,10 @@ tags: [C, C++]
 
 ## 从test说起
 
+图片懒加载测试
+![示例图 1 - 山景](https://picsum.photos/seed/test-mountain/1200/700)
+
+![示例图 2 - 城市](https://picsum.photos/seed/test-city/1200/700)
+
+![示例图 3 - 海边](https://picsum.photos/seed/test-sea/1200/700)
+
