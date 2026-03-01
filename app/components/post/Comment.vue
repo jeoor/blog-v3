@@ -12,7 +12,7 @@ const showUndo = ref(false)
 
 const popoverBind = ref<TippyComponent['$props']>({})
 const modalStore = useModalStore()
-const twikooScriptSrc = 'https://s4.zstatic.net/npm/twikoo-js@16.45.33/twikoo.min.js'
+const twikooScriptSrc = appConfig.twikoo.scriptSrc
 
 /** 评论区链接守卫与图片放大 */
 useEventListener(commentEl, 'click', (e) => {

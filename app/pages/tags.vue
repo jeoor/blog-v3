@@ -2,7 +2,7 @@
 import { sort } from 'radash'
 
 const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
+layoutStore.setAside(['blog-stats', 'blog-tech', 'countdown'])
 
 const appConfig = useAppConfig()
 const title = '标签'

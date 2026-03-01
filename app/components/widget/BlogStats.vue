@@ -31,10 +31,10 @@ const blogStats = [{
 	tip: yearlyTip,
 }, {
 	label: '本站访客量',
-	value: () => h('span', { id: 'busuanzi_site_uv' }, '--'),
+	value: () => h('span', { id: 'busuanzi_site_uv' }),
 }, {
 	label: '本站访问量',
-	value: () => h('span', { id: 'busuanzi_site_pv' }, '--'),
+	value: () => h('span', { id: 'busuanzi_site_pv' }),
 }]
 </script>
 
