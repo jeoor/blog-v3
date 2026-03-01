@@ -7,19 +7,15 @@ const appConfig = useAppConfig()
 const { public: { arch, ci, nodeVersion, platform } } = useRuntimeConfig()
 
 const ciPlatform = computed(() => {
-	if (!ci)
-		return ''
-
-	const ciName = Object.keys(ciIcons).find(name => name.toLowerCase() === ci.toLowerCase()) ?? ci
-	const iconName = ciIcons[ciName]
+	const iconName = ciIcons[ci]
 	if (!iconName)
-		return ciName
+		return ''
 
 	const iconNode = iconName.startsWith('http')
 		? h('img', { src: iconName, alt: '' })
 		: h(Icon, { name: iconName })
 
-	return h('span', {}, [iconNode, ` ${ciName.split(' ')[0]}`])
+	return h('span', {}, [iconNode, ` ${ci.split(' ')[0]}`])
 })
 
 const packages = Object.assign({}, ...Object.values(pnpmWorkspace.catalogs as any)) as Record<string, string>
