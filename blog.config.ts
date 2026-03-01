@@ -8,7 +8,7 @@ const basicConfig = {
 	author: {
 		name: '敖苛',
 		avatar: 'https://bu.dusays.com/2026/02/27/69a08b0dd92b8.webp',
-		email: 'i@kayro.cm',
+		email: 'i@kayro.cn',
 		homepage: 'https://www.kayro.cn/',
 	},
 	copyright: {

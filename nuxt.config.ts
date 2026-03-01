@@ -1,11 +1,19 @@
 import type { NitroConfig } from 'nitropack'
-import { arch, env, version as nodeVersion, platform } from 'node:process'
+import { arch, argv, env, version as nodeVersion, platform } from 'node:process'
 import { name as ciName, CLOUDFLARE_PAGES, GITHUB_ACTIONS, NETLIFY } from 'ci-info'
 import { pascal } from 'radash'
 import { Temporal } from 'temporal-polyfill'
 import blogConfig from './blog.config'
 import packageJson from './package.json'
 import redirectList from './redirects.json'
+
+const edgeOneByEnv = env.TENCENTCLOUD_RUNENV === 'SCF'
+	|| Object.keys(env).some(key => /^(EDGEONE|EO_|TENCENTCLOUD)/i.test(key))
+const runtimeArgv = argv.join(' ').toLowerCase()
+const edgeOneByCommand = runtimeArgv.includes('edgeone')
+	|| runtimeArgv.includes('@edgeone/nuxt-pages')
+	|| (env.npm_lifecycle_script?.toLowerCase().includes('edgeone') ?? false)
+const runtimeCi = env.BLOG_CI || env.CI_NAME || (edgeOneByEnv || edgeOneByCommand ? 'EdgeOne' : ciName || '')
 
 // 此处配置无需修改
 export default defineNuxtConfig({
@@ -86,7 +94,7 @@ export default defineNuxtConfig({
 		'/api/stats': { prerender: true, headers: { 'Content-Type': 'application/json' } },
 		'/atom.xml': { prerender: true, headers: { 'Content-Type': 'application/xml' } },
 		'/favicon.ico': { redirect: { to: blogConfig.favicon } },
-		'/zhilu.opml': { prerender: true, headers: { 'Content-Type': 'application/xml' } },
+		'/kayro.opml': { prerender: true, headers: { 'Content-Type': 'application/xml' } },
 	},
 
 	runtimeConfig: {
@@ -94,8 +102,7 @@ export default defineNuxtConfig({
 		public: {
 			arch,
 			buildTime: Temporal.Now.zonedDateTimeISO().toString(),
-			// EdgeOne 检测暂时不可用
-			ci: env.TENCENTCLOUD_RUNENV === 'SCF' ? 'EdgeOne' : ciName || '',
+			ci: runtimeCi,
 			nodeVersion,
 			platform,
 		},

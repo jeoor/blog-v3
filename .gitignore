@@ -26,3 +26,8 @@ logs
 # Custom
 .vercel
 content/posts/test.md
+# Tencent Cloud EdgeOne
+.env
+.edgeone/*
+.tef_dist/*
+  

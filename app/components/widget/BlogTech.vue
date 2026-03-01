@@ -10,16 +10,16 @@ const ciPlatform = computed(() => {
 	if (!ci)
 		return ''
 
-	const ciKey = Object.keys(ciIcons).find(name => name.toLowerCase() === ci.toLowerCase()) || ci
-	const iconName = ciIcons[ciKey]
+	const ciName = Object.keys(ciIcons).find(name => name.toLowerCase() === ci.toLowerCase()) ?? ci
+	const iconName = ciIcons[ciName]
 	if (!iconName)
-		return ciKey
+		return ciName
 
 	const iconNode = iconName.startsWith('http')
 		? h('img', { src: iconName, alt: '' })
 		: h(Icon, { name: iconName })
 
-	return h('span', {}, [iconNode, ` ${ciKey.split(' ')[0]}`])
+	return h('span', {}, [iconNode, ` ${ciName.split(' ')[0]}`])
 })
 
 const packages = Object.assign({}, ...Object.values(pnpmWorkspace.catalogs as any)) as Record<string, string>
