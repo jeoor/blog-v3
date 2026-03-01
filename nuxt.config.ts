@@ -7,6 +7,10 @@ import blogConfig from './blog.config'
 import packageJson from './package.json'
 import redirectList from './redirects.json'
 
+const edgeOneDetected = env.TENCENTCLOUD_RUNENV === 'SCF'
+	|| Object.keys(env).some(key => /^(EDGEONE|EO_|TENCENTCLOUD)/i.test(key))
+const runtimeCi = env.BLOG_CI || env.CI_NAME || (edgeOneDetected ? 'EdgeOne' : ciName || '')
+
 // 此处配置无需修改
 export default defineNuxtConfig({
 	app: {
@@ -94,8 +98,7 @@ export default defineNuxtConfig({
 		public: {
 			arch,
 			buildTime: Temporal.Now.zonedDateTimeISO().toString(),
-			// EdgeOne 检测暂时不可用
-			ci: env.TENCENTCLOUD_RUNENV === 'SCF' ? 'EdgeOne' : ciName || '',
+			ci: runtimeCi,
 			nodeVersion,
 			platform,
 		},

@@ -6,23 +6,29 @@ import pnpmWorkspace from '~~/pnpm-workspace.yaml'
 const appConfig = useAppConfig()
 const { public: { arch, ci, nodeVersion, platform } } = useRuntimeConfig()
 
+const normalizedCi = computed(() => ci?.trim().replace(/^['\"]|['\"]$/g, '') || '')
+
 const ciPlatform = computed(() => {
-	const iconName = ciIcons[ci]
-	if (!iconName)
+	if (!normalizedCi.value)
 		return ''
+
+	const ciName = Object.keys(ciIcons).find(name => name.toLowerCase() === normalizedCi.value.toLowerCase()) ?? normalizedCi.value
+	const iconName = ciIcons[ciName]
+	if (!iconName)
+		return ciName
 
 	const iconNode = iconName.startsWith('http')
 		? h('img', { src: iconName, alt: '' })
 		: h(Icon, { name: iconName })
 
-	return h('span', {}, [iconNode, ` ${ci.split(' ')[0]}`])
+	return h('span', {}, [iconNode, ` ${ciName.split(' ')[0]}`])
 })
 
 const packages = Object.assign({}, ...Object.values(pnpmWorkspace.catalogs as any)) as Record<string, string>
 const [pm, pmVersion] = packageManager.split('@') as [string, string]
 
 const service = computed(() => ([
-	...ci ? [{ label: '构建平台', value: ciPlatform }] : [],
+	...normalizedCi.value ? [{ label: '构建平台', value: ciPlatform }] : [],
 	{ label: '图片存储', value: () => [h('img', { src: 'https://7bu.top/favicon.ico', alt: '' }), '去不图床'] },
 	{ label: '软件协议', value: 'MIT' },
 	{ label: '文章许可', value: appConfig.copyright.abbr },
