@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import albums from '~/albums'
-import type { AlbumImage } from '~/types/album'
+import type { GalleryImage } from '~/types/gallery'
+import gallery from '~/gallery'
 
 const layoutStore = useLayoutStore()
 layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
@@ -14,7 +14,7 @@ const image = 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto
 useSeoMeta({ title, description, ogImage: image })
 
 const activeFolderId = ref('')
-const shuffledImages = ref<AlbumImage[]>([])
+const shuffledImages = ref<GalleryImage[]>([])
 const hydrated = ref(false)
 
 function applyFolderFromQuery(value: string | null | (string | null)[] | undefined) {
@@ -25,7 +25,7 @@ function applyFolderFromQuery(value: string | null | (string | null)[] | undefin
 		return
 	}
 
-	const exists = albums.some(folder => folder.id === target)
+	const exists = gallery.some(folder => folder.id === target)
 	activeFolderId.value = exists ? target : ''
 }
 
@@ -36,10 +36,10 @@ watch(() => route.query.folder, (value) => {
 	applyFolderFromQuery(value)
 })
 
-const activeFolder = computed(() => albums.find(folder => folder.id === activeFolderId.value))
+const activeFolder = computed(() => gallery.find(folder => folder.id === activeFolderId.value))
 const showingFolder = computed(() => Boolean(activeFolder.value))
 
-function shuffleImages(images: AlbumImage[]) {
+function shuffleImages(images: GalleryImage[]) {
 	const list = [...images]
 	for (let i = list.length - 1; i > 0; i -= 1) {
 		const randomIndex = Math.floor(Math.random() * (i + 1))
@@ -95,12 +95,12 @@ function backToFolders() {
 	<div v-if="!showingFolder" class="folder-panel">
 		<header class="panel-head">
 			<h3>文件夹</h3>
-			<span>共 {{ albums.length }} 个</span>
+			<span>共 {{ gallery.length }} 个</span>
 		</header>
 
 		<div class="folder-grid">
 			<button
-				v-for="folder in albums"
+				v-for="folder in gallery"
 				:key="folder.id"
 				class="folder-card"
 				@click="openFolder(folder.id)"
@@ -141,12 +141,7 @@ function backToFolders() {
 					class="image"
 					:src="pic.url"
 					:alt="pic.title"
-					:caption="pic.description || pic.date || pic.title"
 				/>
-				<div class="meta">
-					<h4>{{ pic.title }}</h4>
-					<p>{{ pic.description || pic.date || '图片来自图床' }}</p>
-				</div>
 			</article>
 		</div>
 
@@ -283,21 +278,18 @@ function backToFolders() {
 		background-color: var(--c-bg-soft);
 	}
 }
-
-
 .image-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-	gap: .8rem;
+	column-count: 3;
+	column-gap: .8rem;
 
 	@media (max-width: $breakpoint-mobile) {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
+		column-count: 2;
 	}
 }
 
 .image-card {
-	display: flex;
-	flex-direction: column;
+	break-inside: avoid;
+	margin-bottom: .8rem;
 	border-radius: .6rem;
 	overflow: hidden;
 	box-shadow: 0 0 0 1px var(--c-bg-soft);
@@ -309,30 +301,13 @@ function backToFolders() {
 
 	.image {
 		display: block;
-		aspect-ratio: 4 / 3;
 		overflow: hidden;
+		line-height: 0;
 
 		:deep(img) {
+			display: block;
 			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-	}
-
-	.meta {
-		padding: .55rem .65rem;
-		background-color: var(--c-bg-soft);
-
-		h4 {
-			margin: 0;
-			font-size: .95rem;
-		}
-
-		p {
-			margin: .25rem 0 0;
-			font-size: .8rem;
-			color: var(--c-text-3);
-			line-height: 1.5;
+			height: auto;
 		}
 	}
 }

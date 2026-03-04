@@ -51,9 +51,12 @@ const copyFields = {
 			:value="postLink"
 			class="article"
 		/>
-		<p v-else class="text-center">
-			可于 link.md 配置友链补充说明。
-		</p>
+		<ZError
+			v-else
+			icon="solar:confounded-square-bold-duotone"
+			title="内容为空或页面不存在"
+			message="可于 content/link.md 配置友链补充说明。"
+		/>
 	</template>
 </Tab>
 

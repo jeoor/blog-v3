@@ -18,6 +18,10 @@ if (about.value) {
 
 <template>
 <template v-if="about">
+	<div class="mobile-only">
+		<BlogHeader to="/" :suffix="about.title || '关于'" tag="h1" />
+	</div>
+
 	<ZPageBanner
 		:title="about.title || '关于我'"
 		:description="about.description || ''"
@@ -25,7 +29,7 @@ if (about.value) {
 	/>
 
 	<ContentRenderer
-		class="article about-article"
+		class="article"
 		:class="getPostTypeClassName(about?.type, { prefix: 'md' })"
 		:value="about"
 		tag="article"
@@ -35,13 +39,7 @@ if (about.value) {
 <ZError
 	v-else
 	icon="solar:confounded-square-bold-duotone"
-	title="关于页内容不存在"
+	title="内容为空或页面不存在"
+	message="可于 content/about.md 配置关于页内容。"
 />
 </template>
-
-<style lang="scss" scoped>
-.about-article {
-	animation: float-in .2s backwards;
-	margin: 1rem;
-}
-</style>

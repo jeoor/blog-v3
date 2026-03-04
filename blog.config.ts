@@ -88,9 +88,9 @@ const blogConfig = {
 
 	/** 自己部署的 Twikoo 服务 */
 	twikoo: {
-		envId: 'https://twikoo-eo.kayro.cn/',
-		preload: 'https://twikoo-eo.kayro.cn/',
-		scriptSrc: 'https://registry.npmmirror.com/twikoo/1.7.0/files/dist/twikoo.min.js',
+		envId: 'https://twikoo.kayro.cn/',
+		preload: 'https://twikoo.kayro.cn/',
+		scriptSrc: 'https://registry.npmmirror.com/twikoo/1.7.1/files/dist/twikoo.min.js',
 	},
 }
 
@@ -106,7 +106,7 @@ export const myFeed: FeedEntry = {
 	avatar: blogConfig.author.avatar,
 	archs: ['Nuxt', 'EdgeOne'],
 	date: blogConfig.timeEstablished,
-	comment: '这是我自己',
+	comment: '这个好像是我',
 }
 
 export default blogConfig

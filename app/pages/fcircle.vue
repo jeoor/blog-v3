@@ -27,7 +27,7 @@ useSeoMeta({ title, description, ogImage: image })
 
 // 配置选项
 const UserConfig = reactive({
-  api_url: 'https://fc.linux-qitong.top/',
+  api_url: 'https://fc.kayro.cn/',
   page_size: 20
 })
 
@@ -210,11 +210,12 @@ onUnmounted(() => {
       />
 
       <!-- 空状态 -->
-      <div v-if="!isLoading && allArticles.length === 0" class="error-container">
-        <Icon class="error-container__icon" name="ph:file-text-bold" />
-        <p>暂无文章数据</p>
-        <p class="empty-hint">请稍后再试</p>
-      </div>
+      <ZError
+        v-if="!isLoading && allArticles.length === 0"
+        icon="solar:confounded-square-bold-duotone"
+        title="内容为空或页面不存在"
+        message="暂无文章数据，请稍后再试。"
+      />
 
       <!-- 作者模态框 - 时间线样式 -->
       <Transition name="modal">

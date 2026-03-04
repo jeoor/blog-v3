@@ -117,7 +117,7 @@ function clearSelectedTag() {
 	<!-- 标签云视图 -->
 	<div v-else class="tag-cloud">
 		<h1 class="tag-cloud-title">{{ title }}</h1>
-		<div class="tag-cloud-content">
+		<div v-if="sortedTags.length" class="tag-cloud-content">
 			<button
 				v-for="tag in sortedTags"
 				:key="tag"
@@ -130,9 +130,16 @@ function clearSelectedTag() {
 			</button>
 		</div>
 
-		<div class="tag-cloud-stats">
+		<div v-if="sortedTags.length" class="tag-cloud-stats">
 			共 {{ sortedTags.length }} 个标签
 		</div>
+
+		<ZError
+			v-else
+			icon="solar:confounded-square-bold-duotone"
+			title="内容为空或页面不存在"
+			message="暂无标签数据。"
+		/>
 	</div>
 </div>
 </template>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { EssayImage, EssayItem } from '~/types/essay'
 import essays from '~/essay'
 
 const layoutStore = useLayoutStore()
@@ -11,15 +12,15 @@ useSeoMeta({ title, description, ogImage: image })
 
 const { author } = useAppConfig()
 
-const recentEssays = [...essays]
+const recentEssays: EssayItem[] = [...essays]
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   .slice(0, 30)
 
-function replyEssay(content: string): void {
+function replyEssay(content?: string): void {
   const input = document.querySelector('#twikoo .tk-input textarea')
   if (!(input instanceof HTMLTextAreaElement)) return
 
-  if (content.trim()) {
+  if (content?.trim()) {
     const quotes = content.split('\n').map(str => `> ${str}`)
     input.value = `${quotes}\n\n`
   } else {
@@ -46,6 +47,32 @@ function getEssayDate(date?: string | Date) {
     minute: '2-digit',
   }).replace(/\//g, '-')
 }
+
+function getEssayImageSrc(image: EssayImage) {
+  return typeof image === 'string' ? image : image.src
+}
+
+function getEssayImageAlt(image: EssayImage) {
+  return typeof image === 'string' ? '' : (image.alt || '')
+}
+
+function getEssayImageWidth(image: EssayImage) {
+  return typeof image === 'string' ? undefined : image.width
+}
+
+function getEssayImageHeight(image: EssayImage) {
+  return typeof image === 'string' ? undefined : image.height
+}
+
+function getEssayImageStyle(image: EssayImage, isSingle: boolean) {
+  if (!isSingle || typeof image === 'string' || image.width === undefined)
+    return undefined
+
+  return {
+    width: typeof image.width === 'number' ? `${image.width}px` : image.width,
+    maxWidth: '100%',
+  }
+}
 </script>
 
 <template>
@@ -66,8 +93,22 @@ function getEssayDate(date?: string | Date) {
 
     <div class="essay-content">
       <div class="text" v-if="essay.text" v-html="essay.text"></div>
-      <div class="images" v-if="essay.images">
-        <Pic class="image" v-for="image in essay.images" :src="image" />
+      <div class="images" v-if="essay.images?.length" :class="{ single: essay.images.length === 1 }">
+        <Pic
+          class="image"
+          v-for="(image, index) in essay.images"
+          :key="`${getEssayImageSrc(image)}-${index}`"
+          :src="getEssayImageSrc(image)"
+          :alt="getEssayImageAlt(image)"
+          :width="getEssayImageWidth(image)"
+          :height="getEssayImageHeight(image)"
+          :style="getEssayImageStyle(image, essay.images.length === 1)"
+        />
+      </div>
+      <div class="essay-link-cards" v-if="essay.linkCards?.length">
+        <article v-for="(card, index) in essay.linkCards" :key="`${card.link}-${index}`">
+          <LinkCard v-bind="card" />
+        </article>
       </div>
       <VideoEmbed class="video" v-if="essay.video" v-bind="essay.video" height="" />
     </div>
@@ -158,7 +199,7 @@ function getEssayDate(date?: string | Date) {
       gap: .5rem;
       line-height: 1.6;
 
-      :deep(a[href]) {
+      .text :deep(a[href]) {
         margin: -.1em -.2em;
         padding: .1em .2em;
         background: linear-gradient(var(--c-primary-soft), var(--c-primary-soft)) no-repeat center bottom / 100% .1em;
@@ -175,6 +216,24 @@ function getEssayDate(date?: string | Date) {
         display: grid;
         gap: 8px;
         grid-template-columns: repeat(3, 1fr);
+
+        &.single {
+          display: block;
+
+          .image {
+            max-width: min(100%, 28rem);
+            padding-bottom: 0;
+            position: static;
+
+            :deep(img) {
+              display: block;
+              height: auto;
+              object-fit: contain;
+              position: static;
+              width: 100%;
+            }
+          }
+        }
       }
 
       .image {
@@ -194,6 +253,10 @@ function getEssayDate(date?: string | Date) {
             transform: scale(1.05);
           }
         }
+      }
+
+      .essay-link-cards > article :deep(.link-card) {
+        margin: .5rem 0;
       }
 
       .video {
