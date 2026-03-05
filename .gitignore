@@ -30,3 +30,6 @@ content/posts/test.md
 .env
 .edgeone/*
 .tef_dist/*
+
+# friend
+public/friend.json
