@@ -5,7 +5,8 @@ function hasEmptyCounters() {
 		const element = document.getElementById(id)
 		if (!element)
 			return false
-		return !element.textContent?.trim()
+		const text = element.textContent?.trim() || ''
+		return !text || text === '--'
 	})
 }
 

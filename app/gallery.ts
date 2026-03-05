@@ -1,63 +1,129 @@
-import type { GalleryFolder } from '~/types/gallery'
+import type { GalleryFolder, GalleryImage } from '~/types/gallery'
 
-const gallery: GalleryFolder[] = [
+const galleryBase: Omit<GalleryFolder, 'cover'>[] = [
 	{
-		id: 'daily-life',
-		name: '日常记录',
-		cover: 'https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=1200&q=80',
+		id: 'flowers',
+		name: '花',
 		images: [
-			{
-				title: '午后咖啡',
-				url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1400&q=80',
-			},
-			{
-				title: '城市街角',
-				url: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1400&q=80',
-			},
-			{
-				title: '雨后光影',
-				url: 'https://images.unsplash.com/photo-1503435824048-a799a3a84bf7?auto=format&fit=crop&w=1400&q=80',
-			},
+			'https://bu.dusays.com/2026/03/05/69a9a03149c7c.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a0343a573.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a03372f11.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a032cb5c1.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a032013ec.webp',
 		],
 	},
 	{
-		id: 'travel-memory',
-		name: '旅行碎片',
-		cover: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
+		id: 'sea',
+		name: '湖海',
 		images: [
-			{
-				title: '海岸线',
-				url: 'https://images.unsplash.com/photo-1473116763249-2faaef81ccda?auto=format&fit=crop&w=1400&q=80',
-			},
-			{
-				title: '山路',
-				url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1400&q=80',
-			},
-			{
-				title: '夜色',
-				url: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=1400&q=80',
-			},
+			'https://bu.dusays.com/2026/03/05/69a9a30d0817a.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a30c61430.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a30bbf7e8.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a30b11eb9.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a30a6b453.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a309ae10e.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a309115bc.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a30869cf8.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a307bfea1.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a3072088e.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a30673618.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a305cbc50.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a3052bf5d.webp',
 		],
 	},
 	{
-		id: 'workspace',
-		name: '桌面与设备',
-		cover: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+		id: 'sky',
+		name: '天地',
 		images: [
-			{
-				title: '开发环境',
-				url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80',
-			},
-			{
-				title: '键盘细节',
-				url: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=1400&q=80',
-			},
-			{
-				title: '夜间工作流',
-				url: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1400&q=80',
-			},
+			'https://bu.dusays.com/2026/03/05/69a9a395224ef.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a3948626f.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a393e95e8.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a39360e0a.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a392c7244.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a392357a6.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a39198c7f.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a391074c5.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a39070537.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a38fca8db.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a38f32ce2.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a38e85258.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a38ddb1c5.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a38d4783f.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a38c98fbe.webp',
+		],
+	},
+	{
+		id: 'airplane',
+		name: '飞机上',
+		images: [
+			'https://bu.dusays.com/2026/03/05/69a9a3e3649e2.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a3e2bf553.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a3e21bacd.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a3e17022c.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a3e0cb223.webp',
+		],
+	},
+	{
+		id: 'sun',
+		name: '日月',
+		images: [
+			'https://bu.dusays.com/2026/03/05/69a9a45f9418e.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a45ef3ef6.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a45e4fc38.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a45da4b17.webp',
+		],
+	},
+	{
+		id: 'animals',
+		name: '动物（标本）',
+		images: [
+			'https://bu.dusays.com/2026/03/05/69a9a4acd530b.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a4ac302a5.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a4ab86c27.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a4aadc29e.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a4aa444f9.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a4a992fa3.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a4a8f3fea.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a4a86303a.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a4a7b18b5.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a4a70e233.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a4a655aef.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a4a599238.webp',
+		],
+	},
+	{
+		id: 'museum',
+		name: '博物馆',
+		images: [
+			'https://bu.dusays.com/2026/03/05/69a9a51e1fe96.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a51d7cfae.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a51cc9d3d.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a51c370ea.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a51b9fcae.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a51b0358d.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a51a6e54f.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a519c1ff6.webp',
+			'https://bu.dusays.com/2026/03/05/69a9a5191a453.webp',
 		],
 	},
 ]
+
+function getImageUrl(image?: GalleryImage) {
+	if (!image)
+		return undefined
+	return typeof image === 'string' ? image : image.url
+}
+
+function pickRandomImage(images: GalleryImage[]) {
+	if (!images.length)
+		return undefined
+	const index = Math.floor(Math.random() * images.length)
+	return getImageUrl(images[index])
+}
+
+const gallery: GalleryFolder[] = galleryBase.map(folder => ({
+	...folder,
+	cover: pickRandomImage(folder.images),
+}))
 
 export default gallery

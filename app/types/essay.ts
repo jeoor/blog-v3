@@ -27,5 +27,4 @@ export type EssayItem = {
     poster?: string
   }
   tags?: string[]
-  location?: string
 }

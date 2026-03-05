@@ -1,6 +1,6 @@
-export interface GalleryImage {
+export type GalleryImage = string | {
 	url: string
-	title: string
+	title?: string
 }
 
 export interface GalleryFolder {

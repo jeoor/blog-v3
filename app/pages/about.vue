@@ -28,12 +28,14 @@ if (about.value) {
 		:image="about.image || ''"
 	/>
 
-	<ContentRenderer
-		class="article"
-		:class="getPostTypeClassName(about?.type, { prefix: 'md' })"
-		:value="about"
-		tag="article"
-	/>
+	<div class="about-shell">
+		<ContentRenderer
+			class="article about-article card"
+			:class="getPostTypeClassName(about?.type, { prefix: 'md' })"
+			:value="about"
+			tag="article"
+		/>
+	</div>
 </template>
 
 <ZError
@@ -43,3 +45,41 @@ if (about.value) {
 	message="可于 content/about.md 配置关于页内容。"
 />
 </template>
+
+<style lang="scss" scoped>
+.about-shell {
+	width: min(100%, 920px);
+	margin: 1rem auto 2rem;
+	padding: 0 1rem;
+}
+
+.about-article.about-article {
+	margin: 0;
+	padding: 0.8rem 1.2rem 1.2rem;
+}
+
+.about-article :deep(.link-card) {
+	display: inline-flex;
+	width: calc((100% - 1rem) / 2);
+	max-width: none;
+	margin: 0.25rem;
+	vertical-align: top;
+}
+
+@media (min-width: 1200px) {
+	.about-article :deep(.link-card) {
+		width: calc((100% - 1.5rem) / 3);
+	}
+}
+
+@media (max-width: $breakpoint-phone) {
+	.about-shell {
+		padding: 0 0.5rem;
+	}
+
+	.about-article :deep(.link-card) {
+		width: 100%;
+		margin: 0.35rem 0;
+	}
+}
+</style>

@@ -58,8 +58,7 @@ const { copy, copied } = useCopy(shareText)
 			</span>
 
 			<span>
-				<Icon name="ph:eye-bold" />
-				<span id="busuanzi_page_pv">--</span> 次浏览
+				<Icon name="ph:eye-bold" /> <span id="busuanzi_page_pv">--</span> 次
 			</span>
 		</div>
 	</div>

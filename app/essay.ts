@@ -12,7 +12,6 @@ export default [
       }
     ],
     tags: ['生活'],
-    location: '青海',
   },
   {
     text: '元宵节快乐！',
@@ -25,7 +24,6 @@ export default [
       },
     ],
     tags: ['生活'],
-    location: '青海',
   },
   {
     text: '发现了 Clarity 这个主题，后面就用这个主题写文章了。',
@@ -39,7 +37,6 @@ export default [
       },
     ],
     tags: ['网站'],
-    location: '青海',
   },
   // {
   //   text: '这是一个同时包含<b>视频</b>和<b>图片</b>的示例。<br>支持多种媒体格式的展示。',
@@ -54,6 +51,5 @@ export default [
   //     id: 'BV1xx411c7mD',
   //   },
   //   tags: ['旅行'],
-  //   location: '成都',
   // },
 ] satisfies EssayItem[]

@@ -5,9 +5,9 @@ import essays from '~/essay'
 const layoutStore = useLayoutStore()
 layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
-const title = '说说'
-const description = '记录生活点滴，一些想法。'
-const image = 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80'
+const title = '日记'
+const description = '记录生活点滴和一些想法。'
+const image = 'https://bu.dusays.com/2026/03/05/69a99d3fe44f3.webp'
 useSeoMeta({ title, description, ogImage: image })
 
 const { author } = useAppConfig()
@@ -119,15 +119,6 @@ function getEssayImageStyle(image: EssayImage, isSingle: boolean) {
           <Icon name="ph:tag-bold" />
           <span>{{ tag }}</span>
         </span>
-        <UtilLink
-          class="location"
-          v-if="essay.location"
-          v-tip="`搜索: ${essay.location}`"
-          :to="`https://bing.com/maps?q=${encodeURIComponent(essay.location)}`"
-        >
-          <Icon name="ph:map-pin-bold" />
-          <span>{{ essay.location }}</span>
-        </UtilLink>
       </div>
       <button class="comment-btn" v-tip="'评论'" @click="replyEssay(essay.text)">
         <Icon name="ph:chats-bold" />
@@ -277,7 +268,7 @@ function getEssayImageStyle(image: EssayImage, isSingle: boolean) {
         gap: 4px;
       }
 
-      .tag, .location {
+      .tag {
         display: flex;
         padding: 2px 4px;
         border-radius: 8px;
@@ -293,10 +284,6 @@ function getEssayImageStyle(image: EssayImage, isSingle: boolean) {
 
       .tag .i-ph\:tag-bold + * {
         margin-left: .15em;
-      }
-
-      .location {
-        color: var(--c-primary);
       }
     }
   }

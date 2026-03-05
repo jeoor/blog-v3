@@ -15,6 +15,9 @@ interface FriendCircleArticle extends FriendCircleApiItem {
 
 interface FriendCircleApiResponse {
   article_data?: FriendCircleApiItem[]
+  statistical_data?: {
+    last_updated_time?: string
+  }
 }
 
 const layoutStore = useLayoutStore()
@@ -22,7 +25,7 @@ layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
 const title = '朋友圈'
 const description = '发现更多有趣的博主。'
-const image = 'https://images.unsplash.com/photo-1470770903676-69b98201ea1c?auto=format&fit=crop&w=1600&q=80'
+const image = 'https://bu.dusays.com/2026/03/05/69a99d24ab46c.webp'
 useSeoMeta({ title, description, ogImage: image })
 
 // 配置选项
@@ -94,6 +97,10 @@ const fetchData = async () => {
     const response = await fetch(`${UserConfig.api_url}all.json`)
     const data = await response.json() as FriendCircleApiResponse
     const rawArticles = Array.isArray(data.article_data) ? data.article_data : []
+    const apiLastUpdatedTime = data.statistical_data?.last_updated_time
+
+    if (apiLastUpdatedTime)
+      lastUpdatedDate.value = apiLastUpdatedTime
 
     // 处理数据
     allArticles.value = rawArticles.map((item, index) => ({
@@ -116,7 +123,7 @@ const fetchData = async () => {
     refreshRandomArticle()
 
     // 设置最新更新日期
-    if (allArticles.value.length > 0) {
+    if (!lastUpdatedDate.value && allArticles.value.length > 0) {
       const sortedArticles = [...allArticles.value].sort((a, b) =>
         new Date(b.created).getTime() - new Date(a.created).getTime()
       )
@@ -144,8 +151,8 @@ onUnmounted(() => {
 <template>
   <ZPageBanner :title :description :image>
     <div class="fcircle-stats">
-      <div class="fcircle-stats__update-time">Updated at {{ lastUpdatedDate || '2025-07-17' }}</div>
-      <div class="fcircle-stats__powered-by">Powered by FriendCircleLite</div>
+      <div class="fcircle-stats__update-time">更新于 {{ lastUpdatedDate || '--' }}</div>
+      <div class="fcircle-stats__powered-by">由 FriendCircleLite 驱动</div>
     </div>
   </ZPageBanner>
 

@@ -1,23 +1,32 @@
 <script setup lang="ts">
 import type { GalleryImage } from '~/types/gallery'
+import { LazyPopoverLightbox } from '#components'
 import gallery from '~/gallery'
+
+definePageMeta({
+	path: '/gallery/:folder?',
+})
 
 const layoutStore = useLayoutStore()
 layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
 const route = useRoute()
 const router = useRouter()
+const galleryPage = useTemplateRef<HTMLElement>('galleryPage')
+const modalStore = useModalStore()
 
 const title = '相册'
-const description = '按文件夹浏览图片，点击可放大查看。'
-const image = 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1600&q=80'
+const description = '用镜头记录生活。'
+const image = 'https://bu.dusays.com/2026/03/05/69a99d453fa90.webp'
 useSeoMeta({ title, description, ogImage: image })
 
 const activeFolderId = ref('')
 const shuffledImages = ref<GalleryImage[]>([])
 const hydrated = ref(false)
+const viewerIndex = ref(-1)
+const viewerTargetEl = ref<HTMLImageElement>()
 
-function applyFolderFromQuery(value: string | null | (string | null)[] | undefined) {
+function applyFolderFromRoute(value: string | string[] | undefined) {
 	const targetRaw = Array.isArray(value) ? value[0] : value
 	const target = targetRaw || ''
 	if (!target) {
@@ -29,15 +38,94 @@ function applyFolderFromQuery(value: string | null | (string | null)[] | undefin
 	activeFolderId.value = exists ? target : ''
 }
 
-watch(() => route.query.folder, (value) => {
+watch(() => route.params.folder, (value) => {
 	if (!hydrated.value)
 		return
 
-	applyFolderFromQuery(value)
+	applyFolderFromRoute(value as string | string[] | undefined)
 })
 
 const activeFolder = computed(() => gallery.find(folder => folder.id === activeFolderId.value))
 const showingFolder = computed(() => Boolean(activeFolder.value))
+
+function getImageUrl(image?: GalleryImage) {
+	if (!image)
+		return ''
+	return typeof image === 'string' ? image : image.url
+}
+
+function getImageAlt(image: GalleryImage, index: number) {
+	if (typeof image !== 'string' && image.title)
+		return image.title
+	return `${activeFolder.value?.name || '相册'}-${index + 1}`
+}
+
+const viewerCaption = computed(() => {
+	const image = shuffledImages.value[viewerIndex.value]
+	if (!image)
+		return ''
+	return getImageAlt(image, viewerIndex.value)
+})
+
+const {
+	open: openLightbox,
+	close: closeLightbox,
+	status: lightboxStatus,
+} = modalStore.use(
+	() => h(LazyPopoverLightbox, {
+		el: viewerTargetEl.value as HTMLImageElement,
+		caption: viewerCaption.value,
+	}),
+	{ unique: true },
+)
+
+const viewerOpen = computed(() => lightboxStatus.value === 'open')
+const hasViewerNav = computed(() => shuffledImages.value.length > 1)
+
+function getImageElement(index: number) {
+	return galleryPage.value?.querySelector<HTMLImageElement>(`.image-card[data-viewer-index="${index}"] img`) || null
+}
+
+function openViewer(index: number, e?: MouseEvent) {
+	const targetFromClick = e?.currentTarget instanceof HTMLElement
+		? e.currentTarget.querySelector<HTMLImageElement>('img')
+		: null
+	const imageEl = targetFromClick || getImageElement(index)
+	if (!imageEl)
+		return
+
+	viewerIndex.value = index
+	viewerTargetEl.value = imageEl
+	openLightbox()
+}
+
+function closeViewer() {
+	viewerIndex.value = -1
+	if (lightboxStatus.value !== 'closed')
+		closeLightbox()
+}
+
+function goPrevViewer() {
+	const total = shuffledImages.value.length
+	if (!total)
+		return
+	const next = (viewerIndex.value - 1 + total) % total
+	viewerIndex.value = next
+	const nextImage = getImageElement(next)
+	if (nextImage)
+		viewerTargetEl.value = nextImage
+}
+
+function goNextViewer() {
+	const total = shuffledImages.value.length
+	if (!total)
+		return
+	const next = (viewerIndex.value + 1) % total
+	viewerIndex.value = next
+	const nextImage = getImageElement(next)
+	if (nextImage)
+		viewerTargetEl.value = nextImage
+}
 
 function shuffleImages(images: GalleryImage[]) {
 	const list = [...images]
@@ -57,41 +145,58 @@ function refreshOrder() {
 watch(activeFolder, () => {
 	if (!hydrated.value) {
 		shuffledImages.value = []
+		closeViewer()
 		return
 	}
 
 	refreshOrder()
+	closeViewer()
 }, { immediate: true })
+
+watch(shuffledImages, (images) => {
+	if (viewerIndex.value >= images.length)
+		closeViewer()
+})
+
+watch(lightboxStatus, (status) => {
+	if (status === 'closed')
+		viewerIndex.value = -1
+})
 
 onMounted(() => {
 	hydrated.value = true
-	applyFolderFromQuery(route.query.folder)
+	applyFolderFromRoute(route.params.folder as string | string[] | undefined)
 	refreshOrder()
 })
 
+useEventListener('keydown', (e) => {
+	if (!viewerOpen.value)
+		return
+
+	if (e.key === 'ArrowLeft') {
+		e.preventDefault()
+		goPrevViewer()
+	}
+	else if (e.key === 'ArrowRight') {
+		e.preventDefault()
+		goNextViewer()
+	}
+})
+
 function openFolder(id: string) {
-	router.replace({
-		query: {
-			...route.query,
-			folder: id,
-		},
-	})
+	router.replace(`/gallery/${encodeURIComponent(id)}`)
 }
 
 function backToFolders() {
-	router.replace({
-		query: {
-			...route.query,
-			folder: undefined,
-		},
-	})
+	closeViewer()
+	router.replace('/gallery')
 }
 </script>
 
 <template>
 <ZPageBanner :title :description :image />
 
-<section class="gallery-page">
+<section ref="galleryPage" class="gallery-page">
 	<div v-if="!showingFolder" class="folder-panel">
 		<header class="panel-head">
 			<h3>文件夹</h3>
@@ -108,7 +213,7 @@ function backToFolders() {
 				<div class="folder-cover">
 					<NuxtImg
 						class="cover-image"
-						:src="folder.cover || folder.images[0]?.url"
+						:src="folder.cover || getImageUrl(folder.images[0])"
 						:alt="folder.name"
 						loading="lazy"
 					/>
@@ -116,7 +221,7 @@ function backToFolders() {
 
 				<div class="folder-meta">
 					<h4>{{ folder.name }}</h4>
-					<p>{{ folder.images.length }} 张图片</p>
+					<p class="folder-count">{{ folder.images.length }} 张图片</p>
 				</div>
 			</button>
 		</div>
@@ -136,16 +241,43 @@ function backToFolders() {
 		</header>
 
 		<div v-if="shuffledImages.length" class="image-grid">
-			<article v-for="pic in shuffledImages" :key="pic.url" class="image-card">
+			<article
+				v-for="(pic, index) in shuffledImages"
+				:key="`${getImageUrl(pic)}-${index}`"
+				:data-viewer-index="index"
+				class="image-card"
+				@click="openViewer(index, $event)"
+			>
 				<Pic
 					class="image"
-					:src="pic.url"
-					:alt="pic.title"
+					:src="getImageUrl(pic)"
+					:alt="getImageAlt(pic, index)"
+					:zoom="false"
 				/>
 			</article>
 		</div>
 
-		<p v-else class="empty-tip">
+		<button
+			v-if="viewerOpen && hasViewerNav"
+			class="lightbox-nav prev"
+			aria-label="上一张"
+			title="上一张 (←)"
+			@click="goPrevViewer"
+		>
+			<Icon name="ph:caret-left-bold" />
+		</button>
+
+		<button
+			v-if="viewerOpen && hasViewerNav"
+			class="lightbox-nav next"
+			aria-label="下一张"
+			title="下一张 (→)"
+			@click="goNextViewer"
+		>
+			<Icon name="ph:caret-right-bold" />
+		</button>
+
+		<p v-if="!shuffledImages.length" class="empty-tip">
 			当前文件夹暂无图片。
 		</p>
 	</div>
@@ -219,14 +351,13 @@ function backToFolders() {
 
 	.folder-meta {
 		padding: .65rem .75rem;
-		background-color: var(--c-bg-soft);
 
 		h4 {
 			margin: 0;
 			font-size: .95rem;
 		}
 
-		p {
+		.folder-count {
 			margin: .25rem 0 0;
 			font-size: .82rem;
 			color: var(--c-text-3);
@@ -292,6 +423,7 @@ function backToFolders() {
 	margin-bottom: .8rem;
 	border-radius: .6rem;
 	overflow: hidden;
+	cursor: zoom-in;
 	box-shadow: 0 0 0 1px var(--c-bg-soft);
 	transition: transform var(--delay), box-shadow var(--delay);
 
@@ -308,6 +440,51 @@ function backToFolders() {
 			display: block;
 			width: 100%;
 			height: auto;
+		}
+	}
+}
+
+.lightbox-nav {
+	display: grid;
+	place-items: center;
+	position: fixed;
+	top: 50%;
+	width: 2.5rem;
+	height: 2.5rem;
+	border: 1px solid var(--c-border);
+	border-radius: 0.5em;
+	box-shadow: var(--box-shadow-2), var(--box-shadow-3);
+	background-color: var(--c-bg-a80);
+	backdrop-filter: blur(1rem) saturate(2);
+	color: var(--c-text-2);
+	transform: translateY(-50%);
+	transition: all var(--delay);
+	z-index: 513;
+
+	&.prev {
+		inset-inline-start: clamp(0.75rem, 3.5vw, 3rem);
+	}
+
+	&.next {
+		inset-inline-end: clamp(0.75rem, 3.5vw, 3rem);
+	}
+
+	&:hover {
+		color: var(--c-text);
+	}
+}
+
+@media (max-width: $breakpoint-mobile) {
+	.lightbox-nav {
+		width: 2.25rem;
+		height: 2.25rem;
+
+		&.prev {
+			inset-inline-start: max(0.5rem, env(safe-area-inset-left));
+		}
+
+		&.next {
+			inset-inline-end: max(0.5rem, env(safe-area-inset-right));
 		}
 	}
 }

@@ -31,10 +31,10 @@ const blogStats = [{
 	tip: yearlyTip,
 }, {
 	label: '本站访客量',
-	value: () => h('span', { id: 'busuanzi_site_uv' }),
+	value: () => h('span', { id: 'busuanzi_site_uv', class: 'busuanzi-value' }),
 }, {
 	label: '本站访问量',
-	value: () => h('span', { id: 'busuanzi_site_pv' }),
+	value: () => h('span', { id: 'busuanzi_site_pv', class: 'busuanzi-value' }),
 }]
 </script>
 
@@ -43,3 +43,9 @@ const blogStats = [{
 	<ZDlGroup :items="blogStats" size="small" />
 </BlogWidget>
 </template>
+
+<style lang="scss" scoped>
+:deep(.busuanzi-value:empty::before) {
+	content: '--';
+}
+</style>
