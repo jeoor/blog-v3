@@ -34,31 +34,70 @@ donation: false
 
 这个网站是静态网站，没有使用任何服务器，全站部署到 [EdgeOne](https://edgeone.ai/) 并使用其 CDN 加速。
 
-<!-- ## 我的站点
+## 我的站点
 
 ::link-card
 ---
-title: MDC 基本语法（必读）
-icon: https://v2.content.nuxt.com/favicon.ico
-link: https://content.nuxt.com/docs/files/markdown#mdc-syntax
+title: 博客
+description: blog.kayro.cn
+link: https://blog.kayro.cn/
 class: gradient-card active
 ---
+#icon
+<Icon name="ph:files-bold" size="1.75rem" />
 ::
 
 ::link-card
 ---
-title: MDC 基本语法（必读）
-icon: https://v2.content.nuxt.com/favicon.ico
-link: https://content.nuxt.com/docs/files/markdown#mdc-syntax
+title: 电视厅
+description: tv.kayro.cn
+link: https://tv.kayro.cn/
 class: gradient-card active
 ---
+#icon
+<Icon name="ph:monitor-bold" size="1.75rem" />
 ::
 
 ::link-card
 ---
-title: MDC 基本语法（必读）
-link: https://content.nuxt.com/docs/files/markdown#mdc-syntax
-description: 这是描述
+title: 音乐
+description: music.kayro.cn
+link: https://music.kayro.cn/
 class: gradient-card active
 ---
-:: -->
+#icon
+<Icon name="ph:music-notes" size="1.75rem" />
+::
+
+::link-card
+---
+title: 相册
+description: blog.kayro.cn/gallery
+link: https://blog.kayro.cn/gallery/
+class: gradient-card active
+---
+#icon
+<Icon name="ph:images-square-bold" size="1.75rem" />
+::
+
+::link-card
+---
+title: 有趣的东西
+description: fun.kayro.cn
+link: https://fun.kayro.cn/
+class: gradient-card active
+---
+#icon
+<Icon name="ph:compass-bold" size="1.75rem" />
+::
+
+::link-card
+---
+title: 站点监测
+description: status.kayro.cn
+link: https://status.kayro.cn/
+class: gradient-card active
+---
+#icon
+<Icon name="ph:code-bold" size="1.75rem" />
+::

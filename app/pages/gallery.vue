@@ -3,10 +3,6 @@ import type { GalleryImage } from '~/types/gallery'
 import { LazyPopoverLightbox } from '#components'
 import gallery from '~/gallery'
 
-definePageMeta({
-	path: '/gallery/:folder?',
-})
-
 const layoutStore = useLayoutStore()
 layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
@@ -38,7 +34,7 @@ function applyFolderFromRoute(value: string | string[] | undefined) {
 	activeFolderId.value = exists ? target : ''
 }
 
-watch(() => route.params.folder, (value) => {
+watch(() => route.query.c, (value) => {
 	if (!hydrated.value)
 		return
 
@@ -165,7 +161,7 @@ watch(lightboxStatus, (status) => {
 
 onMounted(() => {
 	hydrated.value = true
-	applyFolderFromRoute(route.params.folder as string | string[] | undefined)
+	applyFolderFromRoute(route.query.c as string | string[] | undefined)
 	refreshOrder()
 })
 
@@ -184,7 +180,10 @@ useEventListener('keydown', (e) => {
 })
 
 function openFolder(id: string) {
-	router.replace(`/gallery/${encodeURIComponent(id)}`)
+	router.replace({
+		path: '/gallery',
+		query: { c: id },
+	})
 }
 
 function backToFolders() {
@@ -199,7 +198,7 @@ function backToFolders() {
 <section ref="galleryPage" class="gallery-page">
 	<div v-if="!showingFolder" class="folder-panel">
 		<header class="panel-head">
-			<h3>文件夹</h3>
+			<h3>分类</h3>
 			<span>共 {{ gallery.length }} 个</span>
 		</header>
 
@@ -231,7 +230,7 @@ function backToFolders() {
 		<header class="images-head">
 			<button class="back-btn" @click="backToFolders">
 				<Icon name="ph:caret-left-bold" />
-				返回文件夹
+				返回分类
 			</button>
 
 			<div class="head-main">
@@ -278,7 +277,7 @@ function backToFolders() {
 		</button>
 
 		<p v-if="!shuffledImages.length" class="empty-tip">
-			当前文件夹暂无图片。
+			当前分类暂无图片。
 		</p>
 	</div>
 </section>
@@ -351,6 +350,7 @@ function backToFolders() {
 
 	.folder-meta {
 		padding: .65rem .75rem;
+		background-color: var(--ld-bg-card);
 
 		h4 {
 			margin: 0;

@@ -114,16 +114,23 @@ function getImageUrl(image?: GalleryImage) {
 	return typeof image === 'string' ? image : image.url
 }
 
-function pickRandomImage(images: GalleryImage[]) {
+function getStableIndex(seed: string, length: number) {
+	let hash = 0
+	for (let i = 0; i < seed.length; i += 1)
+		hash = (hash * 31 + seed.charCodeAt(i)) >>> 0
+	return hash % length
+}
+
+function pickStableImage(images: GalleryImage[], seed: string) {
 	if (!images.length)
 		return undefined
-	const index = Math.floor(Math.random() * images.length)
+	const index = getStableIndex(seed, images.length)
 	return getImageUrl(images[index])
 }
 
 const gallery: GalleryFolder[] = galleryBase.map(folder => ({
 	...folder,
-	cover: pickRandomImage(folder.images),
+	cover: pickStableImage(folder.images, folder.id),
 }))
 
 export default gallery
