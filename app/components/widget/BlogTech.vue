@@ -8,6 +8,10 @@ const { public: { arch, ci, nodeVersion, platform } } = useRuntimeConfig()
 
 const normalizedCi = computed(() => ci?.trim().replace(/^['\"]|['\"]$/g, '') || '')
 
+function isImageSource(value: string) {
+	return value.startsWith('/') || /^https?:\/\//.test(value)
+}
+
 const ciPlatform = computed(() => {
 	if (!normalizedCi.value)
 		return ''
@@ -17,7 +21,7 @@ const ciPlatform = computed(() => {
 	if (!iconName)
 		return ciName
 
-	const iconNode = iconName.startsWith('http')
+	const iconNode = isImageSource(iconName)
 		? h('img', { src: iconName, alt: '' })
 		: h(Icon, { name: iconName })
 
@@ -29,7 +33,7 @@ const [pm, pmVersion] = packageManager.split('@') as [string, string]
 
 const service = computed(() => ([
 	...normalizedCi.value ? [{ label: '构建平台', value: ciPlatform }] : [],
-	{ label: '图片存储', value: () => [h('img', { src: 'https://7bu.top/favicon.ico', alt: '' }), '去不图床'] },
+	{ label: '图片存储', value: () => [h('img', { src: '/icon/7bu.webp', alt: '' }), '去不图床'] },
 	{ label: '软件协议', value: 'MIT' },
 	{ label: '文章许可', value: appConfig.copyright.abbr },
 	{ label: '规范域名', value: getDomain(appConfig.url) },

@@ -7,7 +7,7 @@ const basicConfig = {
 	description: '敖苛记是敖苛的个人博客，主要分享技术折腾、开源探索与日常生活。“生活不息，折腾不止”是我一直坚持的记录方式。这里会持续更新我在编程学习、项目实践和生活思考中的真实经历，内容覆盖编程、学习、效率与成长等方向。希望你能在这里获得启发、找到实用经验，也收获一点轻松和快乐。',
 	author: {
 		name: '敖苛',
-		avatar: 'https://bu.dusays.com/2026/02/27/69a08b0dd92b8.webp',
+		avatar: '/avatar.webp',
 		email: 'i@kayro.cn',
 		homepage: 'https://www.kayro.cn/',
 	},
