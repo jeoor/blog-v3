@@ -1,9 +1,15 @@
 :root {
-	--font-basic: "InterVariable", "Noto Sans SC-Local", "sans-serif", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
-	--font-serif: "Noto Serif SC-Local", "Noto Serif SC", serif;
-	--font-creative: "InterVariable", "Noto Sans SC-Local", "Noto Sans SC", system-ui, sans-serif;
+	--font-basic: "InterVariable", "Noto Sans SC-Local", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+	--font-serif: "Noto Serif SC-Local", "Songti SC", "STSong", serif;
+	--font-creative: "InterVariable", "Noto Sans SC-Local", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
 	--font-stroke-free: "Inter", "Lantinghei SC", "Microsoft YaHei", "MiSans", system-ui, sans-serif;
 	--font-monospace: "JetBrains Mono", "monospace", "Cascadia Code", "Consolas", "Monaco", var(--font-basic), monospace;
+
+	@media (max-width: $breakpoint-widescreen) {
+		--font-basic: "Noto Sans SC-Local", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+		--font-creative: "Noto Sans SC-Local", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+		--font-stroke-free: "Lantinghei SC", "Microsoft YaHei", system-ui, sans-serif;
+	}
 
 	@media (max-resolution: 1.2dppx) {
 		--font-basic: "InterVariable", system-ui, sans-serif;

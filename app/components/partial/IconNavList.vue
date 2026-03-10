@@ -11,7 +11,7 @@ defineProps<{
 	<UtilLink
 		v-for="{ text, icon, url } in list"
 		:key="text"
-		v-tip="text"
+		:title="text"
 		:to="url"
 		:aria-label="text"
 	>

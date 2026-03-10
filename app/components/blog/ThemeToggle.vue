@@ -8,7 +8,7 @@ const colorMode = useColorMode()
 	<button
 		v-for="(themeData, themeName) in appConfig.themes"
 		:key="themeName"
-		v-tip="themeData.tip"
+		:title="themeData.tip"
 		:aria-label="themeData.tip"
 		:class="{ active: colorMode.preference === themeName }"
 		@click="colorMode.preference = themeName"

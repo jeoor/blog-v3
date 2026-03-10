@@ -33,7 +33,6 @@ const { copy, copied } = useCopy(shareText)
 		<div v-if="!meta?.hideInfo" class="post-info">
 			<UtilDate
 				v-if="date"
-				v-tip
 				:tip-transform="d => `创建于${d}`"
 				:date
 				icon="ph:pencil-simple-line-bold"
@@ -41,7 +40,6 @@ const { copy, copied } = useCopy(shareText)
 
 			<UtilDate
 				v-if="updated && isTimeDiffSignificant(date, updated, 1)"
-				v-tip
 				:tip-transform="d => `修改于${d}`"
 				:date="updated"
 				icon="ph:clock-counter-clockwise-bold"

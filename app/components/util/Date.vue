@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Temporal } from 'temporal-polyfill'
 
+const appConfig = useAppConfig()
+
 const props = withDefaults(defineProps<{
 	icon?: string
 	date?: string | Temporal.ZonedDateTime
@@ -14,7 +16,8 @@ const props = withDefaults(defineProps<{
 	tipTransform: String,
 })
 
-const today = Temporal.Now.plainDateISO()
+const mounted = useMounted()
+
 const zdt = computed(() => {
 	try {
 		return typeof props.date === 'string' ? toZonedTemporal(props.date) : props.date
@@ -24,13 +27,16 @@ const zdt = computed(() => {
 	}
 })
 
+const today = computed(() => mounted.value ? Temporal.Now.plainDateISO() : null)
+
 const relative = computed(() => props.absolute || !zdt.value
 	? false
-	: props.relative || today.since(zdt.value, { largestUnit: 'week' }).weeks < 1,
+	: !today.value
+		? false
+		: props.relative || today.value.since(zdt.value, { largestUnit: 'week' }).weeks < 1,
 )
 
-const mounted = useMounted()
-const tooltip = computed(() => mounted.value && zdt.value
+const tooltip = computed(() => zdt.value
 	? props.tipTransform(toZdtLocaleString(zdt.value, props.tipFormat))
 	: props.date as string,
 )
@@ -52,8 +58,9 @@ const tooltip = computed(() => mounted.value && zdt.value
 	<NuxtTime
 		v-else
 		:datetime="toInstantString(zdt)"
+		:locale="appConfig.language"
 		:relative
-		:year="zdt.year === today.year ? undefined : '2-digit'"
+		year="numeric"
 		month="long"
 		day="numeric"
 		numeric="auto"

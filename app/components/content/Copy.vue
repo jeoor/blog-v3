@@ -13,20 +13,87 @@ const props = withDefaults(defineProps<{
 // prompt 传入空字符串会变成 true
 const showPrompt = computed(() => props.prompt !== true)
 const language = computed(() => props.lang ?? getPromptLanguage(props.prompt))
-
 const showUndo = ref(false)
 const codeInput = useTemplateRef('code-input')
-const shikiStore = useShikiStore()
+const highlightLayer = useTemplateRef('highlight-layer')
+const editableCode = ref(props.code ?? '')
+const rawHtml = ref(escapeHtml(editableCode.value))
+const useHtmlFallback = ref(false)
+let plainShikiDispose: (() => boolean) | undefined
 
 const { copy, copied } = useCopy(codeInput)
+
+function supportsPlainShiki() {
+	if (!import.meta.client)
+		return false
+
+	const runtimeWindow = window as Window & {
+		CSS?: { highlights?: { keys: () => IterableIterator<unknown> } }
+		Highlight?: unknown
+	}
+
+	return typeof CSSStyleSheet !== 'undefined'
+		&& typeof runtimeWindow.CSS !== 'undefined'
+		&& typeof runtimeWindow.CSS.highlights !== 'undefined'
+		&& typeof runtimeWindow.Highlight !== 'undefined'
+		&& 'adoptedStyleSheets' in document
+}
+
+function prefersHtmlFallback() {
+	if (!import.meta.client)
+		return false
+
+	const runtimeNavigator = navigator as Navigator & {
+		userAgentData?: {
+			brands?: Array<{ brand: string }>
+		}
+	}
+	const browserBrands = (runtimeNavigator.userAgentData?.brands ?? [])
+		.map(brand => brand.brand)
+		.join(' ')
+		?? ''
+	const browserSignature = `${browserBrands} ${runtimeNavigator.userAgent}`
+
+	return /\b(?:Chromium|Chrome|Edg|OPR|Opera|Brave)\b/i.test(browserSignature)
+}
+
+async function refreshHighlightedHtml(code = editableCode.value) {
+	const { highlightInlineCode } = await import('~/utils/codeHighlight.shared')
+	rawHtml.value = await highlightInlineCode(code, language.value)
+}
+
+async function enableHtmlFallback() {
+	plainShikiDispose?.()
+	plainShikiDispose = undefined
+	useHtmlFallback.value = true
+	await refreshHighlightedHtml(editableCode.value)
+	syncScroll()
+}
+
+function syncScroll() {
+	if (!useHtmlFallback.value || !codeInput.value || !highlightLayer.value)
+		return
+
+	highlightLayer.value.scrollLeft = codeInput.value.scrollLeft
+	highlightLayer.value.scrollTop = codeInput.value.scrollTop
+}
 
 function undo() {
 	if (!codeInput.value)
 		return
+
+	editableCode.value = props.code ?? ''
 	codeInput.value.textContent = props.code ?? ''
+	showUndo.value = false
+
+	if (useHtmlFallback.value) {
+		void refreshHighlightedHtml(editableCode.value)
+		syncScroll()
+		return
+	}
+
 	// 触发 shiki 高亮
 	codeInput.value.dispatchEvent(new Event('input'))
-	showUndo.value = false
 }
 
 function preventLineBreak(event: InputEvent) {
@@ -37,33 +104,74 @@ function preventLineBreak(event: InputEvent) {
 }
 
 function checkUndoable(event: InputEvent) {
-	showUndo.value = props.code !== (event.target as Element).textContent
+	editableCode.value = (event.target as Element).textContent ?? ''
+	showUndo.value = props.code !== editableCode.value
+
+	if (useHtmlFallback.value) {
+		void refreshHighlightedHtml(editableCode.value)
+		syncScroll()
+	}
 }
 
 onMounted(async () => {
-	const shiki = await shikiStore.load()
-	await shikiStore.loadLang(language.value)
+	if (!supportsPlainShiki() || prefersHtmlFallback()) {
+		await enableHtmlFallback()
+		return
+	}
 
-	createPlainShiki(shiki).mount(
-		codeInput.value!,
-		getShikiOptions(language.value),
-	)
+	try {
+		const { getEditableCodeHighlightContext } = await import('~/utils/codeHighlight.shared')
+		const { highlighter, language: shikiLanguage } = await getEditableCodeHighlightContext(language.value)
+
+		plainShikiDispose = createPlainShiki(highlighter).mount(
+			codeInput.value!,
+			getShikiOptions(shikiLanguage),
+		).dispose
+
+		const runtimeWindow = window as Window & {
+			CSS?: { highlights?: { keys: () => IterableIterator<unknown> } }
+		}
+		const hasShikiHighlights = Array.from(runtimeWindow.CSS?.highlights?.keys?.() ?? [])
+			.some(name => String(name).startsWith('shiki-'))
+
+		if (!hasShikiHighlights)
+			await enableHtmlFallback()
+	}
+	catch {
+		await enableHtmlFallback()
+	}
 })
+
+onBeforeUnmount(() => {
+	plainShikiDispose?.()
+})
+
 </script>
 
 <template>
-<code class="copy">
+<code class="copy" :class="{ 'is-html-fallback': useHtmlFallback }">
 	<span v-if="showPrompt" class="prompt">{{ prompt }}</span>
 
-	<div
-		ref="code-input"
-		contenteditable="plaintext-only"
-		class="code scrollcheck-x"
-		spellcheck="false"
-		@beforeinput="preventLineBreak"
-		@input="checkUndoable"
-		v-text="code"
-	/>
+	<div class="code-shell">
+		<div
+			ref="highlight-layer"
+			v-show="useHtmlFallback"
+			class="code-preview scrollcheck-x shiki"
+			aria-hidden="true"
+			v-html="rawHtml"
+		/>
+
+		<div
+			ref="code-input"
+			contenteditable="plaintext-only"
+			class="code scrollcheck-x"
+			spellcheck="false"
+			@beforeinput="preventLineBreak"
+			@input="checkUndoable"
+			@scroll="syncScroll"
+			v-text="editableCode"
+		/>
+	</div>
 
 	<button v-if="showUndo" class="operation" aria-label="恢复原始内容" @click="undo">
 		<Icon name="ph:arrow-u-up-left-bold" />
@@ -108,6 +216,11 @@ onMounted(async () => {
 		transition: all 0.2s;
 	}
 
+	.code-shell {
+		flex-grow: 1;
+		min-width: 0;
+	}
+
 	.code {
 		--fadeout-width: 3ch;
 		--scrollbar-height: 4px;
@@ -115,6 +228,7 @@ onMounted(async () => {
 		flex-grow: 1;
 		overflow: auto;
 		padding: 0 1em;
+		font-family: var(--font-monospace);
 		outline: none;
 		white-space: nowrap;
 		scrollbar-color: auto;
@@ -123,6 +237,60 @@ onMounted(async () => {
 		&::-webkit-scrollbar {
 			height: 4px;
 			background-color: transparent;
+		}
+	}
+
+	.code-preview {
+		display: none;
+	}
+
+	&.is-html-fallback {
+		overflow: hidden;
+
+		.code-shell {
+			position: relative;
+			overflow: hidden;
+		}
+
+		.code-preview,
+		.code {
+			box-sizing: border-box;
+			min-height: 2.5em;
+			line-height: 2.5;
+		}
+
+		.code-preview {
+			display: block;
+			overflow: hidden;
+			padding: 0 1em;
+			pointer-events: none;
+			user-select: none;
+			white-space: nowrap;
+
+			:deep(pre) {
+				margin: 0;
+				padding: 0;
+				background-color: transparent !important;
+				line-height: inherit;
+			}
+
+			:deep(code) {
+				line-height: inherit;
+			}
+		}
+
+		.code {
+			position: absolute;
+			inset: 0;
+			background-color: transparent;
+			color: transparent;
+			caret-color: var(--c-text-1);
+			-webkit-text-fill-color: transparent;
+
+			&::selection {
+				background-color: var(--c-primary-soft);
+				color: transparent;
+			}
 		}
 	}
 

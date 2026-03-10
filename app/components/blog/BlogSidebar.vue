@@ -1,10 +1,47 @@
 <script setup lang="ts">
 const appConfig = useAppConfig()
 const layoutStore = useLayoutStore()
-const searchStore = useSearchStore()
 
 const { text } = useTextSelection()
 const debouncedSelection = refDebounced(text)
+const searchLabel = ref('')
+
+let searchStorePromise: Promise<{ word: string }> | undefined
+let searchLabelWatcherBound = false
+
+async function ensureSearchStore() {
+	if (!searchStorePromise) {
+		searchStorePromise = import('~/stores/search').then(({ useSearchStore }) => {
+			const searchStore = useSearchStore()
+
+			if (!searchLabelWatcherBound) {
+				watch(() => searchStore.word, (word) => {
+					searchLabel.value = word
+				}, { immediate: true })
+				searchLabelWatcherBound = true
+			}
+
+			return searchStore
+		})
+	}
+
+	return searchStorePromise
+}
+
+async function toggleSearch() {
+	if (layoutStore.state === 'search') {
+		layoutStore.close()
+		return
+	}
+
+	const searchStore = await ensureSearchStore()
+	const selectionText = debouncedSelection.value?.trim() || ''
+
+	if (selectionText)
+		searchStore.word = selectionText
+
+	layoutStore.toggle('search')
+}
 </script>
 
 <template>
@@ -19,10 +56,10 @@ const debouncedSelection = refDebounced(text)
 	<BlogHeader class="sidebar-header" to="/" />
 
 	<nav class="sidebar-nav scrollcheck-y">
-		<div class="search-btn sidebar-nav-item gradient-card" @click="layoutStore.toggle('search')">
+		<div class="search-btn sidebar-nav-item gradient-card" @click="toggleSearch()">
 			<Icon name="ph:magnifying-glass-bold" />
-			<span class="nav-text">{{ debouncedSelection || searchStore.word || '搜索' }}</span>
-			<Key class="keycut" code="K" cmd prevent @press="layoutStore.toggle('search')" />
+			<span class="nav-text">{{ debouncedSelection || searchLabel || '搜索' }}</span>
+			<Key class="keycut" code="K" cmd prevent @press="toggleSearch()" />
 		</div>
 
 		<template v-for="(group, groupIndex) in appConfig.nav" :key="groupIndex">

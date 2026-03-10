@@ -1,7 +1,7 @@
 ---
 title: 关于我
 description: 敖致天，苛制人
-image: https://bu.dusays.com/2026/03/05/69a99d379f40e.webp
+image: /assets/about-banner.webp
 type: story
 comment: false
 postfooter: false

@@ -1,10 +1,9 @@
 import type { ContentCollectionItem } from '@nuxt/content'
 import { XMLBuilder } from 'fast-xml-parser'
 import { pascal } from 'radash'
-import { Temporal } from 'temporal-polyfill'
 import blogConfig from '~~/blog.config'
 import packageJson from '~~/package.json'
-import { toZonedTemporal } from '~~/shared/utils/time'
+import { toInstantString } from '~~/shared/utils/time'
 
 const runtimeConfig = useRuntimeConfig()
 
@@ -20,7 +19,7 @@ function formatIsoDate(date?: string) {
 	if (!date)
 		return
 	try {
-		return toZonedTemporal(date).toInstant().toString()
+		return toInstantString(date)
 	}
 	catch {
 		console.error('Invalid date format', date)
@@ -85,7 +84,7 @@ export default defineEventHandler(async (event) => {
 		},
 		icon: blogConfig.favicon,
 		logo: blogConfig.author.avatar, // Ratio should be 2:1
-		rights: `© ${Temporal.Now.plainDateISO().year.toString()} ${blogConfig.author.name}`,
+		rights: `© ${new Intl.DateTimeFormat('en-US', { year: 'numeric', timeZone: blogConfig.timeZone }).format(new Date())} ${blogConfig.author.name}`,
 		subtitle: blogConfig.subtitle || blogConfig.description,
 		entry: entries,
 	}

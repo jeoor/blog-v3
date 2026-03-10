@@ -1,6 +1,5 @@
 import type { Nav, NavItem } from '~/types/nav'
 import { pascal } from 'radash'
-import { Temporal } from 'temporal-polyfill'
 import blogConfig from '~~/blog.config'
 import { name, version } from '~~/package.json'
 
@@ -54,7 +53,7 @@ export default defineAppConfig({
 	// @keep-sorted
 	footer: {
 		/** 页脚版权信息，支持 <br> 换行等 HTML 标签 */
-		copyright: `© ${Temporal.Now.plainDateISO().year.toString()} ${blogConfig.author.name}`,
+		copyright: `© ${new Intl.DateTimeFormat('en-US', { year: 'numeric', timeZone: blogConfig.timeZone }).format(new Date())} ${blogConfig.author.name}`,
 		/** 侧边栏底部图标导航 */
 		iconNav: [
 			{ icon: 'ph:house-bold', text: '个人主页', url: blogConfig.author.homepage },

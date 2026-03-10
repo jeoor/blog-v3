@@ -107,5 +107,5 @@ export type dateTimeFormatOptions = keyof typeof dateTimeFormat | Intl.DateTimeF
 
 export function toZdtLocaleString(date: string | Temporal.ZonedDateTime, format: dateTimeFormatOptions = 'full') {
 	return (typeof date === 'string' ? toZonedTemporal(date) : date)
-		.toLocaleString(undefined, typeof format === 'string' ? dateTimeFormat[format] : format)
+		.toLocaleString(blogConfig.language, typeof format === 'string' ? dateTimeFormat[format] : format)
 }

@@ -3,6 +3,7 @@ import type { GalleryImage } from '~/types/gallery'
 import { LazyPopoverLightbox } from '#components'
 import gallery from '~/gallery'
 
+const appConfig = useAppConfig()
 const layoutStore = useLayoutStore()
 layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
@@ -13,8 +14,9 @@ const modalStore = useModalStore()
 
 const title = '相册'
 const description = '用镜头记录生活。'
-const image = 'https://bu.dusays.com/2026/03/05/69a99d453fa90.webp'
-useSeoMeta({ title, description, ogImage: image })
+const image = '/assets/gallery-banner.webp'
+const ogImage = new URL(image, appConfig.url).href
+useSeoMeta({ title, description, ogImage })
 
 const activeFolderId = ref('')
 const shuffledImages = ref<GalleryImage[]>([])

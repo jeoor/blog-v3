@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ArticleProps } from '~/types/article'
 import { sort } from 'radash'
 
 const layoutStore = useLayoutStore()
@@ -9,7 +10,10 @@ const title = '标签'
 const description = `${appConfig.title}的所有文章标签。`
 useSeoMeta({ title, description })
 
-const { data: listRaw } = await useAsyncData('index_posts', () => useArticleIndexOptions(), { default: () => [] })
+const { data: listRaw } = await useAsyncData<ArticleProps[]>('index_posts', async () => {
+	const { useArticleIndexOptions } = await import('~/composables/useArticleIndex')
+	return useArticleIndexOptions()
+}, { default: () => [] })
 
 const route = useRoute()
 const router = useRouter()

@@ -1,10 +1,36 @@
 <script setup lang="ts">
+import type { ArticleProps } from '~/types/article'
 import { sort } from 'radash'
 
-const { data: listRaw } = await useAsyncData('widget_tags', () => useArticleIndexOptions(), { default: () => [] })
+const sharedIndexPosts = useNuxtData<ArticleProps[]>('index_posts')
+const hasSharedIndexPosts = computed(() => Array.isArray(sharedIndexPosts.data.value))
+
+const { data: fallbackArticles, execute: loadFallbackArticles } = await useLazyAsyncData(
+	'widget_tags',
+	async () => {
+		const { useArticleIndexOptions } = await import('~/composables/useArticleIndex')
+		return useArticleIndexOptions()
+	},
+	{
+		default: () => [],
+		immediate: false,
+	},
+)
+
+if (!hasSharedIndexPosts.value) {
+	await loadFallbackArticles()
+}
+
+const listRaw = computed<ArticleProps[]>(() => {
+	if (hasSharedIndexPosts.value) {
+		return sharedIndexPosts.data.value ?? []
+	}
+
+	return fallbackArticles.value
+})
 
 const articlesByTag = computed(() => {
-	const result: Record<string, any[]> = {}
+	const result: Record<string, ArticleProps[]> = {}
 	const articles = sort(listRaw.value, a => new Date(a.date || 0).getTime(), true)
 	for (const article of articles) {
 		if (article.tags) {

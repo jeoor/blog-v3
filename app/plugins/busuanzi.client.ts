@@ -1,4 +1,11 @@
 const BUSUANZI_IDS = ['busuanzi_site_uv', 'busuanzi_site_pv', 'busuanzi_page_pv']
+const BUSUANZI_SRC = 'https://jsd.dusays.com/npm/penndu@17.0.0/bsz.js'
+
+declare global {
+	interface Window {
+		__refreshBusuanzi?: () => void
+	}
+}
 
 function hasEmptyCounters() {
 	return BUSUANZI_IDS.some((id) => {
@@ -11,17 +18,28 @@ function hasEmptyCounters() {
 }
 
 function reloadBusuanziScript() {
-	const sourceScript = document.querySelector<HTMLScriptElement>('script[src*="penndu@17.0.0/bsz.js"]')
-	if (!sourceScript?.src)
-		return
-
 	document.querySelectorAll('script[data-busuanzi-runtime="1"]').forEach(script => script.remove())
 
 	const script = document.createElement('script')
-	script.src = sourceScript.src
+	script.src = BUSUANZI_SRC
 	script.async = true
 	script.dataset.busuanziRuntime = '1'
 	document.head.appendChild(script)
+}
+
+function scheduleBusuanziReload() {
+	if (typeof window.requestIdleCallback === 'function') {
+		window.requestIdleCallback(() => {
+			if (hasEmptyCounters())
+				reloadBusuanziScript()
+		})
+		return
+	}
+
+	window.setTimeout(() => {
+		if (hasEmptyCounters())
+			reloadBusuanziScript()
+	}, 300)
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
@@ -29,13 +47,16 @@ export default defineNuxtPlugin((nuxtApp) => {
 		return
 
 	let firstPageFinished = false
+	window.__refreshBusuanzi = () => {
+		if (hasEmptyCounters())
+			scheduleBusuanziReload()
+	}
 
 	nuxtApp.hook('page:finish', () => {
 		setTimeout(() => {
 			if (!firstPageFinished) {
 				firstPageFinished = true
-				if (hasEmptyCounters())
-					reloadBusuanziScript()
+				window.__refreshBusuanzi?.()
 				return
 			}
 

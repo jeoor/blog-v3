@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { Icon } from '#components'
+import { myFeed } from '~~/blog.config'
 import { packageManager, version } from '~~/package.json'
 import pnpmWorkspace from '~~/pnpm-workspace.yaml'
 
 const appConfig = useAppConfig()
 const { public: { arch, ci, nodeVersion, platform } } = useRuntimeConfig()
 
-const normalizedCi = computed(() => ci?.trim().replace(/^['\"]|['\"]$/g, '') || '')
+const fallbackCi = myFeed.archs?.find(name => name in ciIcons) ?? ''
+const normalizedCi = computed(() => ci?.trim().replace(/^['\"]|['\"]$/g, '') || fallbackCi)
 
 function isImageSource(value: string) {
 	return value.startsWith('/') || /^https?:\/\//.test(value)
@@ -22,7 +24,7 @@ const ciPlatform = computed(() => {
 		return ciName
 
 	const iconNode = isImageSource(iconName)
-		? h('img', { src: iconName, alt: '' })
+		? h('img', { src: iconName, alt: '', width: 64, height: 64, loading: 'lazy', decoding: 'async' })
 		: h(Icon, { name: iconName })
 
 	return h('span', {}, [iconNode, ` ${ciName.split(' ')[0]}`])
@@ -33,7 +35,7 @@ const [pm, pmVersion] = packageManager.split('@') as [string, string]
 
 const service = computed(() => ([
 	...normalizedCi.value ? [{ label: '构建平台', value: ciPlatform }] : [],
-	{ label: '图片存储', value: () => [h('img', { src: '/icon/7bu.webp', alt: '' }), '去不图床'] },
+	{ label: '图片存储', value: () => [h('img', { src: '/icon/7bu.webp', alt: '', width: 64, height: 64, loading: 'lazy', decoding: 'async' }), '去不图床'] },
 	{ label: '软件协议', value: 'MIT' },
 	{ label: '文章许可', value: appConfig.copyright.abbr },
 	{ label: '规范域名', value: getDomain(appConfig.url) },
@@ -68,6 +70,7 @@ const expand = ref(false)
 }
 
 .dl-group :deep(img) {
+	width: auto;
 	height: 1.2em;
 	vertical-align: sub;
 }

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const appConfig = useAppConfig()
 const layoutStore = useLayoutStore()
 layoutStore.setAside([])
 
@@ -7,11 +8,13 @@ const { data: about } = await useAsyncData(
 	() => queryCollection('content').path('/about').first(),
 )
 
+const aboutImage = computed(() => about.value?.image || '/assets/about-banner.webp')
+
 if (about.value) {
 	useSeoMeta({
 		title: about.value.title,
 		description: about.value.description,
-		ogImage: about.value.image,
+		ogImage: new URL(aboutImage.value, appConfig.url).href,
 	})
 }
 </script>
@@ -25,7 +28,7 @@ if (about.value) {
 	<ZPageBanner
 		:title="about.title || '关于我'"
 		:description="about.description || ''"
-		:image="about.image || ''"
+		:image="aboutImage"
 	/>
 
 	<div class="about-shell">

@@ -16,7 +16,10 @@ const layoutStore = useLayoutStore()
 const { panelTranslate } = storeToRefs(layoutStore)
 layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
-const { data: listRaw } = await useAsyncData('index_posts', () => useArticleIndexOptions(), { default: () => [] })
+const { data: listRaw } = await useAsyncData<ArticleProps[]>('index_posts', async () => {
+	const { useArticleIndexOptions } = await import('~/composables/useArticleIndex')
+	return useArticleIndexOptions()
+}, { default: () => [] })
 const { listSorted, isAscending, sortOrder } = useArticleSort(listRaw)
 const { category, categories, listCategorized } = useCategory(listSorted)
 

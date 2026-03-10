@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { getShikiOptions } from '~/shiki.config'
 
 const props = withDefaults(defineProps<{
 	code?: string
@@ -45,42 +44,54 @@ const byteSize = computed(() => formatBytes(new TextEncoder().encode(props.code)
 const codeblock = useTemplateRef('codeblock')
 const { copy, copied } = useCopy(codeblock)
 
-const shikiStore = useShikiStore()
-const rawHtml = ref(escapeHtml(props.code))
+function createHighlightStateKey(prefix: string, ...parts: Array<string | undefined>) {
+	let hash = 2166136261
+	let totalLength = 0
+
+	for (const part of parts) {
+		const value = part ?? ''
+		totalLength += value.length
+
+		for (let index = 0; index < value.length; index++) {
+			hash ^= value.charCodeAt(index)
+			hash = Math.imul(hash, 16777619)
+		}
+
+		hash ^= 31
+		hash = Math.imul(hash, 16777619)
+	}
+
+	return `${prefix}:${totalLength}:${(hash >>> 0).toString(36)}`
+}
 
 function getIndent() {
 	if (meta.value.indent)
 		return meta.value.indent
 
-	if (['json', 'jsonc', 'yaml', 'yml'].includes(props.language))
+	if (['md', 'mdc', 'json', 'jsonc', 'yaml', 'yml'].includes(props.language))
 		return 2
 
 	return compConf.value.indent
 }
 
-onMounted(async () => {
-	const shiki = await shikiStore.load()
-	await shikiStore.loadLang(props.language)
-	// 处理 Markdown 高亮内代码块中的语言
-	// 加载 TeX 语言有概率导致 LaTeX 语言高亮炸掉
-	if (props.language === 'markdown' || props.language.startsWith('md')) {
-		const mdLangRegex = /^\s*`{3,}(\S+)/gm
-		const langs = Array
-			.from(props.code.matchAll(mdLangRegex))
-			.map(match => match[1])
-			.filter(lang => lang !== undefined)
-		await shikiStore.loadLang(...langs)
-	}
+const initialRawHtml = escapeHtml(props.code)
+const enableIndentGuide = compConf.value.enableIndentGuide
+const indent = getIndent()
+const rawHtml = useState<string>(
+	createHighlightStateKey('code-highlight:block', props.language, props.code, String(enableIndentGuide), String(indent)),
+	() => initialRawHtml,
+)
 
-	rawHtml.value = shiki.codeToHtml(
-		props.code.trimEnd(),
-		getShikiOptions(
-			props.language,
-			[compConf.value.enableIndentGuide ? 'ignoreRenderWhitespace' : 'ignoreRenderIndentGuides'],
-			{ meta: { indent: getIndent() } },
-		),
-	)
-})
+if (rawHtml.value === initialRawHtml) {
+	const { highlightCodeBlock } = await import('~/utils/codeHighlight.shared')
+
+	rawHtml.value = await highlightCodeBlock({
+		code: props.code,
+		language: props.language,
+		enableIndentGuide,
+		indent,
+	})
+}
 </script>
 
 <template>
@@ -141,14 +152,18 @@ onMounted(async () => {
 	margin: 0.5em 0;
 	border-radius: 0.5em;
 	background-color: var(--c-bg-2);
-	font-size: 0.8125rem;
+	font-size: 0.85em;
 	line-height: 1.4;
 	tab-size: var(--tab-size, 4);
 
+		&.collapsible > pre {
+		padding-bottom: 0.5rem;
+	}
+
 	&.collapsed > pre {
 		overflow: hidden;
-		max-height: calc(var(--line-height) * var(--collapsed-rows) * 1em + 2rem);
-		mask-image: linear-gradient(to top, transparent 1em, #FFF 4em);
+		max-height: calc(var(--line-height) * var(--collapsed-rows) * 1em + 1rem);
+		mask-image: linear-gradient(to top, transparent 1em -2em, #FFF 4em);
 		animation: none;
 	}
 }
@@ -287,7 +302,6 @@ pre {
 	position: relative; // 移动到 pre 上方
 	opacity: 0.3;
 	width: 100%;
-	margin-top: -1em;
 	padding: 0.2em;
 	background-color: var(--c-bg-3);
 	transition: opacity 0.2s;

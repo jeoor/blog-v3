@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { directive as vTip } from 'vue-tippy'
+
 // 即使 boolean 可选，其值也不会是 undefined
 const props = defineProps<{
 	img?: string

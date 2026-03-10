@@ -1,14 +1,48 @@
 <script setup lang="ts">
 import { UtilDate } from '#components'
 
+interface StatsEntry {
+	posts: number
+	words: number
+}
+
+interface StatsPayload {
+	total?: {
+		posts?: number
+		words?: number
+	}
+	annual?: Record<string, StatsEntry>
+}
+
 const appConfig = useAppConfig()
 const runtimeConfig = useRuntimeConfig()
 
 // 响应头不正确时，stats.value 可能会是字符串，首次属性访问可能为 undefined
-const { data: stats } = useFetch('/api/stats')
+const { data: stats } = useFetch<StatsPayload | string>('/api/stats')
+
+const normalizedStats = computed<StatsPayload | undefined>(() => {
+	if (!stats.value)
+		return undefined
+
+	if (typeof stats.value !== 'string')
+		return stats.value
+
+	try {
+		return JSON.parse(stats.value) as StatsPayload
+	}
+	catch {
+		return undefined
+	}
+})
+
+onMounted(() => {
+	nextTick(() => {
+		window.__refreshBusuanzi?.()
+	})
+})
 
 const yearlyTip = computed(() => Object
-	.entries(stats.value?.annual || {})
+	.entries(normalizedStats.value?.annual || {})
 	.reverse()
 	.map(([year, item]) => `${year}年：${item.posts}篇，${formatNumber(item.words)}字`)
 	.join('\n') || '数据获取失败',
@@ -27,7 +61,7 @@ const blogStats = [{
 	}),
 }, {
 	label: '总字数',
-	value: computed(() => formatNumber(stats.value?.total?.words) || '--'),
+		value: computed(() => formatNumber(normalizedStats.value?.total?.words) || '--'),
 	tip: yearlyTip,
 }, {
 	label: '本站访客量',

@@ -16,7 +16,7 @@ function mapEntry(item: FeedEntry) {
 		$text: item.title || item.sitenick || item.author,
 		$type: 'rss',
 		$xmlUrl: item.feed,
-		$created: toZonedTemporal(item.date).toInstant().toString(),
+		$created: toInstantString(item.date),
 		$description: item.desc,
 		$htmlUrl: item.link || item.feed,
 	}
@@ -37,7 +37,7 @@ export default defineEventHandler(async (_e) => {
 		$version: '2.0',
 		head: {
 			title: `${blogConfig.title}的友链订阅`,
-			dateCreated: toZonedTemporal(blogConfig.timeEstablished).toInstant().toString(),
+			dateCreated: toInstantString(blogConfig.timeEstablished),
 			dateModified: runtimeConfig.public.buildTime,
 			ownerName: blogConfig.author.name,
 			ownerEmail: blogConfig.author.email,

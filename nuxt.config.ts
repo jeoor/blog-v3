@@ -1,4 +1,7 @@
 import type { NitroConfig } from 'nitropack'
+import { readFile } from 'node:fs/promises'
+import { dirname, join, resolve } from 'node:path'
+import { imageSize } from 'image-size'
 import { arch, env, version as nodeVersion, platform } from 'node:process'
 import { name as ciName, CLOUDFLARE_PAGES, GITHUB_ACTIONS, NETLIFY } from 'ci-info'
 import { pascal } from 'radash'
@@ -10,6 +13,121 @@ import redirectList from './redirects.json'
 const edgeOneDetected = env.TENCENTCLOUD_RUNENV === 'SCF'
 	|| Object.keys(env).some(key => /^(EDGEONE|EO_|TENCENTCLOUD)/i.test(key))
 const runtimeCi = env.BLOG_CI || env.CI_NAME || (edgeOneDetected ? 'EdgeOne' : ciName || '')
+const nitroOutputDir = env.BLOG_NITRO_OUTPUT_DIR?.trim()
+const nitroOutput = nitroOutputDir
+	? {
+			dir: resolve(nitroOutputDir),
+			publicDir: join(resolve(nitroOutputDir), 'public'),
+			serverDir: join(resolve(nitroOutputDir), 'server'),
+		}
+	: undefined
+
+const picBlockRegex = /::pic\s*---\n([\s\S]*?)\n---\s*::/g
+const imageDimensionCache = new Map<string, Promise<{ width: number, height: number } | null>>()
+
+function getPicProp(block: string, key: string) {
+	const match = block.match(new RegExp(`^${key}:\\s*(.+)$`, 'm'))
+	return match?.[1]?.trim().replace(/^['"]|['"]$/g, '') || ''
+}
+
+function getPicNumericProp(block: string, key: string) {
+	const value = Number(getPicProp(block, key))
+	return Number.isFinite(value) && value > 0 ? value : undefined
+}
+
+function setPicProp(block: string, key: string, value: number) {
+	const line = `${key}: ${value}`
+	const propRegex = new RegExp(`^${key}:\\s*.+$`, 'm')
+
+	if (propRegex.test(block))
+		return block.replace(propRegex, line)
+
+	const anchorKey = key === 'width' ? 'height' : 'width'
+	const anchorRegex = new RegExp(`^${anchorKey}:\\s*.+$`, 'm')
+	const anchorMatch = block.match(anchorRegex)
+
+	if (anchorMatch?.index !== undefined) {
+		return `${block.slice(0, anchorMatch.index)}${line}\n${block.slice(anchorMatch.index)}`
+	}
+
+	return `${block.trimEnd()}\n${line}`
+}
+
+function normalizePicBlock(block: string) {
+	return block.replace(/^weight:\s*(.+)$/m, 'width: $1')
+}
+
+async function getImageDimensions(src: string, filePath: string) {
+	const cacheKey = `${filePath}::${src}`
+	if (!imageDimensionCache.has(cacheKey)) {
+		imageDimensionCache.set(cacheKey, (async () => {
+			try {
+				if (/^https?:\/\//.test(src)) {
+					const response = await fetch(src)
+					if (!response.ok)
+						return null
+
+					const buffer = Buffer.from(await response.arrayBuffer())
+					const size = imageSize(buffer)
+					return size.width && size.height ? { width: size.width, height: size.height } : null
+				}
+
+				const normalizedSrc = src.replace(/[?#].*$/, '')
+				const localPath = normalizedSrc.startsWith('/')
+					? resolve(process.cwd(), 'public', `.${normalizedSrc}`)
+					: resolve(process.cwd(), dirname(filePath), normalizedSrc)
+
+				const buffer = await readFile(localPath)
+				const size = imageSize(buffer)
+				return size.width && size.height ? { width: size.width, height: size.height } : null
+			}
+			catch {
+				return null
+			}
+		})())
+	}
+
+	return imageDimensionCache.get(cacheKey)!
+}
+
+async function fillMissingPicDimensions(body: string, filePath: string) {
+	const matches = [...body.matchAll(picBlockRegex)]
+	if (!matches.length)
+		return body
+
+	let result = ''
+	let lastIndex = 0
+
+	for (const match of matches) {
+		const [fullMatch, rawBlock = ''] = match
+		const startIndex = match.index ?? 0
+		const block = normalizePicBlock(rawBlock)
+		const src = getPicProp(block, 'src')
+		const width = getPicNumericProp(block, 'width')
+		const height = getPicNumericProp(block, 'height')
+
+		let nextBlock = block
+		if (src && (!width || !height)) {
+			const intrinsicSize = await getImageDimensions(src, filePath)
+			if (intrinsicSize?.width && intrinsicSize?.height) {
+				if (!width && height) {
+					nextBlock = setPicProp(nextBlock, 'width', Math.round(height * intrinsicSize.width / intrinsicSize.height))
+				}
+
+				if (!height && width) {
+					nextBlock = setPicProp(nextBlock, 'height', Math.round(width * intrinsicSize.height / intrinsicSize.width))
+				}
+			}
+		}
+
+		result += body.slice(lastIndex, startIndex)
+		result += fullMatch.replace(block, nextBlock)
+		lastIndex = startIndex + fullMatch.length
+	}
+
+	result += body.slice(lastIndex)
+	return result
+}
 
 // 此处配置无需修改
 export default defineNuxtConfig({
@@ -25,15 +143,10 @@ export default defineNuxtConfig({
 			link: [
 				{ rel: 'icon', href: blogConfig.favicon },
 				{ rel: 'alternate', type: 'application/atom+xml', href: '/atom.xml' },
-				{ rel: 'preconnect', href: blogConfig.twikoo.preload },
 				{ rel: 'stylesheet', href: 'https://lib.baomitu.com/KaTeX/0.16.9/katex.min.css', media: 'print', onload: 'this.media="all"' },
-				// "InterVariable", "Inter", "InterDisplay"
-				{ rel: 'stylesheet', href: 'https://rsms.me/inter/inter.css', media: 'print', onload: 'this.media="all"' },
-				// "JetBrains Mono", 思源黑体 "Noto Sans SC", 思源宋体 "Noto Serif SC"
+				// "JetBrains Mono"
 				{ rel: 'preconnect', href: 'https://fonts.gstatic.cn', crossorigin: '' },
-				{ rel: 'stylesheet', href: 'https://fonts.googleapis.cn/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Sans+SC:wght@100..900&family=Noto+Serif+SC:wght@200..900&display=swap', media: 'print', onload: 'this.media="all"' },
-				// 小米字体 "MiSans"
-				{ rel: 'stylesheet', href: 'https://cdn-font.hyperos.mi.com/font/css?family=MiSans:100,200,300,400,450,500,600,650,700,900:Chinese_Simplify,Latin&display=swap', media: 'print', onload: 'this.media="all"' },
+				{ rel: 'stylesheet', href: 'https://fonts.googleapis.cn/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap', media: 'print', onload: 'this.media="all"' },
 			],
 			templateParams: {
 				separator: '|',
@@ -73,6 +186,7 @@ export default defineNuxtConfig({
 	},
 
 	nitro: {
+		output: nitroOutput,
 		prerender: {
 			// 修复部分平台会在文章路径后添加 `/`，导致闪现 404 错误
 			// https://github.com/nuxt/content/issues/2378
@@ -116,10 +230,9 @@ export default defineNuxtConfig({
 			},
 		},
 		define: {
+			__VUE_PROD_HYDRATION_MISMATCH_DETAILS__: env.BLOG_DEBUG_HYDRATION === '1' ? 'true' : 'false',
 			/** 在生产环境启用 Vue DevTools */
 			// __VUE_PROD_DEVTOOLS__: 'true',
-			/** 在生产环境启用 Vue 水合不匹配详情 */
-			// __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'true',
 		},
 		server: {
 			allowedHosts: true,
@@ -181,6 +294,15 @@ ${pascal(packageJson.name)} ${packageJson.version}
 ${packageJson.homepage}
 ================================
 `)
+		},
+		'content:file:beforeParse': async (ctx) => {
+			if (!['.md', '.mdc', '.mdx'].includes(ctx.file.extension || ''))
+				return
+
+			if (!ctx.file.body.includes('::pic'))
+				return
+
+			ctx.file.body = await fillMissingPicDimensions(ctx.file.body, ctx.file.path)
 		},
 		'content:file:afterParse': (ctx) => {
 			const permalink = ctx.content.permalink as string

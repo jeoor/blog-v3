@@ -1,7 +1,11 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
+	showEmojiTail?: boolean
+	splitTitle?: boolean
 	tag?: string
 }>(), {
+	showEmojiTail: true,
+	splitTitle: true,
 	tag: 'div',
 })
 const appConfig = useAppConfig()
@@ -9,7 +13,7 @@ const appConfig = useAppConfig()
 
 <template>
 <UtilLink class="blog-header">
-	<div v-if="appConfig.header.emojiTail" class="emoji-tail">
+	<div v-if="props.showEmojiTail && appConfig.header.emojiTail" class="emoji-tail">
 		<span
 			v-for="(emoji, emojiIndex) in appConfig.header.emojiTail"
 			:key="emojiIndex"
@@ -24,17 +28,26 @@ const appConfig = useAppConfig()
 		class="blog-logo round-cobblestone"
 		:class="{ circle: appConfig.header.showTitle }"
 		:alt="appConfig.title"
+		width="48"
+		height="48"
+		:loading="tag === 'h1' ? 'eager' : 'lazy'"
+		decoding="async"
 	/>
 
 	<div v-if="appConfig.header.showTitle" class="blog-text">
-		<component :is="tag" class="header-title">
-			<span
-				v-for="(char, charIndex) in appConfig.title"
-				:key="charIndex"
-				class="split-char"
-				:style="getFixedDelay((charIndex + 1) * .1)"
-				v-text="char"
-			/>
+		<component :is="tag" class="header-title" :class="{ plain: !props.splitTitle }">
+			<template v-if="props.splitTitle">
+				<span
+					v-for="(char, charIndex) in appConfig.title"
+					:key="charIndex"
+					class="split-char"
+					:style="getFixedDelay((charIndex + 1) * .1)"
+					v-text="char"
+				/>
+			</template>
+			<template v-else>
+				{{ appConfig.title }}
+			</template>
 		</component>
 
 		<div class="header-subtitle">
@@ -69,6 +82,7 @@ const appConfig = useAppConfig()
 
 @font-face {
 	font-family: AlimamaFangYuanTi;
+	font-display: swap;
 	src: url("/fonts/AlimamaFangYuanTi.woff2");
 }
 
@@ -77,6 +91,10 @@ const appConfig = useAppConfig()
 	font-size: 1.5em;
 	font-synthesis: none;
 	font-variation-settings: "wght" 600, "BEVL" 100;
+
+	&.plain {
+		font-variation-settings: normal;
+	}
 
 	> .split-char {
 		animation: 3.14s infinite alternate vf-weight, 2.72s infinite alternate vf-bevel;

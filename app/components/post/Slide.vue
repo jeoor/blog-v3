@@ -44,6 +44,7 @@ useEventListener(carouselEl, 'wheel', (e) => {
 				v-for="(article, index) in list"
 				:key="index"
 				class="slide-item"
+				no-prefetch
 				:title="article.description"
 				:to="article.path"
 			>

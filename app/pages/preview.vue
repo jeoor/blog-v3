@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ArticleProps } from '~/types/article'
+
 const appConfig = useAppConfig()
 useSeoMeta({
 	title: '预览',
@@ -7,7 +9,10 @@ useSeoMeta({
 const layoutStore = useLayoutStore()
 layoutStore.setAside(['blog-tech'])
 
-const { data: listRaw } = await useAsyncData('index_previews', () => useArticleIndexOptions('previews/%'), { default: () => [] })
+const { data: listRaw } = await useAsyncData<ArticleProps[]>('index_previews', async () => {
+	const { useArticleIndexOptions } = await import('~/composables/useArticleIndex')
+	return useArticleIndexOptions('previews/%')
+}, { default: () => [] })
 const { listSorted, isAscending, sortOrder } = useArticleSort(listRaw)
 const { category, categories, listCategorized } = useCategory(listSorted)
 </script>

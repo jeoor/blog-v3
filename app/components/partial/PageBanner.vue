@@ -1,14 +1,35 @@
 <script setup lang="ts">
-defineProps<{
-  image: string
+import { computed } from 'vue'
+
+const props = defineProps<{
+  image?: string
   title: string
   description?: string
 }>()
+
+const bannerImageSrc = computed(() => {
+  if (!props.image)
+    return ''
+
+  if (!/^https?:\/\//.test(props.image) || props.image.startsWith('https://wsrv.nl/?'))
+    return props.image
+
+  const params = new URLSearchParams({
+    url: props.image,
+    w: '1280',
+    h: '320',
+    fit: 'cover',
+    output: 'webp',
+    q: '76',
+  })
+
+  return `https://wsrv.nl/?${params.toString()}`
+})
 </script>
 
 <template>
-<div class="page-banner">
-  <NuxtImg class="banner-image" :src="image" :alt="title" format="webp" sizes="(max-width: 768px) 100vw, 1200px" placeholder />
+<div class="page-banner" :class="{ 'no-image': !image }">
+  <img v-if="image" class="banner-image" :src="bannerImageSrc" :alt="title" width="1200" height="320" loading="eager" fetchpriority="high" decoding="async">
   <div class="banner-content">
     <h1>{{ title }}</h1>
     <p v-if="description">{{ description }}</p>
@@ -27,6 +48,31 @@ defineProps<{
   min-height: 256px;
   overflow: hidden;
   position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(#0b1220, .16), rgba(#0b1220, .56));
+    z-index: 0;
+  }
+
+  &.no-image {
+    background:
+      radial-gradient(circle at top right, rgba(#fff, .18), transparent 28%),
+      linear-gradient(135deg, #2a4158, #1f3044 45%, #111f2f);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: auto -6rem -7rem auto;
+      width: 18rem;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(#fff, .18), transparent 70%);
+      z-index: 0;
+    }
+  }
 
   .banner-image {
     position: absolute;

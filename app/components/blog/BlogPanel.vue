@@ -1,6 +1,13 @@
 <script setup lang="ts">
 const layoutStore = useLayoutStore()
 const { asideWidgets, panelTransform } = storeToRefs(layoutStore)
+const mounted = useMounted()
+const initialAsideWidgets = asideWidgets.value.slice()
+const initialPanelTransform = panelTransform.value
+
+const displayAsideWidgets = computed(() => mounted.value ? asideWidgets.value : initialAsideWidgets)
+const hasAsideWidgets = computed(() => displayAsideWidgets.value.length > 0)
+const displayPanelTransform = computed(() => mounted.value ? panelTransform.value : initialPanelTransform)
 </script>
 
 <template>
@@ -8,7 +15,7 @@ const { asideWidgets, panelTransform } = storeToRefs(layoutStore)
 <div
 	id="blog-panel"
 	:class="{ 'has-active': layoutStore.state !== 'none' }"
-	:style="{ '--transform': panelTransform }"
+	:style="{ '--transform': displayPanelTransform }"
 >
 	<button
 		class="toggle-sidebar mobile-only"
@@ -20,10 +27,12 @@ const { asideWidgets, panelTransform } = storeToRefs(layoutStore)
 	</button>
 
 	<button
-		v-if="asideWidgets.length"
 		class="toggle-aside widescreen-only"
-		:class="{ active: layoutStore.state === 'aside' }"
+		:class="{ active: layoutStore.state === 'aside', hidden: !hasAsideWidgets }"
 		aria-label="切换侧边栏"
+		:aria-hidden="!hasAsideWidgets || undefined"
+		:tabindex="hasAsideWidgets ? undefined : -1"
+		:disabled="!hasAsideWidgets"
 		@click="layoutStore.toggle('aside')"
 	>
 		<Icon class="rtl-flip" name="ph:align-right-duotone" />
@@ -58,6 +67,10 @@ button {
 	display: block;
 	padding: 0.5rem;
 	transition: all 0.2s;
+
+	&.hidden {
+		display: none;
+	}
 
 	&:hover {
 		background-color: var(--c-bg-a80);

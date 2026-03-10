@@ -1,36 +1,126 @@
 <script setup lang="ts">
+import { defineAsyncComponent } from 'vue'
 import type { EssayImage, EssayItem } from '~/types/essay'
+import type { WidgetName } from '~/composables/useWidgets'
 import essays from '~/essay'
 
+const appConfig = useAppConfig()
 const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
+const essayAsideWidgets: WidgetName[] = ['blog-stats', 'blog-tech', 'countdown']
+const essayAsidePlaceholder: WidgetName[] = ['empty']
+const essayAsideWidescreenQuery = '(min-width: 1081px)'
+
+layoutStore.setAside(essayAsidePlaceholder)
 
 const title = '日记'
 const description = '记录生活点滴和一些想法。'
-const image = 'https://bu.dusays.com/2026/03/05/69a99d3fe44f3.webp'
-useSeoMeta({ title, description, ogImage: image })
+const image = '/assets/essay-banner.webp'
+const ogImage = new URL(image, appConfig.url).href
+useSeoMeta({ title, description, ogImage })
 
-const { author } = useAppConfig()
+const { author } = appConfig
+const PostCommentAsync = defineAsyncComponent(() => import('~/components/post/Comment.vue'))
+const commentAnchor = useTemplateRef('comment-anchor')
+const shouldRenderComment = ref(false)
+const commentReplyContent = ref('')
+const commentFocusSeq = ref(0)
+
+if (import.meta.client) {
+  type IdleWindow = Window & typeof globalThis
+  const browser = globalThis as IdleWindow
+  let asideObserver: IntersectionObserver | undefined
+  let asideTimerId: number | undefined
+  let asideRestored = false
+  let commentObserver: IntersectionObserver | undefined
+  let commentRenderQueued = false
+
+  const restoreAside = () => {
+    if (asideRestored)
+      return
+
+    asideRestored = true
+    asideObserver?.disconnect()
+    asideObserver = undefined
+
+    if (asideTimerId !== undefined) {
+      browser.clearTimeout(asideTimerId)
+      asideTimerId = undefined
+    }
+
+    layoutStore.setAside(essayAsideWidgets)
+  }
+
+  const showCommentSection = () => {
+    if (shouldRenderComment.value || commentRenderQueued)
+      return
+
+    commentObserver?.disconnect()
+    commentObserver = undefined
+    commentRenderQueued = true
+
+    queueMicrotask(() => {
+      commentRenderQueued = false
+      shouldRenderComment.value = true
+    })
+  }
+
+  onMounted(() => {
+    if (browser.matchMedia(essayAsideWidescreenQuery).matches) {
+      restoreAside()
+    } else {
+      if (commentAnchor.value && typeof browser.IntersectionObserver === 'function') {
+        asideObserver = new browser.IntersectionObserver((entries) => {
+          if (entries.some(entry => entry.isIntersecting))
+            restoreAside()
+        }, { rootMargin: '960px 0px' })
+
+        asideObserver.observe(commentAnchor.value)
+      } else {
+        asideTimerId = browser.setTimeout(restoreAside, 1500)
+      }
+    }
+
+    if (!commentAnchor.value) {
+      shouldRenderComment.value = true
+      return
+    }
+
+    if (typeof browser.IntersectionObserver !== 'function') {
+      shouldRenderComment.value = true
+      return
+    }
+
+    commentObserver = new browser.IntersectionObserver((entries) => {
+      if (entries.some(entry => entry.isIntersecting))
+        showCommentSection()
+    }, { rootMargin: '320px 0px' })
+
+    commentObserver.observe(commentAnchor.value)
+  })
+
+  onBeforeUnmount(() => {
+    asideObserver?.disconnect()
+    commentObserver?.disconnect()
+
+    if (asideTimerId === undefined)
+      return
+
+    browser.clearTimeout(asideTimerId)
+  })
+}
 
 const recentEssays: EssayItem[] = [...essays]
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   .slice(0, 30)
 
-function replyEssay(content?: string): void {
-  const input = document.querySelector('#twikoo .tk-input textarea')
-  if (!(input instanceof HTMLTextAreaElement)) return
+async function replyEssay(content?: string): Promise<void> {
+  shouldRenderComment.value = true
+  commentReplyContent.value = content?.trim() || ''
 
-  if (content?.trim()) {
-    const quotes = content.split('\n').map(str => `> ${str}`)
-    input.value = `${quotes}\n\n`
-  } else {
-    input.value = ''
-  }
-  input.dispatchEvent(new InputEvent('input'))
+  await nextTick()
 
-  const length = input.value.length
-  input.setSelectionRange(length, length)
-  input.focus()
+  commentAnchor.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  commentFocusSeq.value += 1
 }
 
 function getEssayDate(date?: string | Date) {
@@ -81,7 +171,7 @@ function getEssayImageStyle(image: EssayImage, isSingle: boolean) {
 <div class="essay-list">
   <div class="essay-item" v-for="essay in recentEssays" :key="essay.date">
     <div class="essay-meta">
-      <NuxtImg class="avatar" :src="author.avatar" :alt="author.name" />
+      <NuxtImg class="avatar" :src="author.avatar" :alt="author.name" width="48" height="48" sizes="48px" decoding="async" />
       <div class="info">
         <div class="nick">
           {{ author.name }}
@@ -120,7 +210,7 @@ function getEssayImageStyle(image: EssayImage, isSingle: boolean) {
           <span>{{ tag }}</span>
         </span>
       </div>
-      <button class="comment-btn" v-tip="'评论'" @click="replyEssay(essay.text)">
+      <button class="comment-btn" title="评论" aria-label="评论" @click="replyEssay(essay.text)">
         <Icon name="ph:chats-bold" />
       </button>
     </div>
@@ -129,9 +219,14 @@ function getEssayImageStyle(image: EssayImage, isSingle: boolean) {
   <div class="essay-footer">
     <p>仅显示最近 30 条记录</p>
   </div>
-</div>
 
-<PostComment />
+  <div ref="comment-anchor" class="comment-section">
+    <button v-if="!shouldRenderComment" class="comment-entry card" @click="replyEssay()">
+      展开评论区
+    </button>
+    <PostCommentAsync v-else :initial-reply="commentReplyContent" :focus-seq="commentFocusSeq" />
+  </div>
+</div>
 </template>
 
 <style lang="scss" scoped>
@@ -293,6 +388,25 @@ function getEssayImageStyle(image: EssayImage, isSingle: boolean) {
     font-size: 1rem;
     margin: 2rem 0;
     text-align: center;
+  }
+
+  .comment-section {
+    margin-top: 2rem;
+  }
+
+  .comment-entry {
+    display: block;
+    width: min(100%, 20rem);
+    margin: 0 auto;
+    padding: 0.9rem 1rem;
+    border-radius: 0.75rem;
+    color: var(--c-text-2);
+    transition: transform .2s, box-shadow .2s;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--box-shadow-1);
+    }
   }
 }
 </style>

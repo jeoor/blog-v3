@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Temporal } from 'temporal-polyfill'
-
 const props = defineProps<{
 	datetime?: string
 	rotate?: boolean
@@ -9,11 +7,11 @@ const props = defineProps<{
 const emojiStatic = ['🕛', '🕧', '🕐', '🕜', '🕑', '🕝', '🕒', '🕞', '🕓', '🕟', '🕔', '🕠', '🕕', '🕡', '🕖', '🕢', '🕗', '🕣', '🕘', '🕤', '🕙', '🕥', '🕚', '🕦']
 const emojiRotate = ['🕛', '🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚']
 
-const now = ref(Temporal.Now.zonedDateTimeISO())
+const now = ref(new Date())
 
 const datetime = computed(() => props.datetime
 	? toZonedTemporal(props.datetime)
-	: now.value)
+	: toZonedTemporal(now.value))
 
 const status = computed(() => {
 	const { hour, minute } = datetime.value
@@ -30,7 +28,7 @@ const status = computed(() => {
 
 // 定时器只能在客户端运行，否则 nuxt generate 不能自动退出
 const { resume } = useIntervalFn(() => {
-	now.value = Temporal.Now.zonedDateTimeISO()
+	now.value = new Date()
 }, 30000, { immediate: false })
 
 whenever(() => !props.datetime, resume)

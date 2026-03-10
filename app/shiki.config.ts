@@ -10,9 +10,14 @@ type CustomTransformerOptions = Array<
 >
 type ShikiOptions = CodeToHastOptions<BundledLanguage, string>
 
+export const shikiThemeNames = {
+	light: 'catppuccin-latte',
+	dark: 'one-dark-pro',
+} as const
+
 export function getShikiOptions(lang: string, transformerOptions?: CustomTransformerOptions, extraShikiOptions?: Omit<ShikiOptions, 'lang'>): ShikiOptions {
 	return {
-		...useShikiStore().options,
+		themes: shikiThemeNames,
 		lang,
 		transformers: [
 			transformerNotationDiff(),

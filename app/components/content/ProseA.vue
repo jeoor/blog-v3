@@ -5,14 +5,11 @@ const props = defineProps<{
 }>()
 
 const icon = computed(() => props.icon || getDomainIcon(props.href))
-const tip = computed(() => ({
-	content: isExtLink(props.href) ? getDomain(props.href) : safelyDecodeUriComponent(props.href),
-	inlinePositioning: true,
-}))
+const tipText = computed(() => isExtLink(props.href) ? getDomain(props.href) : safelyDecodeUriComponent(props.href))
 </script>
 
 <template>
-<UtilLink v-tip="tip" class="z-link" :to="href">
+<UtilLink class="z-link" :to="href" :title="tipText">
 	<Icon v-if="icon" class="domain-icon" :name="icon" />
 	<slot />
 </UtilLink>

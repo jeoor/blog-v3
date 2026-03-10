@@ -5,7 +5,7 @@ date: 2026-03-01 21:36:58
 updated: 2026-03-01 21:36:58
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/2a0607d
-categories: [经验分享]
+categories: [技术]
 tags: [linux, linux2go]
 ---
 

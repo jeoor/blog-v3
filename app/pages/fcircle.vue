@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted, computed } from 'vue'
+import type { WidgetName } from '~/composables/useWidgets'
 
 interface FriendCircleApiItem {
   title: string
@@ -21,12 +22,17 @@ interface FriendCircleApiResponse {
 }
 
 const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
+const fcircleAsideWidgets: WidgetName[] = ['blog-stats', 'blog-tech', 'countdown']
+const fcircleAsidePlaceholder: WidgetName[] = ['empty']
+const fcircleAsideWidescreenQuery = '(min-width: 1081px)'
+
+layoutStore.setAside(fcircleAsidePlaceholder)
 
 const title = '朋友圈'
 const description = '发现更多有趣的博主。'
-const image = 'https://bu.dusays.com/2026/03/05/69a99d24ab46c.webp'
-useSeoMeta({ title, description, ogImage: image })
+const image = '/assets/fcircle-banner.webp'
+const ogImage = 'https://bu.dusays.com/2026/03/05/69a99d24ab46c.webp'
+useSeoMeta({ title, description, ogImage })
 
 // 配置选项
 const UserConfig = reactive({
@@ -49,6 +55,33 @@ const lastUpdatedDate = ref('')
 // 计算属性
 const displayedArticles = computed(() => allArticles.value.slice(0, displayCount.value))
 const hasMoreArticles = computed(() => allArticles.value.length > displayCount.value)
+
+function getOptimizedImageUrl(src: string, options?: {
+  width?: number
+  height?: number
+  fit?: 'cover' | 'contain'
+  quality?: number
+}) {
+  if (!src || !/^https?:\/\//.test(src) || src.startsWith('https://wsrv.nl/?'))
+    return src
+
+  const params = new URLSearchParams({
+    url: src,
+    output: 'webp',
+    q: String(options?.quality ?? 78),
+  })
+
+  if (options?.width)
+    params.set('w', String(options.width))
+
+  if (options?.height)
+    params.set('h', String(options.height))
+
+  if (options?.fit)
+    params.set('fit', options.fit)
+
+  return `https://wsrv.nl/?${params.toString()}`
+}
 
 // 格式化日期
 const formatDate = (dateString: string) => {
@@ -139,6 +172,43 @@ const fetchData = async () => {
 }
 
 // 生命周期钩子
+if (import.meta.client) {
+  type IdleWindow = Window & typeof globalThis
+  const browser = globalThis as IdleWindow
+  let idleId: number | undefined
+
+  const restoreAside = () => {
+    idleId = undefined
+    layoutStore.setAside(fcircleAsideWidgets)
+  }
+
+  onMounted(() => {
+    if (browser.matchMedia(fcircleAsideWidescreenQuery).matches) {
+      restoreAside()
+      return
+    }
+
+    if (typeof browser.requestIdleCallback === 'function') {
+      idleId = browser.requestIdleCallback(restoreAside, { timeout: 1200 })
+      return
+    }
+
+    idleId = browser.setTimeout(restoreAside, 300)
+  })
+
+  onUnmounted(() => {
+    if (idleId === undefined)
+      return
+
+    if (typeof browser.cancelIdleCallback === 'function') {
+      browser.cancelIdleCallback(idleId)
+      return
+    }
+
+    browser.clearTimeout(idleId)
+  })
+}
+
 onMounted(() => {
   fetchData()
 })
@@ -159,10 +229,11 @@ onUnmounted(() => {
   <div class="page-fcircle">
     <div class="fcircle">
       <!-- 随机文章区域 -->
-      <div v-if="randomArticle" class="fcircle__random-article">
-        <div class="fcircle__random-title">随机文章</div>
+      <section class="fcircle__random-article" :class="{ 'is-loading': isLoading && !randomArticle }" :aria-busy="isLoading && !randomArticle">
+        <h2 class="fcircle__random-title">随机文章</h2>
         <div class="article-item">
           <a
+            v-if="randomArticle"
             :href="randomArticle.link"
             target="_blank"
             rel="noopener noreferrer"
@@ -172,27 +243,54 @@ onUnmounted(() => {
             <span class="article-item__title">{{ randomArticle.title }}</span>
             <span class="article-item__date">{{ formatDate(randomArticle.created) }}</span>
           </a>
+          <div v-else class="article-item__container article-item__container--placeholder gradient-card" aria-hidden="true">
+            <span class="article-item__author skeleton-line skeleton-line--short"></span>
+            <span class="article-item__title skeleton-line"></span>
+            <span class="article-item__date skeleton-line skeleton-line--tiny"></span>
+          </div>
         </div>
         <ZButton
           class="btn-refresh gradient-card"
           @click="refreshRandomArticle"
           icon="uim:process"
+          title="换一篇随机文章"
+          aria-label="换一篇随机文章"
+          :disabled="!allArticles.length"
         />
-      </div>
+      </section>
 
       <!-- 文章列表区域 -->
       <div class="fcircle__articles">
+        <template v-if="isLoading">
+          <div
+            v-for="index in UserConfig.page_size"
+            :key="`skeleton-${index}`"
+            class="article-item article-item--placeholder"
+            aria-hidden="true"
+          >
+            <div class="article-item__image article-item__image--placeholder" />
+            <div class="article-item__container article-item__container--placeholder gradient-card">
+              <span class="article-item__author skeleton-line skeleton-line--short"></span>
+              <span class="article-item__title skeleton-line"></span>
+              <span class="article-item__date skeleton-line skeleton-line--tiny"></span>
+            </div>
+          </div>
+        </template>
         <div
+          v-else
           v-for="(article, index) in displayedArticles"
           :key="article.id"
           class="article-item article-item--new"
           :style="{ '--delay': `${(index % UserConfig.page_size) * 0.05}s` }"
         >
           <div class="article-item__image" @click="showAvatarPosts(article.author, article.avatar, article.link)">
-            <NuxtImg
-              :src="article.avatar"
+            <img
+              :src="getOptimizedImageUrl(article.avatar, { width: 64, height: 64, fit: 'cover', quality: 74 })"
               :alt="article.author"
               loading="lazy"
+              decoding="async"
+              width="64"
+              height="64"
             />
           </div>
           <a
@@ -235,9 +333,12 @@ onUnmounted(() => {
           <div class="modal__content" @click.stop>
             <div class="modal__header">
               <NuxtImg
-                :src="selectedAuthorAvatar"
+                :src="getOptimizedImageUrl(selectedAuthorAvatar, { width: 128, height: 128, fit: 'cover', quality: 78 })"
                 :alt="selectedAuthor"
                 loading="lazy"
+                decoding="async"
+                width="128"
+                height="128"
                 class="modal__avatar-img"
               />
               <h3>{{ selectedAuthor }}</h3>
@@ -273,9 +374,12 @@ onUnmounted(() => {
             </div>
             <div class="modal__avatar">
               <NuxtImg
-                :src="selectedAuthorAvatar"
+                :src="getOptimizedImageUrl(selectedAuthorAvatar, { width: 256, height: 256, fit: 'cover', quality: 72 })"
                 :alt="selectedAuthor"
                 loading="lazy"
+                decoding="async"
+                width="256"
+                height="256"
               />
             </div>
           </div>
@@ -325,6 +429,7 @@ onUnmounted(() => {
     flex-direction: row;
     gap: 10px;
     justify-content: space-between;
+    min-height: 2.5rem;
     margin: 1rem 0;
 
     .fcircle__random-title {
@@ -360,9 +465,11 @@ onUnmounted(() => {
   align-items: center;
   display: flex;
   gap: 10px;
+  min-height: 2.5rem;
   width: 100%;
 
   &.article-item--new { animation: float-in .2s var(--delay) backwards; }
+  &.article-item--placeholder { animation: none; }
 
   .article-item__image {
     border-radius: 50%;
@@ -380,6 +487,13 @@ onUnmounted(() => {
       transition: all .2s;
       width: 100%;
     }
+
+    &.article-item__image--placeholder {
+      background: linear-gradient(90deg, var(--c-bg-soft), var(--c-bg-2), var(--c-bg-soft));
+      background-size: 200% 100%;
+      box-shadow: none;
+      animation: pulse-fade 1.2s ease-in-out infinite;
+    }
   }
 
   .article-item__container {
@@ -392,6 +506,10 @@ onUnmounted(() => {
     overflow: hidden;
     padding: 10px;
     width: 100%;
+
+    &.article-item__container--placeholder {
+      box-shadow: 0 0 0 1px var(--c-bg-soft);
+    }
 
     &:hover .article-item__title { color: var(--c-text); }
 
@@ -424,6 +542,18 @@ onUnmounted(() => {
       align-items: center;
     }
   }
+}
+
+.skeleton-line {
+  display: block;
+  height: .8rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--c-bg-soft), var(--c-bg-2), var(--c-bg-soft));
+  background-size: 200% 100%;
+  animation: pulse-fade 1.2s ease-in-out infinite;
+
+  &.skeleton-line--short { width: 4.5rem; }
+  &.skeleton-line--tiny { width: 3.25rem; }
 }
 
 /* 按钮样式 */

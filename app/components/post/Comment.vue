@@ -2,6 +2,16 @@
 import type { TippyComponent } from 'vue-tippy'
 import { LazyPopoverLightbox } from '#components'
 
+const props = withDefaults(defineProps<{
+	initialReply?: string
+	focusSeq?: number
+	warmupMode?: 'visible' | 'interaction'
+}>(), {
+	initialReply: '',
+	focusSeq: 0,
+	warmupMode: 'visible',
+})
+
 const appConfig = useAppConfig()
 
 const commentEl = useTemplateRef('comment')
@@ -9,10 +19,14 @@ const popoverEl = useTemplateRef<TippyComponent>('popover')
 const popoverJumpTo = ref('')
 const popoverInputEl = useTemplateRef('popover-input')
 const showUndo = ref(false)
+const twikooReady = ref(false)
+const twikooLoading = ref(false)
 
 const popoverBind = ref<TippyComponent['$props']>({})
 const modalStore = useModalStore()
 const twikooScriptSrc = appConfig.twikoo.scriptSrc
+let twikooInitPromise: Promise<void> | undefined
+let twikooObserver: IntersectionObserver | undefined
 
 /** 评论区链接守卫与图片放大 */
 useEventListener(commentEl, 'click', (e) => {
@@ -67,6 +81,37 @@ function confirmOpen() {
 	window.open(popoverInputEl.value?.textContent, '_blank')
 }
 
+function getCommentInput() {
+	const input = document.querySelector('#twikoo .tk-input textarea')
+	return input instanceof HTMLTextAreaElement ? input : null
+}
+
+async function waitForCommentInput() {
+	for (let index = 0; index < 50; index += 1) {
+		const input = getCommentInput()
+		if (input)
+			return input
+
+		await new Promise(resolve => window.setTimeout(resolve, 100))
+	}
+
+	return null
+}
+
+function fillCommentInput(input: HTMLTextAreaElement, content?: string) {
+	if (content?.trim()) {
+		const quotes = content.split('\n').map(str => `> ${str}`)
+		input.value = `${quotes}\n\n`
+	} else {
+		input.value = ''
+	}
+
+	input.dispatchEvent(new InputEvent('input'))
+
+	const length = input.value.length
+	input.setSelectionRange(length, length)
+}
+
 function loadTwikooScript() {
 	if (window.twikoo?.init)
 		return Promise.resolve()
@@ -89,33 +134,105 @@ function loadTwikooScript() {
 	})
 }
 
-onMounted(async () => {
+
+async function initTwikoo() {
+	if (twikooReady.value)
+		return
+
+	if (!twikooInitPromise) {
+		twikooLoading.value = true
+		twikooInitPromise = (async () => {
+			await loadTwikooScript()
+			await window.twikoo?.init?.({
+				envId: appConfig.twikoo?.envId,
+				// twikoo 会把挂载后的元素变为 #twikoo
+				el: '#twikoo',
+			})
+			twikooReady.value = true
+		})()
+			.catch((error) => {
+				console.error(error)
+				throw error
+			})
+			.finally(() => {
+				twikooLoading.value = false
+			})
+	}
+
 	try {
-		await loadTwikooScript()
-		window.twikoo?.init?.({
-			envId: appConfig.twikoo?.envId,
-			// twikoo 会把挂载后的元素变为 #twikoo
-			el: '#twikoo',
-		})
+		await twikooInitPromise
 	}
 	catch (error) {
-		console.error(error)
+		return
 	}
+}
+
+function warmupTwikoo() {
+	void initTwikoo()
+	twikooObserver?.disconnect()
+	twikooObserver = undefined
+}
+
+async function focusReply(content?: string) {
+	await initTwikoo()
+
+	const input = await waitForCommentInput()
+	if (!input)
+		return
+
+	fillCommentInput(input, content)
+	input.focus({ preventScroll: true })
+}
+
+watch(() => props.focusSeq, (focusSeq) => {
+	if (!focusSeq)
+		return
+
+	void focusReply(props.initialReply)
+}, { immediate: true })
+
+onMounted(() => {
+	if (props.warmupMode !== 'visible')
+		return
+
+	if (!commentEl.value) {
+		warmupTwikoo()
+		return
+	}
+
+	if (typeof window.IntersectionObserver !== 'function') {
+		warmupTwikoo()
+		return
+	}
+
+	twikooObserver = new window.IntersectionObserver((entries) => {
+		if (entries.some(entry => entry.isIntersecting))
+			warmupTwikoo()
+	}, { rootMargin: '320px 0px' })
+
+	twikooObserver.observe(commentEl.value)
 })
+
+onBeforeUnmount(() => {
+	twikooObserver?.disconnect()
+})
+
+useEventListener(commentEl, 'pointerdown', warmupTwikoo, { once: true })
+useEventListener(commentEl, 'focusin', warmupTwikoo, { once: true })
 </script>
 
 <template>
 <section ref="comment" class="z-comment">
-	<h3 class="text-creative">
+	<h2 class="text-creative">
 		评论区
-	</h3>
+	</h2>
 
 	<!-- interactive 默认会把气泡移动到 triggerTarget 的父元素上 -->
 	<Tooltip
 		ref="popover"
 		v-bind="popoverBind"
-		:append-to="() => commentEl!"
 		interactive
+		:append-to="() => commentEl!"
 		:aria="{ expanded: false }"
 		trigger="focusin"
 	>
@@ -149,9 +266,14 @@ onMounted(async () => {
 	</Tooltip>
 
 	<div id="twikoo">
-		<div class="comment-loading">
-			<div class="loading-spinner" />
-			<p>评论加载中...</p>
+		<div
+			v-if="!twikooReady"
+			class="comment-loading"
+			:class="{ 'is-clickable': !twikooLoading && props.warmupMode === 'interaction' }"
+		>
+			<div v-if="twikooLoading" class="loading-spinner" />
+			<p>{{ twikooLoading ? '评论加载中...' : props.warmupMode === 'interaction' ? '点击评论区加载评论' : '评论区会在接近此处或点击后加载' }}</p>
+			<ZButton v-if="!twikooLoading && props.warmupMode === 'visible'" text="立即加载" @click="warmupTwikoo" />
 		</div>
 	</div>
 </section>
@@ -159,10 +281,12 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .z-comment {
+	--comment-control-radius: 0.5rem;
+
 	margin: 2rem auto;
 	padding: 0 1rem;
 
-	> h3 {
+	> h2 {
 		margin-top: 3rem;
 		font-size: 1.25rem;
 	}
@@ -172,6 +296,10 @@ onMounted(async () => {
 	padding: 2rem;
 	text-align: center;
 	color: var(--c-text-2);
+
+	&.is-clickable {
+		cursor: pointer;
+	}
 
 	.loading-spinner {
 		width: 2.5rem;
@@ -247,7 +375,7 @@ onMounted(async () => {
 			.el-textarea__inner {
 				padding: 0.8rem;
 				border: 1px solid var(--c-border);
-				border-radius: 0.5em;
+				border-radius: var(--comment-control-radius);
 				background-color: var(--c-bg-2);
 				transition: border-color 0.2s;
 
@@ -262,7 +390,7 @@ onMounted(async () => {
 
 			.el-input-group {
 				border: 1px solid var(--c-border);
-				border-radius: 0.5em;
+				border-radius: var(--comment-control-radius);
 				background: var(--c-bg-2);
 				transition: border-color 0.2s;
 
@@ -273,7 +401,7 @@ onMounted(async () => {
 
 			.el-input-group__prepend {
 				border: none;
-				border-radius: 0.5em 0 0 0.5em;
+				border-radius: var(--comment-control-radius) 0 0 var(--comment-control-radius);
 				background: var(--c-bg-1);
 				color: var(--c-text-2);
 			}
@@ -283,7 +411,7 @@ onMounted(async () => {
 	// 按钮
 	.tk-preview, .tk-cancel {
 		border: 1px solid var(--c-bg-soft);
-		border-radius: 0.5em;
+		border-radius: var(--comment-control-radius);
 		background-color: var(--ld-bg-card);
 		color: var(--c-text-1);
 		transition: background-color 0.2s;
@@ -293,7 +421,7 @@ onMounted(async () => {
 
 	.tk-send {
 		border: 1px solid var(--c-primary);
-		border-radius: 0.5em;
+		border-radius: var(--comment-control-radius);
 		background-color: var(--c-primary);
 		color: var(--c-bg);
 		transition: background-color 0.2s;
@@ -303,7 +431,7 @@ onMounted(async () => {
 
 	// 表情面板
 	.OwO .OwO-body {
-		border-radius: 0.5em;
+		border-radius: var(--comment-control-radius);
 		background: var(--c-bg-1);
 	}
 
@@ -348,7 +476,7 @@ onMounted(async () => {
 	// 加载更多
 	.tk-expand {
 		padding: 0.375rem 1rem;
-		border-radius: 0.5em;
+		border-radius: var(--comment-control-radius);
 		background-color: var(--c-bg-2);
 		color: var(--c-text-1);
 		transition: background-color 0.2s;
@@ -372,13 +500,13 @@ onMounted(async () => {
 :deep(:where(.tk-preview-container, .tk-content)) {
 	pre {
 		overflow: auto;
-		border-radius: 0.5rem;
+		border-radius: var(--comment-control-radius);
 		font-size: 0.8125rem;
 	}
 
 	p { margin: 0.2em 0; }
 	img {
-		border-radius: 0.5em;
+		border-radius: var(--comment-control-radius);
 		cursor: zoom-in;
 	}
 

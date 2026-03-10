@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TippyOptions } from 'vue-tippy'
+import { directive as vTip } from 'vue-tippy'
 
 const props = withDefaults(defineProps<{
 	text?: string

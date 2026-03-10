@@ -19,7 +19,7 @@ defineProps<{
 		</div>
 	</div>
 	<slot name="icon" class="link-card-icon-slot">
-		<UtilImg v-if="icon" class="link-card-icon" :src="icon" :mirror />
+		<UtilImg v-if="icon" class="link-card-icon" :src="icon" :mirror width="48" height="48" loading="lazy" decoding="async" />
 	</slot>
 </UtilLink>
 </template>

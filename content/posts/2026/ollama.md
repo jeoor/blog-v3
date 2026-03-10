@@ -5,7 +5,7 @@ date: 2026-03-01 21:40:21
 updated: 2026-03-01 21:40:21
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/f1249d8
-categories: [经验分享]
+categories: [技术]
 tags: [linux, ai, ollama]
 ---
 
