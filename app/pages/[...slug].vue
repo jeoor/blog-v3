@@ -24,6 +24,8 @@ const { data: post } = await useAsyncData(
 	() => queryCollection('content').path(route.path).first(),
 )
 
+useOptionalKatexStyles(post)
+
 const contentStore = useContentStore()
 const { toc, meta } = storeToRefs(contentStore)
 

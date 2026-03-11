@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { Temporal } from 'temporal-polyfill'
+import type { ZonedDateValue } from '~/shared/utils/time'
 
 const appConfig = useAppConfig()
 
 const props = withDefaults(defineProps<{
 	icon?: string
-	date?: string | Temporal.ZonedDateTime
+	date?: string | Date | ZonedDateValue
 	format?: dateTimeFormatOptions
 	absolute?: boolean
 	relative?: boolean
@@ -20,20 +20,20 @@ const mounted = useMounted()
 
 const zdt = computed(() => {
 	try {
-		return typeof props.date === 'string' ? toZonedTemporal(props.date) : props.date
+		return props.date ? toZonedTemporal(props.date) : null
 	}
 	catch {
 		return null
 	}
 })
 
-const today = computed(() => mounted.value ? Temporal.Now.plainDateISO() : null)
+const today = computed(() => mounted.value ? toZonedTemporal(new Date()) : null)
 
 const relative = computed(() => props.absolute || !zdt.value
 	? false
 	: !today.value
 		? false
-		: props.relative || today.value.since(zdt.value, { largestUnit: 'week' }).weeks < 1,
+		: props.relative || Math.abs(today.value.epochMilliseconds - zdt.value.epochMilliseconds) < 7 * 24 * 60 * 60 * 1000,
 )
 
 const tooltip = computed(() => zdt.value

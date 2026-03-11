@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { FeedEntry } from '~/types/feed'
-import { Temporal } from 'temporal-polyfill'
 
 const props = defineProps<FeedEntry>()
 
@@ -10,6 +9,7 @@ const route = useRoute()
 const isInspect = computed(() => import.meta.dev && route.query.inspect !== undefined)
 
 const title = computed(() => props.title ?? props.sitenick ?? props.author)
+const dateLabel = computed(() => toZdtLocaleString(props.date, 'date'))
 const domainTip = computed(() => getDomainType(getMainDomain(props.link, true)))
 const domainIcon = computed(() => getDomainIcon(props.link))
 
@@ -78,7 +78,7 @@ function getInspectStyle(src: string): CSSProperties {
 		</div>
 		<div class="desc-content">
 			<div class="date">
-				{{ Temporal.PlainDate.from(date).toLocaleString() }}
+				{{ dateLabel }}
 			</div>
 
 			<p>{{ error ?? desc }}</p>

@@ -282,6 +282,19 @@ useEventListener(commentEl, 'focusin', warmupTwikoo, { once: true })
 <style lang="scss" scoped>
 .z-comment {
 	--comment-control-radius: 0.5rem;
+	--comment-panel-bg: var(--ld-bg-card);
+	--comment-panel-bg-soft: var(--c-bg-2);
+	--comment-panel-border: var(--c-border);
+	--comment-panel-hover: var(--c-bg-3);
+	--comment-panel-active: var(--c-primary-soft);
+
+	@supports (color: color-mix(in srgb, transparent, transparent)) {
+		--comment-panel-bg: color-mix(in srgb, var(--ld-bg-card) 80%, var(--c-bg-1));
+		--comment-panel-bg-soft: color-mix(in srgb, var(--c-bg-2) 82%, var(--c-bg-3));
+		--comment-panel-border: color-mix(in srgb, var(--c-border) 68%, var(--c-primary) 32%);
+		--comment-panel-hover: color-mix(in srgb, var(--c-primary-soft) 55%, var(--c-bg-3) 45%);
+		--comment-panel-active: color-mix(in srgb, var(--c-primary-soft) 72%, var(--c-bg-3) 28%);
+	}
 
 	margin: 2rem auto;
 	padding: 0 1rem;
@@ -430,9 +443,67 @@ useEventListener(commentEl, 'focusin', warmupTwikoo, { once: true })
 	}
 
 	// 表情面板
-	.OwO .OwO-body {
+	.OwO .OwO-logo {
+		border: 1px solid var(--comment-panel-border);
 		border-radius: var(--comment-control-radius);
-		background: var(--c-bg-1);
+		background: var(--comment-panel-bg-soft);
+		color: var(--c-text-2);
+		transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+
+		&:hover {
+			border-color: var(--c-primary);
+			background: var(--comment-panel-hover);
+			color: var(--c-text-1);
+		}
+	}
+
+	.OwO .OwO-body {
+		overflow: hidden;
+		border: 1px solid var(--comment-panel-border);
+		border-radius: var(--comment-control-radius);
+		background: linear-gradient(180deg, var(--comment-panel-bg-soft), var(--comment-panel-bg));
+		box-shadow: var(--box-shadow-1), var(--box-shadow-3);
+
+		.OwO-items {
+			padding: 0.4rem;
+			background: transparent;
+		}
+
+		.OwO-item {
+			border-radius: calc(var(--comment-control-radius) - 0.125rem);
+			transition: background-color 0.2s, transform 0.2s;
+
+			&:hover {
+				background: var(--comment-panel-hover);
+				transform: translateY(-1px);
+			}
+		}
+
+		.OwO-bar {
+			border-top: 1px solid var(--comment-panel-border);
+			background: var(--comment-panel-bg-soft);
+		}
+
+		.OwO-packages {
+			padding: 0.25rem;
+		}
+
+		.OwO-packages li {
+			border-radius: calc(var(--comment-control-radius) - 0.125rem);
+			color: var(--c-text-2);
+			transition: background-color 0.2s, color 0.2s;
+
+			&:hover {
+				background: var(--comment-panel-hover);
+				color: var(--c-text-1);
+			}
+		}
+
+		.OwO-packages .OwO-package-active,
+		.OwO-packages li[aria-selected='true'] {
+			background: var(--comment-panel-active);
+			color: var(--c-text-1);
+		}
 	}
 
 	// ====== 评论内容 ======

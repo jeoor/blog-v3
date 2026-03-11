@@ -141,11 +141,10 @@ export default defineNuxtConfig({
 				{ name: 'mobile-web-app-capable', content: 'yes' },
 			],
 			link: [
+				{ rel: 'preload', href: '/fonts/AlimamaFangYuanTi.woff2', as: 'font', type: 'font/woff2', crossorigin: '' },
 				{ rel: 'icon', href: blogConfig.favicon },
 				{ rel: 'alternate', type: 'application/atom+xml', href: '/atom.xml' },
-				{ rel: 'stylesheet', href: 'https://lib.baomitu.com/KaTeX/0.16.9/katex.min.css', media: 'print', onload: 'this.media="all"' },
 				// "JetBrains Mono"
-				{ rel: 'preconnect', href: 'https://fonts.gstatic.cn', crossorigin: '' },
 				{ rel: 'stylesheet', href: 'https://fonts.googleapis.cn/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap', media: 'print', onload: 'this.media="all"' },
 			],
 			templateParams: {

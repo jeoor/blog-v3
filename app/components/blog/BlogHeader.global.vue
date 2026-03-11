@@ -30,6 +30,8 @@ const appConfig = useAppConfig()
 		:alt="appConfig.title"
 		width="48"
 		height="48"
+		sizes="48px"
+		:fetchpriority="tag === 'h1' ? 'high' : undefined"
 		:loading="tag === 'h1' ? 'eager' : 'lazy'"
 		decoding="async"
 	/>

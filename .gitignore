@@ -35,6 +35,6 @@ content/posts/test.md
 # friend
 public/friend.json
 
-.chrome-lh*
+.chrome*
 lighthouse*.json
 .tmp

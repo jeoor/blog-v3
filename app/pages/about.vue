@@ -8,6 +8,8 @@ const { data: about } = await useAsyncData(
 	() => queryCollection('content').path('/about').first(),
 )
 
+useOptionalKatexStyles(about)
+
 const aboutImage = computed(() => about.value?.image || '/assets/about-banner.webp')
 
 if (about.value) {

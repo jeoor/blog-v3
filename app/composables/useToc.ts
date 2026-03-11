@@ -7,6 +7,8 @@ interface TocList {
 
 export function useToc(toc: MaybeRefOrGetter<Toc | undefined>) {
 	const { height: bodyHeight } = useElementSize(document?.body)
+	const scrollMarginTop = ref(64)
+	let scrollFrame = 0
 
 	function flattenToc(tocTree: TocLink[], tocList: TocList[] = []) {
 		tocTree.forEach((item) => {
@@ -26,9 +28,16 @@ export function useToc(toc: MaybeRefOrGetter<Toc | undefined>) {
 
 	const { y: windowScrollY } = useWindowScroll()
 
+	function updateScrollMarginTop() {
+		if (!document)
+			return
+
+		const margin = Number.parseFloat(getComputedStyle(document.documentElement).scrollMarginTop)
+		scrollMarginTop.value = Number.isFinite(margin) ? margin : 64
+	}
+
 	function getActiveHeading() {
-		const scrollMargin = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('scroll-margin-top'))
-		const scrollPosition = windowScrollY.value + (scrollMargin || 64)
+		const scrollPosition = windowScrollY.value + scrollMarginTop.value
 		// 为兼容性不使用 findLast，而是使用倒序的 tocOffsets
 		return tocOffsets.value.find(item => item.offsetTop <= scrollPosition)?.id
 	}
@@ -39,12 +48,21 @@ export function useToc(toc: MaybeRefOrGetter<Toc | undefined>) {
 	)
 
 	function scrollToActiveTocItem() {
-		const tocContainerEl = document.querySelector('#blog-aside')
-		const activeTocEl = document.querySelector(`#blog-aside a[href="#${activeHeadingId.value}"]`) as HTMLElement | null
-		// scrollIntoView 触发目录滚动时导致文章持续缓慢滚动并打断正常滚动
-		tocContainerEl?.scroll({ top: activeTocEl?.offsetTop || 0 })
+		if (!document || !activeHeadingId.value)
+			return
+
+		cancelAnimationFrame(scrollFrame)
+		scrollFrame = requestAnimationFrame(() => {
+			const tocContainerEl = document.getElementById('blog-aside')
+			const activeTocEl = document.querySelector(`#blog-aside a[href="#${activeHeadingId.value}"]`) as HTMLElement | null
+			// scrollIntoView 触发目录滚动时导致文章持续缓慢滚动并打断正常滚动
+			tocContainerEl?.scroll({ top: activeTocEl?.offsetTop ?? 0 })
+		})
 	}
 
+	onMounted(updateScrollMarginTop)
+	onBeforeUnmount(() => cancelAnimationFrame(scrollFrame))
+	useEventListener(window, 'resize', updateScrollMarginTop)
 	watch(activeHeadingId, scrollToActiveTocItem)
 
 	return {

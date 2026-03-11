@@ -11,6 +11,8 @@ const { data: postLink } = await useAsyncData(
 	() => queryCollection('content').path('/link').first(),
 )
 
+useOptionalKatexStyles(postLink)
+
 useSeoMeta({
 	title: '友链',
 	ogType: 'profile',
