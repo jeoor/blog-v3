@@ -94,7 +94,7 @@ const blogConfig = {
 	twikoo: {
 		envId: 'https://twikoo.kayro.cn/',
 		preload: 'https://twikoo.kayro.cn/',
-		scriptSrc: 'https://registry.npmmirror.com/twikoo/1.7.1/files/dist/twikoo.min.js',
+		scriptSrc: 'https://registry.npmmirror.com/twikoo/1.7.3/files/dist/twikoo.min.js',
 	},
 }
 

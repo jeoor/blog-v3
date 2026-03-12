@@ -287,13 +287,19 @@ useEventListener(commentEl, 'focusin', warmupTwikoo, { once: true })
 	--comment-panel-border: var(--c-border);
 	--comment-panel-hover: var(--c-bg-3);
 	--comment-panel-active: var(--c-primary-soft);
+	--comment-panel-text: var(--c-text-1);
+	--comment-panel-text-muted: var(--c-text-2);
+	--comment-panel-divider: color-mix(in srgb, var(--c-border) 78%, var(--c-text-3) 22%);
 
 	@supports (color: color-mix(in srgb, transparent, transparent)) {
 		--comment-panel-bg: color-mix(in srgb, var(--ld-bg-card) 80%, var(--c-bg-1));
 		--comment-panel-bg-soft: color-mix(in srgb, var(--c-bg-2) 82%, var(--c-bg-3));
 		--comment-panel-border: color-mix(in srgb, var(--c-border) 68%, var(--c-primary) 32%);
-		--comment-panel-hover: color-mix(in srgb, var(--c-primary-soft) 55%, var(--c-bg-3) 45%);
-		--comment-panel-active: color-mix(in srgb, var(--c-primary-soft) 72%, var(--c-bg-3) 28%);
+		--comment-panel-hover: color-mix(in srgb, var(--c-primary-soft) 38%, var(--c-bg-3) 62%);
+		--comment-panel-active: color-mix(in srgb, var(--c-primary-soft) 58%, var(--c-bg-3) 42%);
+		--comment-panel-text: color-mix(in srgb, var(--c-text-1) 92%, white 8%);
+		--comment-panel-text-muted: color-mix(in srgb, var(--c-text-2) 88%, var(--c-text-1) 12%);
+		--comment-panel-divider: color-mix(in srgb, var(--c-border) 60%, var(--c-text-1) 40%);
 	}
 
 	margin: 2rem auto;
@@ -447,7 +453,7 @@ useEventListener(commentEl, 'focusin', warmupTwikoo, { once: true })
 		border: 1px solid var(--comment-panel-border);
 		border-radius: var(--comment-control-radius);
 		background: var(--comment-panel-bg-soft);
-		color: var(--c-text-2);
+		color: var(--comment-panel-text-muted);
 		transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 
 		&:hover {
@@ -463,24 +469,30 @@ useEventListener(commentEl, 'focusin', warmupTwikoo, { once: true })
 		border-radius: var(--comment-control-radius);
 		background: linear-gradient(180deg, var(--comment-panel-bg-soft), var(--comment-panel-bg));
 		box-shadow: var(--box-shadow-1), var(--box-shadow-3);
+		color: var(--comment-panel-text);
 
 		.OwO-items {
 			padding: 0.4rem;
 			background: transparent;
+			color: inherit;
 		}
 
 		.OwO-item {
+			color: var(--comment-panel-text);
+			opacity: 0.96;
 			border-radius: calc(var(--comment-control-radius) - 0.125rem);
-			transition: background-color 0.2s, transform 0.2s;
+			text-shadow: 0 0 0.01px currentColor;
+			transition: background-color 0.2s, color 0.2s, transform 0.2s;
 
 			&:hover {
 				background: var(--comment-panel-hover);
+				color: var(--comment-panel-text);
 				transform: translateY(-1px);
 			}
 		}
 
 		.OwO-bar {
-			border-top: 1px solid var(--comment-panel-border);
+			border-top: 1px solid var(--comment-panel-divider);
 			background: var(--comment-panel-bg-soft);
 		}
 
@@ -490,19 +502,21 @@ useEventListener(commentEl, 'focusin', warmupTwikoo, { once: true })
 
 		.OwO-packages li {
 			border-radius: calc(var(--comment-control-radius) - 0.125rem);
-			color: var(--c-text-2);
+			color: var(--comment-panel-text-muted);
+			font-weight: 500;
 			transition: background-color 0.2s, color 0.2s;
 
 			&:hover {
 				background: var(--comment-panel-hover);
-				color: var(--c-text-1);
+				color: var(--comment-panel-text);
 			}
 		}
 
 		.OwO-packages .OwO-package-active,
 		.OwO-packages li[aria-selected='true'] {
 			background: var(--comment-panel-active);
-			color: var(--c-text-1);
+			color: var(--comment-panel-text);
+			box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-primary) 35%, transparent);
 		}
 	}
 

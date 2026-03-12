@@ -2,10 +2,11 @@
 import { Icon } from '#components'
 import { myFeed } from '~~/blog.config'
 import { packageManager, version } from '~~/package.json'
-import pnpmWorkspace from '~~/pnpm-workspace.yaml'
 
 const appConfig = useAppConfig()
-const { public: { arch, ci, nodeVersion, platform } } = useRuntimeConfig()
+const runtimeConfig = useRuntimeConfig()
+const { arch, ci, nodeVersion, platform } = runtimeConfig.public
+const techstackVersions = computed(() => ((runtimeConfig.public as Record<string, unknown>).techstackVersions as Record<string, string> | undefined) ?? {})
 
 const fallbackCi = myFeed.archs?.find(name => name in ciIcons) ?? ''
 const normalizedCi = computed(() => ci?.trim().replace(/^['\"]|['\"]$/g, '') || fallbackCi)
@@ -29,8 +30,6 @@ const ciPlatform = computed(() => {
 
 	return h('span', {}, [iconNode, ` ${ciName.split(' ')[0]}`])
 })
-
-const packages = Object.assign({}, ...Object.values(pnpmWorkspace.catalogs as any)) as Record<string, string>
 const [pm, pmVersion] = packageManager.split('@') as [string, string]
 
 const service = computed(() => ([
@@ -43,9 +42,9 @@ const service = computed(() => ([
 
 const techstack = computed(() => ([
 	{ label: 'Blog', value: version },
-	{ label: 'Vue', value: packages.vue },
-	{ label: 'Nuxt', value: packages.nuxt },
-	{ label: 'Content', value: packages['@nuxt/content'] },
+	{ label: 'Vue', value: techstackVersions.value.vue },
+	{ label: 'Nuxt', value: techstackVersions.value.nuxt },
+	{ label: 'Content', value: techstackVersions.value.content },
 	{ label: 'Node', value: nodeVersion },
 	{ label: pm, value: pmVersion },
 	{ label: 'OS', value: platform },

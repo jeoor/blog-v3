@@ -252,7 +252,7 @@ onUnmounted(() => {
         <ZButton
           class="btn-refresh gradient-card"
           @click="refreshRandomArticle"
-          icon="uim:process"
+          icon="ph:arrows-clockwise-bold"
           title="换一篇随机文章"
           aria-label="换一篇随机文章"
           :disabled="!allArticles.length"
@@ -348,7 +348,7 @@ onUnmounted(() => {
                 rel="noopener noreferrer"
                 class="modal__author-link"
               >
-                <Icon name="lucide:external-link" />
+                <Icon name="ph:arrow-square-out-bold" />
               </a>
             </div>
             <div class="modal__body">

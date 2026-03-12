@@ -1,6 +1,7 @@
 ---
 title: 关于我
 description: 敖致天，苛制人
+date: 2026-02-13
 image: /assets/about-banner.webp
 type: story
 comment: false

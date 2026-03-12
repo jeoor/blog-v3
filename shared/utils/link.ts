@@ -41,6 +41,24 @@ export function isExtLink(url?: string) {
 		: false
 }
 
+export function toSiteRelativeLink(url: string, siteUrl: string) {
+	if (!url)
+		return url
+
+	try {
+		const targetUrl = new URL(url, siteUrl)
+		const site = new URL(siteUrl)
+		if (targetUrl.origin !== site.origin)
+			return url
+
+		const pathname = targetUrl.pathname === '/' ? '/' : targetUrl.pathname.replace(/\/+$/, '') || '/'
+		return `${pathname}${targetUrl.search}${targetUrl.hash}`
+	}
+	catch {
+		return url
+	}
+}
+
 export function safelyDecodeUriComponent(str: string) {
 	try {
 		return decodeURIComponent(str)

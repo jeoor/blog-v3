@@ -5,7 +5,7 @@ import gallery from '~/gallery'
 
 const appConfig = useAppConfig()
 const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
+layoutStore.setAside(['blog-stats', 'blog-tech', 'countdown'])
 
 const route = useRoute()
 const router = useRouter()

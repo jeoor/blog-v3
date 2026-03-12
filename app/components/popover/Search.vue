@@ -31,10 +31,8 @@ const miniSearch = new MiniSearch({
 		: undefined,
 })
 
-const searchStore = useSearchStore()
 const searchInput = ref<HTMLInputElement>()
-
-const { word, debouncedWord } = storeToRefs(searchStore)
+const { word, debouncedWord } = useSearchWord()
 const result = computed(() => {
 	void data.value
 	return miniSearch.search(debouncedWord.value)

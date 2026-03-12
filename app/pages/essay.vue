@@ -175,7 +175,7 @@ function getEssayImageStyle(image: EssayImage, isSingle: boolean) {
       <div class="info">
         <div class="nick">
           {{ author.name }}
-          <Icon class="verified" name="i-material-symbols:verified" />
+          <Icon class="verified" name="ri:verified-badge-fill" />
         </div>
         <div class="date">{{ getEssayDate(essay.date) }}</div>
       </div>

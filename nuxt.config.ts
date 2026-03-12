@@ -1,4 +1,5 @@
 import type { NitroConfig } from 'nitropack'
+import { readFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { imageSize } from 'image-size'
@@ -21,6 +22,22 @@ const nitroOutput = nitroOutputDir
 			serverDir: join(resolve(nitroOutputDir), 'server'),
 		}
 	: undefined
+const workspaceCatalogSource = readFileSync(resolve('pnpm-workspace.yaml'), 'utf8')
+
+function escapeRegex(value: string) {
+	return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function getWorkspaceCatalogVersion(packageName: string) {
+	const match = workspaceCatalogSource.match(new RegExp(`^\\s{4,}${escapeRegex(packageName)}:\\s*(.+)$`, 'm'))
+	return match?.[1]?.trim() || ''
+}
+
+const techstackVersions = {
+	vue: getWorkspaceCatalogVersion('vue'),
+	nuxt: getWorkspaceCatalogVersion('nuxt'),
+	content: getWorkspaceCatalogVersion('@nuxt/content'),
+}
 
 const picBlockRegex = /::pic\s*---\n([\s\S]*?)\n---\s*::/g
 const imageDimensionCache = new Map<string, Promise<{ width: number, height: number } | null>>()
@@ -214,6 +231,7 @@ export default defineNuxtConfig({
 			ci: runtimeCi,
 			nodeVersion,
 			platform,
+			techstackVersions,
 		},
 	},
 
@@ -221,6 +239,9 @@ export default defineNuxtConfig({
 	// sourcemap: true,
 
 	vite: {
+		build: {
+			chunkSizeWarningLimit: 900,
+		},
 		css: {
 			preprocessorOptions: {
 				scss: {
@@ -253,7 +274,6 @@ export default defineNuxtConfig({
 		'@pinia/nuxt',
 		'@vueuse/nuxt',
 		'nuxt-llms',
-		'unplugin-yaml/nuxt',
 	],
 
 	colorMode: {
@@ -359,6 +379,10 @@ ${packageJson.homepage}
 	robots: {
 		disableNuxtContentIntegration: true,
 		disallow: blogConfig.article.robotsNotIndex,
+	},
+
+	sitemap: {
+		zeroRuntime: true,
 	},
 
 	site: {

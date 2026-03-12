@@ -1,7 +1,7 @@
 import { createHighlighterCore } from 'shiki/core'
 import { createJavaScriptRegexEngine } from 'shiki/engine-javascript.mjs'
-import { bundledLanguages } from 'shiki/langs'
 import shikiConfig, { getShikiOptions } from '~/shiki.config'
+import { getShikiLanguageLoader } from './shikiLanguageLoaders.shared'
 
 type TransformerOption =
 	| 'ignoreColorizedBrackets'
@@ -112,7 +112,7 @@ async function ensureLanguageLoaded(language: string) {
 	if (loadedLanguages.has(language))
 		return true
 
-	const loadLanguage = bundledLanguages[language as keyof typeof bundledLanguages]
+	const loadLanguage = await getShikiLanguageLoader(language)
 	if (!loadLanguage)
 		return false
 

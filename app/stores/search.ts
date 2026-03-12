@@ -5,8 +5,7 @@ export const useSearchStore = defineStore('search', () => {
 	const layoutStore = useLayoutStore()
 	const modalStore = useModalStore()
 
-	const word = ref('')
-	const debouncedWord = refDebounced(word)
+	const { word, debouncedWord } = useSearchWord()
 
 	const {
 		open: _open,

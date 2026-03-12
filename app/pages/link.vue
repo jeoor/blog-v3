@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { myFeed } from '~~/blog.config'
+import { useOptionalKatexStyles } from '~/composables/useOptionalKatexStyles'
 import feeds from '~/feeds'
 
 const appConfig = useAppConfig()
@@ -44,7 +45,7 @@ const copyFields = {
 	<template #tab1>
 		<div class="link-tab">
 			<FeedCard v-bind="myFeed" />
-			<Copy v-for="(code, prompt) in copyFields" :key="prompt" :prompt :code />
+			<LinkCopyField v-for="(code, prompt) in copyFields" :key="prompt" :prompt :code />
 		</div>
 	</template>
 	<template #tab2>

@@ -1,25 +1,30 @@
 <script setup lang="ts">
-defineProps<{
+import { toSiteRelativeLink } from '~~/shared/utils/link'
+
+const props = defineProps<{
 	link: string
 	title: string
 	description?: string
 	icon?: string
 	mirror?: ImgService
 }>()
+
+const appConfig = useAppConfig()
+const normalizedLink = computed(() => toSiteRelativeLink(props.link, appConfig.url))
 </script>
 
 <template>
-<UtilLink :to="link" class="link-card card" :title="joinWith([title, description, link])">
+<UtilLink :to="normalizedLink" class="link-card card" :title="joinWith([props.title, props.description, props.link])">
 	<div class="link-card-info">
 		<div class="link-card-title">
-			{{ title }}
+			{{ props.title }}
 		</div>
 		<div class="link-card-description">
-			{{ description ?? getDomain(link) }}
+			{{ props.description ?? getDomain(props.link) }}
 		</div>
 	</div>
 	<slot name="icon" class="link-card-icon-slot">
-		<UtilImg v-if="icon" class="link-card-icon" :src="icon" :mirror width="48" height="48" loading="lazy" decoding="async" />
+		<UtilImg v-if="props.icon" class="link-card-icon" :src="props.icon" :mirror="props.mirror" width="48" height="48" loading="lazy" decoding="async" />
 	</slot>
 </UtilLink>
 </template>

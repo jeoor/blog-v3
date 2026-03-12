@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { FeedEntry } from '~/types/feed'
+import { toSiteRelativeLink } from '~~/shared/utils/link'
 
 const props = defineProps<FeedEntry>()
 
@@ -9,7 +10,19 @@ const route = useRoute()
 const isInspect = computed(() => import.meta.dev && route.query.inspect !== undefined)
 
 const title = computed(() => props.title ?? props.sitenick ?? props.author)
-const dateLabel = computed(() => toZdtLocaleString(props.date, 'date'))
+const normalizedLink = computed(() => toSiteRelativeLink(props.link, appConfig.url))
+const dateLabel = computed(() => {
+	const date = props.date?.trim()
+	if (!date)
+		return ''
+
+	try {
+		return toZdtLocaleString(date, 'date')
+	}
+	catch {
+		return ''
+	}
+})
 const domainTip = computed(() => getDomainType(getMainDomain(props.link, true)))
 const domainIcon = computed(() => getDomainIcon(props.link))
 
@@ -37,7 +50,7 @@ function getInspectStyle(src: string): CSSProperties {
 <Tooltip :delay="200" interactive hide-on-click="toggle">
 	<UtilLink
 		class="feed-card gradient-card"
-		:to="error ? undefined : link"
+		:to="error ? undefined : normalizedLink"
 		rel="noopener"
 		:data-error="error"
 	>
@@ -77,7 +90,7 @@ function getInspectStyle(src: string): CSSProperties {
 			/>
 		</div>
 		<div class="desc-content">
-			<div class="date">
+			<div v-if="dateLabel" class="date">
 				{{ dateLabel }}
 			</div>
 

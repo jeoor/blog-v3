@@ -11,8 +11,8 @@ let searchLabelWatcherBound = false
 
 async function ensureSearchStore() {
 	if (!searchStorePromise) {
-		searchStorePromise = import('~/stores/search').then(({ useSearchStore }) => {
-			const searchStore = useSearchStore()
+		searchStorePromise = import('~/stores/search').then((searchStoreModule) => {
+			const searchStore = searchStoreModule.useSearchStore()
 
 			if (!searchLabelWatcherBound) {
 				watch(() => searchStore.word, (word) => {
