@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { ZonedDateValue } from '~/shared/utils/time'
 
-const appConfig = useAppConfig()
-
 const props = withDefaults(defineProps<{
 	icon?: string
 	date?: string | Date | ZonedDateValue
@@ -15,6 +13,8 @@ const props = withDefaults(defineProps<{
 }>(), {
 	tipTransform: String,
 })
+
+const appConfig = useAppConfig()
 
 const mounted = useMounted()
 
@@ -32,8 +32,8 @@ const today = computed(() => mounted.value ? toZonedTemporal(new Date()) : null)
 const relative = computed(() => props.absolute || !zdt.value
 	? false
 	: !today.value
-		? false
-		: props.relative || Math.abs(today.value.epochMilliseconds - zdt.value.epochMilliseconds) < 7 * 24 * 60 * 60 * 1000,
+			? false
+			: props.relative || Math.abs(today.value.epochMilliseconds - zdt.value.epochMilliseconds) < 7 * 24 * 60 * 60 * 1000,
 )
 
 const tooltip = computed(() => zdt.value

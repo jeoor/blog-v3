@@ -3,16 +3,19 @@ import { Icon } from '#components'
 import { myFeed } from '~~/blog.config'
 import { packageManager, version } from '~~/package.json'
 
+const wrappingQuotesRE = /^['"]|['"]$/g
+const httpUrlRE = /^https?:\/\//
+
 const appConfig = useAppConfig()
 const runtimeConfig = useRuntimeConfig()
 const { arch, ci, nodeVersion, platform } = runtimeConfig.public
 const techstackVersions = computed(() => ((runtimeConfig.public as Record<string, unknown>).techstackVersions as Record<string, string> | undefined) ?? {})
 
 const fallbackCi = myFeed.archs?.find(name => name in ciIcons) ?? ''
-const normalizedCi = computed(() => ci?.trim().replace(/^['\"]|['\"]$/g, '') || fallbackCi)
+const normalizedCi = computed(() => ci?.trim().replace(wrappingQuotesRE, '') || fallbackCi)
 
 function isImageSource(value: string) {
-	return value.startsWith('/') || /^https?:\/\//.test(value)
+	return value.startsWith('/') || httpUrlRE.test(value)
 }
 
 const ciPlatform = computed(() => {
@@ -34,7 +37,7 @@ const [pm, pmVersion] = packageManager.split('@') as [string, string]
 
 const service = computed(() => ([
 	...normalizedCi.value ? [{ label: '构建平台', value: ciPlatform }] : [],
-	{ label: '图片存储', value: () => [h('img', { src: '/icon/7bu.webp', alt: '', width: 64, height: 64, loading: 'lazy', decoding: 'async' }), '去不图床'] },
+	{ label: '图片存储', value: () => h('span', {}, [h('img', { src: '/icon/7bu.webp', alt: '', width: 64, height: 64, loading: 'lazy', decoding: 'async' }), '去不图床']) },
 	{ label: '软件协议', value: 'MIT' },
 	{ label: '文章许可', value: appConfig.copyright.abbr },
 	{ label: '规范域名', value: getDomain(appConfig.url) },

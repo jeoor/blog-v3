@@ -66,11 +66,14 @@ function getTagSize(count: number): string {
 	const maxCount = Math.max(...Object.values(articlesByTag.value).map(articles => articles.length))
 	const minCount = Math.min(...Object.values(articlesByTag.value).map(articles => articles.length))
 	const range = maxCount - minCount
-	if (range === 0) return 'medium'
+	if (range === 0)
+		return 'medium'
 
 	const ratio = (count - minCount) / range
-	if (ratio < 0.33) return 'small'
-	if (ratio < 0.66) return 'medium'
+	if (ratio < 0.33)
+		return 'small'
+	if (ratio < 0.66)
+		return 'medium'
 	return 'large'
 }
 
@@ -97,7 +100,7 @@ function clearSelectedTag() {
 			<h1 class="tag-selected-title">
 				<span class="tag-hashtag">#</span> {{ selectedTag }}
 			</h1>
-			<button class="tag-clear-btn" @click="clearSelectedTag" aria-label="返回标签云">
+			<button class="tag-clear-btn" aria-label="返回标签云" @click="clearSelectedTag">
 				<Icon name="ph:x-circle-bold" />
 			</button>
 		</div>
@@ -120,7 +123,9 @@ function clearSelectedTag() {
 
 	<!-- 标签云视图 -->
 	<div v-else class="tag-cloud">
-		<h1 class="tag-cloud-title">{{ title }}</h1>
+		<h1 class="tag-cloud-title">
+			{{ title }}
+		</h1>
 		<div v-if="sortedTags.length" class="tag-cloud-content">
 			<button
 				v-for="tag in sortedTags"
@@ -130,7 +135,7 @@ function clearSelectedTag() {
 				@click="handleTagClick(tag)"
 			>
 				# {{ tag }}
-               <span class="tag-count">{{ articlesByTag[tag]?.length }}</span>
+				<span class="tag-count">{{ articlesByTag[tag]?.length }}</span>
 			</button>
 		</div>
 
@@ -161,9 +166,9 @@ function clearSelectedTag() {
 }
 
 .tag-cloud-title {
-	text-align: center;
-	font-size: 2.5rem;
 	margin-bottom: 2rem;
+	font-size: 2.5rem;
+	text-align: center;
 	color: var(--c-text);
 }
 
@@ -182,9 +187,9 @@ function clearSelectedTag() {
 	padding: 0.5rem 1rem;
 	border-radius: 2rem;
 	background-color: var(--c-bg-2);
+	line-height: 1.4;
 	color: var(--c-text);
 	cursor: pointer;
-	line-height: 1.4;
 
 	&.small {
 		font-size: 0.9rem;
@@ -204,21 +209,21 @@ function clearSelectedTag() {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 20px;
 	height: 20px;
+	min-width: 20px;
 	padding: 0 6px;
 	border-radius: 10px;
 	background-color: var(--c-bg-3);
-	color: var(--c-text-2);
 	font-size: 0.8rem;
 	font-weight: 500;
+	color: var(--c-text-2);
 }
 
 .tag-cloud-stats {
+	margin-top: 2rem;
+	font-size: 0.9rem;
 	text-align: center;
 	color: var(--c-text-2);
-	font-size: 0.9rem;
-	margin-top: 2rem;
 }
 
 // 选中标签时的样式
@@ -235,11 +240,11 @@ function clearSelectedTag() {
 }
 
 .tag-selected-title {
-	font-size: 2.5rem;
+	margin: 0;
 	font-family: var(--font-creative);
+	font-size: 2.5rem;
 	font-weight: 550;
 	color: var(--c-text);
-	margin: 0;
 }
 
 .tag-hashtag {
@@ -256,12 +261,12 @@ function clearSelectedTag() {
 	justify-content: center;
 	width: 40px;
 	height: 40px;
+	border: none;
 	border-radius: 50%;
 	background-color: var(--c-bg-2);
 	color: var(--c-text-2);
-	border: none;
-	cursor: pointer;
 	transition: all 0.2s ease;
+	cursor: pointer;
 
 	&:hover {
 		background-color: var(--c-bg-3);
@@ -271,11 +276,11 @@ function clearSelectedTag() {
 }
 
 .tag-selected-info {
-	color: var(--c-text-2);
-	font-size: 1rem;
 	margin-bottom: 2rem;
 	padding-bottom: 1rem;
 	border-bottom: 1px solid var(--c-border);
+	font-size: 1rem;
+	color: var(--c-text-2);
 }
 
 .archive-list {
@@ -295,8 +300,8 @@ function clearSelectedTag() {
 	}
 
 	.tag-cloud-item {
-		padding: 0.4rem 0.8rem;
 		gap: 0.4rem;
+		padding: 0.4rem 0.8rem;
 	}
 
 	.tag-cloud-item.large {

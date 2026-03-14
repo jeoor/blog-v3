@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const props = withDefaults(defineProps<{
 	code?: string
 	language?: string
@@ -156,7 +155,7 @@ if (rawHtml.value === initialRawHtml) {
 	line-height: 1.4;
 	tab-size: var(--tab-size, 4);
 
-		&.collapsible > pre {
+	&.collapsible > pre {
 		padding-bottom: 0.5rem;
 	}
 

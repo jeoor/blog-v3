@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TippyComponent } from 'vue-tippy'
-import { Tippy as VueTippy, roundArrow } from 'vue-tippy'
+import { roundArrow, Tippy as VueTippy } from 'vue-tippy'
 import 'tippy.js/dist/svg-arrow.css'
 
 defineOptions({ inheritAttrs: false })

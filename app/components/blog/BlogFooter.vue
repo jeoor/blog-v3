@@ -1,14 +1,25 @@
 <script setup lang="ts">
+import { toZonedTemporal } from '~~/shared/utils/time'
+
+const yearRE = /\b\d{4}\b/u
+
 const appConfig = useAppConfig()
+const runtimeConfig = useRuntimeConfig()
+
+const footerCopyright = computed(() => {
+	const buildYear = String(toZonedTemporal(runtimeConfig.public.buildTime).year)
+
+	return appConfig.footer.copyright.replace(yearRE, buildYear)
+})
 </script>
 
 <template>
 <footer class="blog-footer">
 	<nav class="footer-nav">
 		<div v-for="(group, groupIndex) in appConfig.footer.nav" :key="groupIndex" class="footer-nav-group">
-			<h3 v-if="group.title">
+			<p v-if="group.title" class="footer-nav-title">
 				{{ group.title }}
-			</h3>
+			</p>
 			<menu>
 				<li v-for="(item, itemIndex) in group.items" :key="itemIndex">
 					<UtilLink :to="item.url">
@@ -19,7 +30,7 @@ const appConfig = useAppConfig()
 			</menu>
 		</div>
 	</nav>
-	<p v-html="appConfig.footer.copyright" />
+	<p v-html="footerCopyright" />
 </footer>
 </template>
 
@@ -35,7 +46,7 @@ const appConfig = useAppConfig()
 		gap: 5vw clamp(2rem, 5%, 5vw);
 		padding-block: 3rem;
 
-		h3 {
+		.footer-nav-title {
 			margin: 0.5em;
 			font: inherit;
 		}

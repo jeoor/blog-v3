@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ArticleProps } from '~/types/article'
 import type { WidgetName } from '~/composables/useWidgets'
+import type { ArticleProps } from '~/types/article'
 import { sort } from 'radash'
 
 const appConfig = useAppConfig()
@@ -79,7 +79,7 @@ const listRecommended = computed<ArticleProps[]>(() => sort<ArticleProps>(
 <UtilHydrateSafe>
 	<PostSlide v-if="listRecommended.length && page === 1 && !category" :list="listRecommended" />
 
-	<div class="post-list">
+	<div class="home-post-list">
 		<PostOrderToggle
 			v-model:is-ascending="isAscending"
 			v-model:sort-order="sortOrder"
@@ -94,7 +94,7 @@ const listRecommended = computed<ArticleProps[]>(() => sort<ArticleProps>(
 			</ZSecret>
 		</PostOrderToggle>
 
-		<TransitionGroup tag="menu" class="proper-height" name="float-in">
+		<menu class="home-post-list-menu proper-height">
 			<PostArticle
 				v-for="article, index in listPaged"
 				:key="article.path"
@@ -104,19 +104,9 @@ const listRecommended = computed<ArticleProps[]>(() => sort<ArticleProps>(
 				:use-updated="sortOrder === 'updated'"
 				:style="getFixedDelay(index * 0.05)"
 			/>
-		</TransitionGroup>
+		</menu>
 
 		<ZPagination v-model="page" sticky :total-pages="totalPages" />
 	</div>
 </UtilHydrateSafe>
 </template>
-
-<style lang="scss" scoped>
-.post-list {
-	margin: 1rem;
-}
-
-.float-in-leave-to {
-	position: absolute;
-}
-</style>

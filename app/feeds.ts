@@ -1,7 +1,5 @@
 import type { FeedGroup } from '../app/types/feed'
 // 友链检测 CLI 需要使用显式导入和相对路径
-import { get } from 'radash'
-import { myFeed } from '../blog.config'
 // eslint-disable-next-line unused-imports/no-unused-imports
 import { getFavicon, getGithubAvatar, getGithubIcon, getOciqGroupAvatar, getOicqAvatar, OicqAvatarSize } from './utils/img'
 
@@ -12,6 +10,18 @@ export default [
 		desc: '网络上遇到的大佬',
 		// @keep-sorted { "keys": ["date"] }
 		entries: [
+
+			{
+				author: '张洪Heo',
+				desc: '分享设计与科技生活',
+				link: 'https://blog.zhheo.com/',
+				feed: 'https://blog.zhheo.com/atom.xml',
+				icon: 'https://blog.zhheo.com/img/favicon4.0.webp',
+				avatar: 'https://bu.dusays.com/2022/12/28/63ac2812183aa.png',
+				archs: ['Hexo', '国内 CDN'],
+				date: '2024-03-05',
+				comment: '知名博主，其博客设计风格被众多人借鉴。',
+			},
 			{
 				author: '纸鹿',
 				sitenick: '摸鱼处',
@@ -35,17 +45,6 @@ export default [
 				avatar: 'https://cdn.sep.cc/avatar/28b57baa4e8f13fe4292ccb2de267e30?s=150&d=mm&r=g',
 				archs: ['Hexo', '服务器'],
 				date: '2026-03-05',
-			},
-			{
-				author: '张洪Heo',
-				desc: '分享设计与科技生活',
-				link: 'https://blog.zhheo.com/',
-				feed: 'https://blog.zhheo.com/atom.xml',
-				icon: 'https://blog.zhheo.com/img/favicon4.0.webp',
-				avatar: 'https://bu.dusays.com/2022/12/28/63ac2812183aa.png',
-				archs: ['Hexo', '国内 CDN'],
-				date: '2024-03-05',
-				comment: '知名博主，其博客设计风格被众多人借鉴。',
 			},
 			{
 				author: '無名',

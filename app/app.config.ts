@@ -68,7 +68,7 @@ export default defineAppConfig({
 				title: '探索',
 				items: [
 					{ icon: 'ph:rss-simple-bold', text: 'Atom订阅', url: '/atom.xml' },
-					{icon: 'ph:map-trifold-bold', text: '站点地图', url: '/sitemap.xml' },
+					{ icon: 'ph:map-trifold-bold', text: '站点地图', url: '/sitemap.xml' },
 					{ icon: 'ph:planet-bold', text: '异次元之旅', url: 'https://travel.moe/go.html?travel=on' },
 				],
 			},

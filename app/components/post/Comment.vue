@@ -102,7 +102,8 @@ function fillCommentInput(input: HTMLTextAreaElement, content?: string) {
 	if (content?.trim()) {
 		const quotes = content.split('\n').map(str => `> ${str}`)
 		input.value = `${quotes}\n\n`
-	} else {
+	}
+	else {
 		input.value = ''
 	}
 
@@ -134,7 +135,6 @@ function loadTwikooScript() {
 	})
 }
 
-
 async function initTwikoo() {
 	if (twikooReady.value)
 		return
@@ -162,8 +162,8 @@ async function initTwikoo() {
 	try {
 		await twikooInitPromise
 	}
-	catch (error) {
-		return
+	catch {
+
 	}
 }
 
@@ -467,8 +467,8 @@ useEventListener(commentEl, 'focusin', warmupTwikoo, { once: true })
 		overflow: hidden;
 		border: 1px solid var(--comment-panel-border);
 		border-radius: var(--comment-control-radius);
-		background: linear-gradient(180deg, var(--comment-panel-bg-soft), var(--comment-panel-bg));
 		box-shadow: var(--box-shadow-1), var(--box-shadow-3);
+		background: linear-gradient(180deg, var(--comment-panel-bg-soft), var(--comment-panel-bg));
 		color: var(--comment-panel-text);
 
 		.OwO-items {
@@ -478,10 +478,10 @@ useEventListener(commentEl, 'focusin', warmupTwikoo, { once: true })
 		}
 
 		.OwO-item {
-			color: var(--comment-panel-text);
 			opacity: 0.96;
 			border-radius: calc(var(--comment-control-radius) - 0.125rem);
-			text-shadow: 0 0 0.01px currentColor;
+			text-shadow: 0 0 0.01px currentcolor;
+			color: var(--comment-panel-text);
 			transition: background-color 0.2s, color 0.2s, transform 0.2s;
 
 			&:hover {
@@ -502,8 +502,8 @@ useEventListener(commentEl, 'focusin', warmupTwikoo, { once: true })
 
 		.OwO-packages li {
 			border-radius: calc(var(--comment-control-radius) - 0.125rem);
-			color: var(--comment-panel-text-muted);
 			font-weight: 500;
+			color: var(--comment-panel-text-muted);
 			transition: background-color 0.2s, color 0.2s;
 
 			&:hover {
@@ -513,10 +513,10 @@ useEventListener(commentEl, 'focusin', warmupTwikoo, { once: true })
 		}
 
 		.OwO-packages .OwO-package-active,
-		.OwO-packages li[aria-selected='true'] {
+		.OwO-packages li[aria-selected="true"] {
+			box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-primary) 35%, transparent);
 			background: var(--comment-panel-active);
 			color: var(--comment-panel-text);
-			box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-primary) 35%, transparent);
 		}
 	}
 
@@ -590,6 +590,7 @@ useEventListener(commentEl, 'focusin', warmupTwikoo, { once: true })
 	}
 
 	p { margin: 0.2em 0; }
+
 	img {
 		border-radius: var(--comment-control-radius);
 		cursor: zoom-in;

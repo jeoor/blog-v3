@@ -8,7 +8,14 @@ export default antfu({
 	pnpm: true,
 	// @keep-sorted
 	rules: {
-		'jsonc/indent': ['error', 2],
+		'@stylistic/linebreaks': 'off',
+		'e18e/prefer-static-regex': 'warn',
+		'style/linebreaks': 'off',
+		'yaml/indent': ['error', 2],
+	},
+}, {
+	files: ['**/*.vue'],
+	rules: {
 		'vue/block-lang': ['warn', {
 			script: { lang: ['ts', 'tsx'] },
 			style: { lang: ['scss'] },
@@ -17,12 +24,12 @@ export default antfu({
 			allow: ['scoped'],
 		}],
 		'vue/html-indent': ['error', 'tab', { baseIndent: 0 }],
-		'yaml/indent': ['error', 2],
 	},
 }, {
-	files: ['**/*.json'],
+	files: ['**/*.json', '**/*.jsonc', '**/*.json5'],
 	ignores: ['content/**'],
 	rules: {
+		'jsonc/indent': ['error', 2],
 		'style/eol-last': ['warn', 'never'],
 	},
 }, {
@@ -31,7 +38,7 @@ export default antfu({
 	rules: {
 		'antfu/consistent-list-newline': 'off',
 		'eqeqeq': 'off',
-		'jsonc/comma-dangle': ['warn', 'always'],
+		'markdown/no-multiple-h1': 'off',
 		'no-irregular-whitespace': 'off',
 		'no-sequences': 'off',
 		'prefer-arrow-callback': 'off',
@@ -41,5 +48,12 @@ export default antfu({
 		'style/quotes': 'off',
 		'style/semi': 'off',
 		'unicorn/prefer-includes': 'off',
+	},
+
+}, {
+	files: ['nuxt.config.ts', 'scripts/**/*.ts'],
+	rules: {
+		'node/prefer-global/buffer': 'off',
+		'node/prefer-global/process': 'off',
 	},
 })

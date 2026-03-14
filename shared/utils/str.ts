@@ -1,5 +1,10 @@
 import { toArray } from '@vueuse/core'
 
+const htmlEscapeRE = /[&<>"']/g
+const lineBreaksRE = /\n+/g
+const regexSpecialCharsRE = /[.*+?^${}()|[\]\\]/g
+const htmlTagRE = /<[^>]+(>|$)/g
+
 // @keep-sorted
 const promptLanguageMap: Record<string, string> = {
 	'#': 'sh',
@@ -72,13 +77,13 @@ export function escapeHtml(text: string) {
 		'"': '&quot;',
 		'\'': '&#039;',
 	}
-	return text.replace(/[&<>"']/g, match => map[match] || match)
+	return text.replace(htmlEscapeRE, match => map[match] || match)
 }
 
 export function highlightHtml(text: string, words: string | string[] | undefined, className?: string) {
 	if (!text)
 		return ''
-	const format = (str: string) => str.replace(/\n+/g, '<br>')
+	const format = (str: string) => str.replace(lineBreaksRE, '<br>')
 
 	const validTerms = new Set(
 		toArray(words)
@@ -89,8 +94,7 @@ export function highlightHtml(text: string, words: string | string[] | undefined
 	if (validTerms.size === 0)
 		return format(escapeHtml(text))
 
-	const escapedTerms = Array.from(validTerms)
-		.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+	const escapedTerms = Array.from(validTerms, t => t.replace(regexSpecialCharsRE, '\\$&'))
 
 	const regex = new RegExp(`(${escapedTerms.join('|')})`, 'gi')
 
@@ -100,11 +104,11 @@ export function highlightHtml(text: string, words: string | string[] | undefined
 			? `<mark ${className ? `class="${className}"` : ''}>${escapeHtml(part)}</mark>`
 			: escapeHtml(part))
 		.join('')
-		.replace(/\n+/g, '<br>')
+		.replace(lineBreaksRE, '<br>')
 }
 
 export function removeHtmlTags(str?: string) {
 	if (typeof str !== 'string')
 		return ''
-	return str.replace(/<[^>]+(>|$)/g, '')
+	return str.replace(htmlTagRE, '')
 }

@@ -1,6 +1,9 @@
 import { fromUrl, parseDomain, ParseResultType } from 'parse-domain'
 import { isPathFile } from 'site-config-stack/urls'
 
+const githubUsernameRE = /github\.com\/([a-zA-Z0-9-]+)(?:\/[^/]+)?(\/?)$/
+const trailingSlashRE = /\/+$/
+
 const domainTip: Record<string, string> = {
 	'github.io': 'GitHub Pages 域名',
 	'netlify.app': 'Netlify 域名',
@@ -31,8 +34,7 @@ export function getDomainType(mainDomain: string) {
 export function getGithubUsername(url?: string) {
 	if (!url)
 		return ''
-	const usernameRegex = /github\.com\/([a-zA-Z0-9-]+)(?:\/[^/]+)?(\/?)$/
-	return url.match(usernameRegex)?.[1] ?? ''
+	return url.match(githubUsernameRE)?.[1] ?? ''
 }
 
 export function isExtLink(url?: string) {
@@ -51,7 +53,7 @@ export function toSiteRelativeLink(url: string, siteUrl: string) {
 		if (targetUrl.origin !== site.origin)
 			return url
 
-		const pathname = targetUrl.pathname === '/' ? '/' : targetUrl.pathname.replace(/\/+$/, '') || '/'
+		const pathname = targetUrl.pathname === '/' ? '/' : targetUrl.pathname.replace(trailingSlashRE, '') || '/'
 		return `${pathname}${targetUrl.search}${targetUrl.hash}`
 	}
 	catch {

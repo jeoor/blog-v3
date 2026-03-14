@@ -13,6 +13,21 @@ withDefaults(defineProps<{
 }>(), {
 	size: 'medium',
 })
+
+function normalizeDlValue(value: VNodeChild): VNodeChild {
+	if (value === '')
+		return null
+
+	if (Array.isArray(value)) {
+		const normalized = value
+			.map(item => normalizeDlValue(item))
+			.filter(item => item !== null)
+
+		return normalized.length > 0 ? normalized : null
+	}
+
+	return value
+}
 </script>
 
 <template>
@@ -20,8 +35,10 @@ withDefaults(defineProps<{
 	<div v-for="{ label, value, tip } in items" :key="label">
 		<dt>{{ label }}</dt>
 		<dd :title="toValue(tip)">
-			<!-- 支持 string, Ref<String>, VNode, () => VNode -->
-			<component :is="() => toValue(value)" />
+			<span class="dl-value">
+				<!-- 支持 string, Ref<String>, VNode, () => VNode -->
+				<component :is="() => normalizeDlValue(toValue(value))" />
+			</span>
 		</dd>
 	</div>
 </dl>

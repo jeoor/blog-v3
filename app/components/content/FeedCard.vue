@@ -8,6 +8,11 @@ const props = defineProps<FeedEntry>()
 const appConfig = useAppConfig()
 const route = useRoute()
 const isInspect = computed(() => import.meta.dev && route.query.inspect !== undefined)
+const inspectLabelStyle: CSSProperties = {
+	left: '100%',
+	position: 'absolute',
+	whiteSpace: 'nowrap',
+}
 
 const title = computed(() => props.title ?? props.sitenick ?? props.author)
 const normalizedLink = computed(() => toSiteRelativeLink(props.link, appConfig.url))
@@ -56,7 +61,7 @@ function getInspectStyle(src: string): CSSProperties {
 	>
 		<div class="avatar" :title="feed ? undefined : '无订阅源'">
 			<ClientOnly v-if="isInspect">
-				<span style="position: absolute; left: 100%; white-space: nowrap;" v-text="title" />
+				<span :style="inspectLabelStyle" v-text="title" />
 				<NuxtImg :src="icon" :title="icon" :style="getInspectStyle(icon)" />
 				<NuxtImg :src="avatar" :title="avatar" :style="getInspectStyle(avatar)" />
 			</ClientOnly>

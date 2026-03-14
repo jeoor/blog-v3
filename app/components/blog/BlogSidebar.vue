@@ -2,12 +2,18 @@
 const appConfig = useAppConfig()
 const layoutStore = useLayoutStore()
 
-const { text } = useTextSelection()
-const debouncedSelection = refDebounced(text)
 const searchLabel = ref('')
+const searchButtonLabel = computed(() => searchLabel.value || '搜索')
 
 let searchStorePromise: Promise<{ word: string }> | undefined
 let searchLabelWatcherBound = false
+
+function getSelectedText() {
+	if (!import.meta.client)
+		return ''
+
+	return globalThis.getSelection?.()?.toString().trim() || ''
+}
 
 async function ensureSearchStore() {
 	if (!searchStorePromise) {
@@ -35,12 +41,30 @@ async function toggleSearch() {
 	}
 
 	const searchStore = await ensureSearchStore()
-	const selectionText = debouncedSelection.value?.trim() || ''
+	const selectionText = getSelectedText()
 
 	if (selectionText)
 		searchStore.word = selectionText
 
 	layoutStore.toggle('search')
+}
+
+function onSearchShortcut(event: KeyboardEvent) {
+	if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 'k')
+		return
+
+	event.preventDefault()
+	void toggleSearch()
+}
+
+if (import.meta.client) {
+	onMounted(() => {
+		window.addEventListener('keydown', onSearchShortcut)
+	})
+
+	onBeforeUnmount(() => {
+		window.removeEventListener('keydown', onSearchShortcut)
+	})
 }
 </script>
 
@@ -56,10 +80,17 @@ async function toggleSearch() {
 	<BlogHeader class="sidebar-header" to="/" />
 
 	<nav class="sidebar-nav scrollcheck-y">
-		<div class="search-btn sidebar-nav-item gradient-card" @click="toggleSearch()">
+		<div
+			class="search-btn sidebar-nav-item gradient-card"
+			role="button"
+			tabindex="0"
+			@click="toggleSearch()"
+			@keydown.enter.prevent="toggleSearch()"
+			@keydown.space.prevent="toggleSearch()"
+		>
 			<Icon name="ph:magnifying-glass-bold" />
-			<span class="nav-text">{{ debouncedSelection || searchLabel || '搜索' }}</span>
-			<Key class="keycut" code="K" cmd prevent @press="toggleSearch()" />
+			<span class="nav-text">{{ searchButtonLabel }}</span>
+			<span class="keycut" aria-hidden="true">Ctrl / ⌘ K</span>
 		</div>
 
 		<template v-for="(group, groupIndex) in appConfig.nav" :key="groupIndex">
@@ -166,6 +197,16 @@ async function toggleSearch() {
 	> .external-tip {
 		opacity: 0.5;
 		font-size: 1em;
+	}
+
+	> .keycut {
+		padding: 0.1em 0.5em;
+		border-radius: 999px;
+		background-color: var(--c-bg-soft);
+		font-size: 0.75em;
+		line-height: 1.6;
+		white-space: nowrap;
+		color: var(--c-text-3);
 	}
 }
 

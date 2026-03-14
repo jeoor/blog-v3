@@ -18,11 +18,11 @@ const { widgets } = useWidgets(asideWidgets)
 	:class="{ show: layoutStore.state === 'aside', hidden: !asideWidgets?.length }"
 	:aria-hidden="!asideWidgets?.length || undefined"
 >
-	<TransitionGroup name="float-in">
+	<div class="blog-aside-widgets">
 		<!-- 更换页面时相同 key 的组件不会更新 -->
 		<component :is="widget.comp" v-for="widget in widgets" :key="widget.name" />
-		<div v-if="!widgets.length" key="aside-placeholder" />
-	</TransitionGroup>
+		<div v-if="!widgets.length" class="blog-aside-placeholder" />
+	</div>
 </aside>
 </template>
 
@@ -59,9 +59,5 @@ const { widgets } = useWidgets(asideWidgets)
 			transform: none;
 		}
 	}
-}
-
-.float-in-leave-active {
-	position: absolute;
 }
 </style>

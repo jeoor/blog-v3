@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue'
 import type { WidgetName } from '~/composables/useWidgets'
+import { defineAsyncComponent } from 'vue'
 
 definePageMeta({
 	key: route => route.path,
@@ -66,7 +66,8 @@ function clearAsideRestore() {
 
 	if (typeof browser.cancelIdleCallback === 'function') {
 		browser.cancelIdleCallback(asideRestoreId)
-	} else {
+	}
+	else {
 		browser.clearTimeout(asideRestoreId)
 	}
 
@@ -100,10 +101,9 @@ if (post.value) {
 else {
 	const event = useRequestEvent()
 	event && setResponseStatus(event, 404)
-	route.meta.title = '404'
+	route.meta.title = '页面不存在'
 	layoutStore.setAside(['blog-tech'])
 }
-
 
 if (import.meta.client) {
 	onMounted(() => {
@@ -189,8 +189,8 @@ if (import.meta.dev) {
 	transition: transform 0.2s, box-shadow 0.2s;
 
 	&:hover {
-		transform: translateY(-1px);
 		box-shadow: var(--box-shadow-1);
+		transform: translateY(-1px);
 	}
 }
 </style>

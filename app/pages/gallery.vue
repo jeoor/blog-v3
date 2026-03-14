@@ -222,7 +222,9 @@ function backToFolders() {
 
 				<div class="folder-meta">
 					<h4>{{ folder.name }}</h4>
-					<p class="folder-count">{{ folder.images.length }} 张图片</p>
+					<p class="folder-count">
+						{{ folder.images.length }} 张图片
+					</p>
 				</div>
 			</button>
 		</div>
@@ -287,8 +289,8 @@ function backToFolders() {
 
 <style lang="scss" scoped>
 .gallery-page {
-	animation: float-in .2s backwards;
 	margin: 1rem;
+	animation: float-in 0.2s backwards;
 }
 
 .folder-panel,
@@ -299,8 +301,8 @@ function backToFolders() {
 
 .panel-head {
 	display: flex;
-	justify-content: space-between;
 	align-items: baseline;
+	justify-content: space-between;
 	gap: 1rem;
 	margin-bottom: 1rem;
 
@@ -311,7 +313,7 @@ function backToFolders() {
 	}
 
 	span {
-		font-size: .85rem;
+		font-size: 0.85rem;
 		color: var(--c-text-3);
 	}
 }
@@ -319,7 +321,7 @@ function backToFolders() {
 .folder-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-	gap: .8rem;
+	gap: 0.8rem;
 
 	@media (max-width: $breakpoint-mobile) {
 		grid-template-columns: 1fr;
@@ -327,10 +329,10 @@ function backToFolders() {
 }
 
 .folder-card {
-	text-align: left;
-	border-radius: .6rem;
 	overflow: hidden;
+	border-radius: 0.6rem;
 	box-shadow: 0 0 0 1px var(--c-bg-soft);
+	text-align: left;
 	transition: transform var(--delay), box-shadow var(--delay);
 
 	&:hover {
@@ -339,8 +341,8 @@ function backToFolders() {
 
 	.folder-cover {
 		position: relative;
-		aspect-ratio: 16 / 9;
 		overflow: hidden;
+		aspect-ratio: 16 / 9;
 	}
 
 	.cover-image {
@@ -351,17 +353,17 @@ function backToFolders() {
 	}
 
 	.folder-meta {
-		padding: .65rem .75rem;
+		padding: 0.65rem 0.75rem;
 		background-color: var(--ld-bg-card);
 
 		h4 {
 			margin: 0;
-			font-size: .95rem;
+			font-size: 0.95rem;
 		}
 
 		.folder-count {
-			margin: .25rem 0 0;
-			font-size: .82rem;
+			margin: 0.25rem 0 0;
+			font-size: 0.82rem;
 			color: var(--c-text-3);
 		}
 	}
@@ -371,7 +373,7 @@ function backToFolders() {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: .8rem;
+	gap: 0.8rem;
 	margin-bottom: 1rem;
 
 	@media (max-width: $breakpoint-mobile) {
@@ -381,7 +383,7 @@ function backToFolders() {
 	.head-main {
 		display: flex;
 		align-items: baseline;
-		gap: .6rem;
+		gap: 0.6rem;
 		margin-inline-end: auto;
 
 		h3 {
@@ -390,7 +392,7 @@ function backToFolders() {
 		}
 
 		span {
-			font-size: .85rem;
+			font-size: 0.85rem;
 			color: var(--c-text-3);
 		}
 	}
@@ -399,21 +401,22 @@ function backToFolders() {
 .back-btn {
 	display: inline-flex;
 	align-items: center;
-	gap: .25rem;
-	padding: .35rem .6rem;
-	border-radius: .45rem;
-	font-size: .8rem;
+	gap: 0.25rem;
+	padding: 0.35rem 0.6rem;
+	border-radius: 0.45rem;
+	font-size: 0.8rem;
 	color: var(--c-text-2);
 	transition: color var(--delay), background-color var(--delay);
 
 	&:hover {
-		color: var(--c-text);
 		background-color: var(--c-bg-soft);
+		color: var(--c-text);
 	}
 }
+
 .image-grid {
 	column-count: 3;
-	column-gap: .8rem;
+	column-gap: 0.8rem;
 
 	@media (max-width: $breakpoint-mobile) {
 		column-count: 2;
@@ -421,13 +424,13 @@ function backToFolders() {
 }
 
 .image-card {
-	break-inside: avoid;
-	margin-bottom: .8rem;
-	border-radius: .6rem;
 	overflow: hidden;
-	cursor: zoom-in;
+	margin-bottom: 0.8rem;
+	border-radius: 0.6rem;
 	box-shadow: 0 0 0 1px var(--c-bg-soft);
 	transition: transform var(--delay), box-shadow var(--delay);
+	cursor: zoom-in;
+	break-inside: avoid;
 
 	&:hover {
 		transform: translateY(-2px);

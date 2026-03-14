@@ -40,6 +40,8 @@ const zonedPartsFormatter = new Intl.DateTimeFormat('en-CA', {
 })
 const formatterCache = new Map<string, Intl.DateTimeFormat>()
 const naiveDateTimePattern = /^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?)?)?$/
+const trailingZoneAnnotationRE = /\[[^\]]+\]$/u
+const dateSpaceSeparatorRE = /^(\d{4}-\d{2}-\d{2})\s/u
 
 export function isSameUnit(date1: DateInput, date2: DateInput, unit: DateTimeUnit) {
 	try {
@@ -203,12 +205,12 @@ function toDate(date: DateInput) {
 }
 
 function parseDateString(date: string) {
-	const normalizedDate = date.trim().replace(/\[[^\]]+\]$/u, '')
+	const normalizedDate = date.trim().replace(trailingZoneAnnotationRE, '')
 	const naiveDateMatch = normalizedDate.match(naiveDateTimePattern)
 	if (naiveDateMatch)
 		return parseNaiveDate(naiveDateMatch)
 
-	const parsedDate = new Date(normalizedDate.replace(/^(\d{4}-\d{2}-\d{2})\s/u, '$1T'))
+	const parsedDate = new Date(normalizedDate.replace(dateSpaceSeparatorRE, '$1T'))
 	if (Number.isNaN(parsedDate.getTime()))
 		throw new TypeError(`Invalid date: ${date}`)
 	return parsedDate
@@ -224,7 +226,7 @@ function parseNaiveDate(match: RegExpMatchArray) {
 	const millisecond = Number.parseInt((match[7] || '0').padEnd(3, '0'), 10)
 
 	const utcGuess = Date.UTC(year, month - 1, day, hour, minute, second, millisecond)
-	let timeZoneOffset = getTimeZoneOffset(utcGuess)
+	const timeZoneOffset = getTimeZoneOffset(utcGuess)
 	let timestamp = utcGuess - timeZoneOffset
 	const adjustedOffset = getTimeZoneOffset(timestamp)
 

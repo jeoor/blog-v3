@@ -57,11 +57,14 @@ function getTagSize(count: number): string {
 	const maxCount = Math.max(...Object.values(articlesByTag.value).map(articles => articles.length))
 	const minCount = Math.min(...Object.values(articlesByTag.value).map(articles => articles.length))
 	const range = maxCount - minCount
-	if (range === 0) return 'medium'
+	if (range === 0)
+		return 'medium'
 
 	const ratio = (count - minCount) / range
-	if (ratio < 0.33) return 'small'
-	if (ratio < 0.66) return 'medium'
+	if (ratio < 0.33)
+		return 'small'
+	if (ratio < 0.66)
+		return 'medium'
 	return 'large'
 }
 </script>
@@ -97,8 +100,8 @@ function getTagSize(count: number): string {
 	padding: 0.25rem 0.5rem;
 	border-radius: 0.5rem;
 	background-color: transparent;
-	color: var(--c-text-2);
 	line-height: 1.2;
+	color: var(--c-text-2);
 	transition: background-color 0.2s, color 0.1s;
 
 	&:hover,
@@ -109,7 +112,11 @@ function getTagSize(count: number): string {
 
 	&.small { font-size: 0.82em; }
 	&.medium { font-size: 0.9em; }
-	&.large { font-size: 0.98em; font-weight: 600; }
+
+	&.large {
+		font-size: 0.98em;
+		font-weight: 600;
+	}
 }
 
 .tag-count {

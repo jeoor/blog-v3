@@ -1,13 +1,11 @@
-import { ContentRenderer } from '#components'
-import BlogWidget from '~/components/blog/BlogWidget.vue'
+import { LazyContentRenderer } from '#components'
 import { defineAsyncComponent } from 'vue'
+import BlogWidget from '~/components/blog/BlogWidget.vue'
 
 // @keep-sorted
 const rawWidgets = {
-	'blog-log': defineAsyncComponent(() => import('~/components/widget/BlogLog.vue')),
 	'blog-stats': defineAsyncComponent(() => import('~/components/widget/BlogStats.vue')),
 	'blog-tech': defineAsyncComponent(() => import('~/components/widget/BlogTech.vue')),
-	'comm-group': defineAsyncComponent(() => import('~/components/widget/CommGroup.vue')),
 	'countdown': defineAsyncComponent(() => import('~/components/widget/Countdown.vue')),
 	'empty': defineAsyncComponent(() => import('~/components/widget/Empty.vue')),
 	'tag-cloud': defineAsyncComponent(() => import('~/components/widget/TagCloud.vue')),
@@ -25,7 +23,7 @@ export default function useWidgets(widgetList: MaybeRefOrGetter<WidgetName[]>) {
 			BlogWidget,
 			{ card: !slotsTree, ...slotsTree?.props },
 			() => slotsTree
-				? h(ContentRenderer, { value: slotsTree })
+				? h(LazyContentRenderer, { value: slotsTree })
 				: `${widgetName} 不存在`,
 		)
 	}

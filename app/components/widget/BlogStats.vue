@@ -16,6 +16,7 @@ interface StatsPayload {
 
 const appConfig = useAppConfig()
 const runtimeConfig = useRuntimeConfig()
+const mounted = useMounted()
 
 // 响应头不正确时，stats.value 可能会是字符串，首次属性访问可能为 undefined
 const { data: stats } = useFetch<StatsPayload | string>('/api/stats')
@@ -50,7 +51,7 @@ const yearlyTip = computed(() => Object
 
 const blogStats = [{
 	label: '运营时长',
-	value: timeElapse(appConfig.timeEstablished),
+	value: computed(() => mounted.value ? timeElapse(appConfig.timeEstablished) : '--'),
 	tip: `博客于${appConfig.timeEstablished}上线`,
 }, {
 	label: '上次更新',
@@ -61,7 +62,7 @@ const blogStats = [{
 	}),
 }, {
 	label: '总字数',
-		value: computed(() => formatNumber(normalizedStats.value?.total?.words) || '--'),
+	value: computed(() => formatNumber(normalizedStats.value?.total?.words) || '--'),
 	tip: yearlyTip,
 }, {
 	label: '本站访客量',
@@ -80,6 +81,6 @@ const blogStats = [{
 
 <style lang="scss" scoped>
 :deep(.busuanzi-value:empty::before) {
-	content: '--';
+	content: "--";
 }
 </style>

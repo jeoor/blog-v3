@@ -6,7 +6,27 @@ const props = defineProps<{
 }>()
 
 const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-log'])
+layoutStore.setAside([])
+
+const errorTitle = computed(() => {
+	const statusCode = props.error?.statusCode
+	const message = props.error?.message?.trim()
+
+	if (statusCode === 404)
+		return '页面不存在'
+
+	if (statusCode && message)
+		return `[${statusCode}] ${message}`
+
+	if (statusCode)
+		return `错误 ${statusCode}`
+
+	return message || '页面错误'
+})
+
+useSeoMeta({
+	title: errorTitle,
+})
 
 const errorStack = removeHtmlTags(props.error?.stack)
 
@@ -26,7 +46,7 @@ onMounted(() => {
 			<ZError
 				:code="errorStack"
 				:message="error?.url"
-				:title="`[${error?.statusCode}] ${error?.message}`"
+				:title="errorTitle"
 			>
 				<template #operation>
 					<ZButton text="返回主页" @click="clearError({ redirect: '/' })" />

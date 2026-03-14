@@ -2,17 +2,19 @@ import type { NitroConfig } from 'nitropack'
 import { readFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
-import { imageSize } from 'image-size'
 import { arch, env, version as nodeVersion, platform } from 'node:process'
 import { name as ciName, CLOUDFLARE_PAGES, GITHUB_ACTIONS, NETLIFY } from 'ci-info'
+import { imageSize } from 'image-size'
 import { pascal } from 'radash'
 import { Temporal } from 'temporal-polyfill'
 import blogConfig from './blog.config'
 import packageJson from './package.json'
 import redirectList from './redirects.json'
 
+const edgeOneEnvKeyRE = /^(?:EDGEONE|EO_|TENCENTCLOUD)/i
+const lineBreakRE = /\r?\n/u
 const edgeOneDetected = env.TENCENTCLOUD_RUNENV === 'SCF'
-	|| Object.keys(env).some(key => /^(EDGEONE|EO_|TENCENTCLOUD)/i.test(key))
+	|| Object.keys(env).some(key => edgeOneEnvKeyRE.test(key))
 const runtimeCi = env.BLOG_CI || env.CI_NAME || (edgeOneDetected ? 'EdgeOne' : ciName || '')
 const nitroOutputDir = env.BLOG_NITRO_OUTPUT_DIR?.trim()
 const nitroOutput = nitroOutputDir
@@ -23,14 +25,35 @@ const nitroOutput = nitroOutputDir
 		}
 	: undefined
 const workspaceCatalogSource = readFileSync(resolve('pnpm-workspace.yaml'), 'utf8')
-
-function escapeRegex(value: string) {
-	return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
+const workspaceCatalogLines = workspaceCatalogSource.split(lineBreakRE)
+const versionPrefixRE = /^[~^<>=\s]+/
+const wrappingQuotesRE = /^['"]|['"]$/g
+const leadingWhitespaceRE = /^\s*/u
+const httpUrlRE = /^https?:\/\//
+const queryOrHashRE = /[?#].*$/
+const postsPrefixRE = /^\/posts/
 
 function getWorkspaceCatalogVersion(packageName: string) {
-	const match = workspaceCatalogSource.match(new RegExp(`^\\s{4,}${escapeRegex(packageName)}:\\s*(.+)$`, 'm'))
-	return match?.[1]?.trim() || ''
+	const directKey = `${packageName}:`
+	const singleQuotedKey = `'${packageName}':`
+	const doubleQuotedKey = `"${packageName}":`
+
+	for (const line of workspaceCatalogLines) {
+		if (!line.startsWith('    '))
+			continue
+
+		const trimmedLine = line.trimStart()
+		if (!trimmedLine.startsWith(directKey) && !trimmedLine.startsWith(singleQuotedKey) && !trimmedLine.startsWith(doubleQuotedKey))
+			continue
+
+		const separatorIndex = trimmedLine.indexOf(':')
+		if (separatorIndex === -1)
+			return ''
+
+		return trimmedLine.slice(separatorIndex + 1).trim().replace(versionPrefixRE, '')
+	}
+
+	return ''
 }
 
 const techstackVersions = {
@@ -43,8 +66,15 @@ const picBlockRegex = /::pic\s*---\n([\s\S]*?)\n---\s*::/g
 const imageDimensionCache = new Map<string, Promise<{ width: number, height: number } | null>>()
 
 function getPicProp(block: string, key: string) {
-	const match = block.match(new RegExp(`^${key}:\\s*(.+)$`, 'm'))
-	return match?.[1]?.trim().replace(/^['"]|['"]$/g, '') || ''
+	for (const line of block.split(lineBreakRE)) {
+		const trimmedLine = line.trimStart()
+		if (!trimmedLine.startsWith(`${key}:`))
+			continue
+
+		return trimmedLine.slice(key.length + 1).trim().replace(wrappingQuotesRE, '')
+	}
+
+	return ''
 }
 
 function getPicNumericProp(block: string, key: string) {
@@ -53,25 +83,40 @@ function getPicNumericProp(block: string, key: string) {
 }
 
 function setPicProp(block: string, key: string, value: number) {
-	const line = `${key}: ${value}`
-	const propRegex = new RegExp(`^${key}:\\s*.+$`, 'm')
-
-	if (propRegex.test(block))
-		return block.replace(propRegex, line)
-
+	const lines = block.split(lineBreakRE)
+	const existingLine = lines.find(entry => entry.trimStart().startsWith(`${key}:`))
 	const anchorKey = key === 'width' ? 'height' : 'width'
-	const anchorRegex = new RegExp(`^${anchorKey}:\\s*.+$`, 'm')
-	const anchorMatch = block.match(anchorRegex)
+	const anchorLine = lines.find(entry => entry.trimStart().startsWith(`${anchorKey}:`))
+	const lineIndent = (existingLine || anchorLine)?.match(leadingWhitespaceRE)?.[0] || ''
+	const line = `${lineIndent}${key}: ${value}`
+	const existingIndex = lines.findIndex(entry => entry.trimStart().startsWith(`${key}:`))
 
-	if (anchorMatch?.index !== undefined) {
-		return `${block.slice(0, anchorMatch.index)}${line}\n${block.slice(anchorMatch.index)}`
+	if (existingIndex !== -1) {
+		lines[existingIndex] = line
+		return lines.join('\n')
+	}
+
+	const anchorIndex = lines.findIndex(entry => entry.trimStart().startsWith(`${anchorKey}:`))
+
+	if (anchorIndex !== -1) {
+		lines.splice(anchorIndex, 0, line)
+		return lines.join('\n')
 	}
 
 	return `${block.trimEnd()}\n${line}`
 }
 
 function normalizePicBlock(block: string) {
-	return block.replace(/^weight:\s*(.+)$/m, 'width: $1')
+	return block
+		.split(lineBreakRE)
+		.map((line) => {
+			const keyIndex = line.indexOf('weight:')
+			if (keyIndex === -1 || line.slice(0, keyIndex).trim().length > 0)
+				return line
+
+			return `${line.slice(0, keyIndex)}width:${line.slice(keyIndex + 'weight:'.length)}`
+		})
+		.join('\n')
 }
 
 async function getImageDimensions(src: string, filePath: string) {
@@ -79,7 +124,7 @@ async function getImageDimensions(src: string, filePath: string) {
 	if (!imageDimensionCache.has(cacheKey)) {
 		imageDimensionCache.set(cacheKey, (async () => {
 			try {
-				if (/^https?:\/\//.test(src)) {
+				if (httpUrlRE.test(src)) {
 					const response = await fetch(src)
 					if (!response.ok)
 						return null
@@ -89,7 +134,7 @@ async function getImageDimensions(src: string, filePath: string) {
 					return size.width && size.height ? { width: size.width, height: size.height } : null
 				}
 
-				const normalizedSrc = src.replace(/[?#].*$/, '')
+				const normalizedSrc = src.replace(queryOrHashRE, '')
 				const localPath = normalizedSrc.startsWith('/')
 					? resolve(process.cwd(), 'public', `.${normalizedSrc}`)
 					: resolve(process.cwd(), dirname(filePath), normalizedSrc)
@@ -198,7 +243,7 @@ export default defineNuxtConfig({
 	},
 
 	features: {
-		inlineStyles: false,
+		inlineStyles: true,
 	},
 
 	nitro: {
@@ -332,19 +377,25 @@ ${packageJson.homepage}
 			// 在 URL 中隐藏文件路由自动生成的 /posts 路径前缀
 			if (blogConfig.article.hidePostPrefix) {
 				const realPath = ctx.content.path as string | undefined
-				ctx.content.path = realPath?.replace(/^\/posts/, '')
+				ctx.content.path = realPath?.replace(postsPrefixRE, '')
 			}
 		},
 	},
 
 	icon: {
+		collections: [
+			'line-md',
+			'material-symbols',
+			'ph',
+			'ri',
+			'simple-icons',
+			'solar',
+		],
 		customCollections: [
 			{ prefix: 'zi', dir: './app/assets/icons' },
 		],
 		clientBundle: {
-			scan: {
-				globInclude: ['**\/*.{vue,jsx,tsx,ts,md,mdc,mdx}'],
-			},
+			scan: false,
 		},
 	},
 

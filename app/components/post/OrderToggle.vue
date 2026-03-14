@@ -65,37 +65,3 @@ function toggleDirection() {
 	</span>
 </div>
 </template>
-
-<style lang="scss" scoped>
-.order-toggle {
-	display: flex;
-	gap: 1rem;
-	color: var(--c-text-2);
-
-	:deep(button), :deep(a) {
-		transition: color 0.2s;
-
-		&:hover {
-			color: var(--c-primary);
-		}
-	}
-
-	.toggle-direction {
-		display: inline-block;
-		margin-inline-end: 0.1em;
-		transition: transform 0.2s;
-
-		&.ascending {
-			transform: scaleY(-1);
-		}
-	}
-}
-
-:deep(.secret-container) {
-	margin-inline-end: auto;
-}
-
-.iconify + span {
-	margin-inline-start: 0.1em;
-}
-</style>

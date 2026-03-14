@@ -10,6 +10,8 @@ const props = withDefaults(defineProps<{
 	prompt: '$',
 })
 
+const htmlFallbackBrowserRE = /\b(?:Chromium|Chrome|Edg|OPR|Opera|Brave)\b/i
+
 // prompt 传入空字符串会变成 true
 const showPrompt = computed(() => props.prompt !== true)
 const language = computed(() => props.lang ?? getPromptLanguage(props.prompt))
@@ -54,7 +56,7 @@ function prefersHtmlFallback() {
 		?? ''
 	const browserSignature = `${browserBrands} ${runtimeNavigator.userAgent}`
 
-	return /\b(?:Chromium|Chrome|Edg|OPR|Opera|Brave)\b/i.test(browserSignature)
+	return htmlFallbackBrowserRE.test(browserSignature)
 }
 
 async function refreshHighlightedHtml(code = editableCode.value) {
@@ -131,7 +133,7 @@ onMounted(async () => {
 		const runtimeWindow = window as Window & {
 			CSS?: { highlights?: { keys: () => IterableIterator<unknown> } }
 		}
-		const hasShikiHighlights = Array.from(runtimeWindow.CSS?.highlights?.keys?.() ?? [])
+		const hasShikiHighlights = [...runtimeWindow.CSS?.highlights?.keys?.() ?? []]
 			.some(name => String(name).startsWith('shiki-'))
 
 		if (!hasShikiHighlights)
@@ -145,7 +147,6 @@ onMounted(async () => {
 onBeforeUnmount(() => {
 	plainShikiDispose?.()
 })
-
 </script>
 
 <template>
@@ -154,8 +155,8 @@ onBeforeUnmount(() => {
 
 	<div class="code-shell">
 		<div
-			ref="highlight-layer"
 			v-show="useHtmlFallback"
+			ref="highlight-layer"
 			class="code-preview scrollcheck-x shiki"
 			aria-hidden="true"
 			v-html="rawHtml"
@@ -228,8 +229,8 @@ onBeforeUnmount(() => {
 		flex-grow: 1;
 		overflow: auto;
 		padding: 0 1em;
-		font-family: var(--font-monospace);
 		outline: none;
+		font-family: var(--font-monospace);
 		white-space: nowrap;
 		scrollbar-color: auto;
 		scrollbar-width: auto;
@@ -254,8 +255,8 @@ onBeforeUnmount(() => {
 
 		.code-preview,
 		.code {
-			box-sizing: border-box;
 			min-height: 2.5em;
+			box-sizing: border-box;
 			line-height: 2.5;
 		}
 
@@ -263,14 +264,14 @@ onBeforeUnmount(() => {
 			display: block;
 			overflow: hidden;
 			padding: 0 1em;
+			white-space: nowrap;
 			pointer-events: none;
 			user-select: none;
-			white-space: nowrap;
 
 			:deep(pre) {
 				margin: 0;
 				padding: 0;
-				background-color: transparent !important;
+				background-color: transparent !important; /* stylelint-disable-line declaration-no-important */
 				line-height: inherit;
 			}
 

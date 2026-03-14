@@ -3,10 +3,10 @@ import { createJavaScriptRegexEngine } from 'shiki/engine-javascript.mjs'
 import shikiConfig, { getShikiOptions } from '~/shiki.config'
 import { getShikiLanguageLoader } from './shikiLanguageLoaders.shared'
 
-type TransformerOption =
-	| 'ignoreColorizedBrackets'
-	| 'ignoreRenderWhitespace'
-	| 'ignoreRenderIndentGuides'
+type TransformerOption
+	= | 'ignoreColorizedBrackets'
+		| 'ignoreRenderWhitespace'
+		| 'ignoreRenderIndentGuides'
 
 interface HighlightCodeBlockOptions {
 	code: string
@@ -56,7 +56,7 @@ function escapeHtml(value: string) {
 		.replaceAll('<', '&lt;')
 		.replaceAll('>', '&gt;')
 		.replaceAll('"', '&quot;')
-		.replaceAll("'", '&#39;')
+		.replaceAll('\'', '&#39;')
 }
 
 function normalizeLanguage(language?: string) {

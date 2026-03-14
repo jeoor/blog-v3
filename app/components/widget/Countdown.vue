@@ -17,7 +17,7 @@ function getLunarYearDaysCount(year: number) {
 	for (let i = 0x8000; i > 0x8; i >>= 1)
 		sum += yearInfo & i ? 1 : 0
 
-	const leapMonth = yearInfo & 0xf
+	const leapMonth = yearInfo & 0xF
 	if (leapMonth)
 		sum += yearInfo & 0x10000 ? 30 : 29
 
@@ -173,19 +173,29 @@ function onVisibilityChange() {
 <BlogWidget card title="倒计时">
 	<div v-if="hydrated" class="countdown">
 		<div class="left">
-			<div class="text">距离</div>
-			<div class="name">{{ targetName }}</div>
-			<div class="days">{{ daysUntil }}</div>
-			<div class="date">{{ targetDateText }}</div>
+			<div class="text">
+				距离
+			</div>
+			<div class="name">
+				{{ targetName }}
+			</div>
+			<div class="days">
+				{{ daysUntil }}
+			</div>
+			<div class="date">
+				{{ targetDateText }}
+			</div>
 		</div>
 
 		<div class="right">
 			<div v-for="item in progressRows" :key="item.key" class="row">
-				<div class="row-name">{{ item.text }}</div>
+				<div class="row-name">
+					{{ item.text }}
+				</div>
 				<div class="bar-wrap">
 					<div class="bar" :style="item.style" />
-						<span class="percent" :class="{ 'on-bar': item.highlight }">{{ item.percentage.toFixed(2) }}%</span>
-						<span class="remain" :class="{ 'on-bar': item.highlight }">还剩{{ item.remaining }}{{ item.unit }}</span>
+					<span class="percent" :class="{ 'on-bar': item.highlight }">{{ item.percentage.toFixed(2) }}%</span>
+					<span class="remain" :class="{ 'on-bar': item.highlight }">还剩{{ item.remaining }}{{ item.unit }}</span>
 				</div>
 			</div>
 		</div>
@@ -193,17 +203,27 @@ function onVisibilityChange() {
 
 	<div v-else class="countdown">
 		<div class="left">
-			<div class="text">距离</div>
-			<div class="name">春节</div>
-			<div class="days">--</div>
-			<div class="date">----</div>
+			<div class="text">
+				距离
+			</div>
+			<div class="name">
+				春节
+			</div>
+			<div class="days">
+				--
+			</div>
+			<div class="date">
+				----
+			</div>
 		</div>
 
 		<div class="right">
 			<div v-for="item in units" :key="item.key" class="row">
-				<div class="row-name">{{ item.text }}</div>
+				<div class="row-name">
+					{{ item.text }}
+				</div>
 				<div class="bar-wrap">
-					<div class="bar" style="width: 0%; opacity: 0.62" />
+					<div class="bar" :style="{ opacity: 0.62, width: '0%' }" />
 					<span class="percent">--%</span>
 					<span class="remain">还剩--{{ item.unit }}</span>
 				</div>
@@ -216,31 +236,31 @@ function onVisibilityChange() {
 <style lang="scss" scoped>
 .countdown {
 	display: flex;
-	gap: .8rem;
+	gap: 0.8rem;
 }
 
 .left {
-	position: relative;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	line-height: 1.5;
+	position: relative;
 	min-width: 5.2rem;
+	line-height: 1.5;
 
 	&::after {
-		content: '';
+		content: "";
 		position: absolute;
-		right: -.4rem;
-		height: 80%;
+		opacity: 0.8;
+		right: -0.4rem;
 		width: 2px;
+		height: 80%;
 		background-color: var(--c-border);
-		opacity: .8;
 	}
 }
 
 .text {
-	font-size: .9rem;
+	font-size: 0.9rem;
 	color: var(--c-text-2);
 }
 
@@ -259,36 +279,36 @@ function onVisibilityChange() {
 }
 
 .date {
-	font-size: .85rem;
+	font-size: 0.85rem;
 	color: var(--c-text-3);
 }
 
 .right {
-	flex: 1;
 	display: flex;
+	flex: 1;
 	flex-direction: column;
 	justify-content: space-between;
-	gap: .35rem;
+	gap: 0.35rem;
 }
 
 .row {
 	display: flex;
 	align-items: center;
-	gap: .45rem;
+	gap: 0.45rem;
 }
 
 .row-name {
-	font-size: .9rem;
+	font-size: 0.9rem;
 	white-space: nowrap;
 	color: var(--c-text-2);
 }
 
 .bar-wrap {
-	position: relative;
-	height: 1.9rem;
 	flex: 1;
-	border-radius: 8px;
+	position: relative;
 	overflow: hidden;
+	height: 1.9rem;
+	border-radius: 8px;
 	background-color: var(--c-bg-soft);
 }
 
@@ -296,28 +316,28 @@ function onVisibilityChange() {
 	height: 100%;
 	border-radius: 8px;
 	background-color: var(--c-primary);
-	transition: width .3s;
+	transition: width 0.3s;
 }
 
 .percent,
 .remain {
 	position: absolute;
 	inset-block-start: 50%;
-	transform: translateY(-50%);
-	font-size: .8rem;
+	font-size: 0.8rem;
 	font-weight: 600;
 	color: var(--c-text-2);
-	transition: opacity .3s ease-in-out, transform .3s ease-in-out;
+	transform: translateY(-50%);
+	transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .percent {
-	inset-inline-start: .45rem;
+	inset-inline-start: 0.45rem;
 }
 
 .remain {
-	inset-inline-end: .45rem;
 	opacity: 0;
-	transform: translateY(-50%) translateX(.625rem);
+	inset-inline-end: 0.45rem;
+	transform: translateY(-50%) translateX(0.625rem);
 }
 
 .on-bar {
@@ -332,7 +352,7 @@ function onVisibilityChange() {
 
 	.percent {
 		opacity: 0;
-		transform: translateY(-50%) translateX(-.625rem);
+		transform: translateY(-50%) translateX(-0.625rem);
 	}
 }
 
@@ -342,12 +362,12 @@ function onVisibilityChange() {
 	}
 
 	.left {
-		padding-bottom: .6rem;
+		padding-bottom: 0.6rem;
 
 		&::after {
 			right: auto;
-			left: 10%;
 			bottom: 0;
+			left: 10%;
 			width: 80%;
 			height: 1px;
 		}

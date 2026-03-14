@@ -8,6 +8,9 @@ import { log } from '@clack/prompts'
 import stripAnsi from 'strip-ansi'
 import feeds from '../../app/feeds'
 
+const dnsPrefixRE = /^DNS:/
+const csvQuoteRE = /"/g
+
 export const entries = flattenFeedGroups(feeds)
 
 function flattenFeedGroups(groups: FeedGroup[]): FeedEntry[] {
@@ -74,7 +77,7 @@ export async function getCertDomains(options: tls.ConnectionOptions): Promise<st
 			const cert = socket.getPeerCertificate(true)
 			const san: string[] = cert.subjectaltname
 				?.split(', ')
-				.map(s => s.replace(/^DNS:/, '')) ?? []
+				.map(s => s.replace(dnsPrefixRE, '')) ?? []
 			const domains = san.length ? san : [cert.subject.CN]
 			resolve(domains)
 			socket.end()
@@ -93,7 +96,7 @@ export function toCsv(data: any[], columns: string[]) {
 	for (const row of data) {
 		const vals = columns.map((col) => {
 			const v = row[col]
-			return (v.join?.('; ') ?? v ?? '').replace(/"/g, '""')
+			return (v.join?.('; ') ?? v ?? '').replace(csvQuoteRE, '""')
 		})
 		lines.push(vals.join(','))
 	}
