@@ -39,13 +39,13 @@ donation: false
 
 ::link-card
 ---
-title: 博客
-description: blog.kayro.cn
-link: https://blog.kayro.cn/
+title: 主页
+description: www.kayro.cn
+link: https://www.kayro.cn/
 class: gradient-card active
 ---
 #icon
-<Icon name="ph:files-bold" size="1.75rem" />
+<Icon name="ph:house-bold" size="1.75rem" />
 ::
 
 ::link-card
