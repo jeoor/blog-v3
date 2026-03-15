@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import type { GalleryImage } from '~/types/gallery'
+import type { GalleryFolder, GalleryImage } from '~/types/gallery'
 import { LazyPopoverLightbox } from '#components'
-import gallery from '~/gallery'
+import galleryBase from '~/gallery'
+
+definePageMeta({
+	path: '/gallery/:folder?',
+})
 
 const appConfig = useAppConfig()
 const layoutStore = useLayoutStore()
@@ -19,38 +23,84 @@ const ogImage = new URL(image, appConfig.url).href
 useSeoMeta({ title, description, ogImage })
 
 const activeFolderId = ref('')
+const shuffledFolders = ref<GalleryFolder[]>([])
 const shuffledImages = ref<GalleryImage[]>([])
 const hydrated = ref(false)
 const viewerIndex = ref(-1)
 const viewerTargetEl = ref<HTMLImageElement>()
-
-function applyFolderFromRoute(value: string | string[] | undefined) {
-	const targetRaw = Array.isArray(value) ? value[0] : value
-	const target = targetRaw || ''
-	if (!target) {
-		activeFolderId.value = ''
-		return
-	}
-
-	const exists = gallery.some(folder => folder.id === target)
-	activeFolderId.value = exists ? target : ''
-}
-
-watch(() => route.query.c, (value) => {
-	if (!hydrated.value)
-		return
-
-	applyFolderFromRoute(value as string | string[] | undefined)
-})
-
-const activeFolder = computed(() => gallery.find(folder => folder.id === activeFolderId.value))
-const showingFolder = computed(() => Boolean(activeFolder.value))
 
 function getImageUrl(image?: GalleryImage) {
 	if (!image)
 		return ''
 	return typeof image === 'string' ? image : image.url
 }
+
+function getStableIndex(seed: string, length: number) {
+	let hash = 0
+	for (let i = 0; i < seed.length; i += 1)
+		hash = (hash * 31 + seed.charCodeAt(i)) >>> 0
+	return hash % length
+}
+
+function pickStableImage(images: GalleryImage[], seed: string) {
+	if (!images.length)
+		return undefined
+	const index = getStableIndex(seed, images.length)
+	return getImageUrl(images[index]) || undefined
+}
+
+const gallery: GalleryFolder[] = galleryBase.map(folder => ({
+	...folder,
+	cover: pickStableImage(folder.images, folder.id),
+}))
+
+shuffledFolders.value = [...gallery]
+
+type RouteFolderValue = string | string[] | null | undefined
+
+function normalizeRouteFolder(value: RouteFolderValue) {
+	const targetRaw = Array.isArray(value) ? value[0] : value
+	return targetRaw || ''
+}
+
+function resolveFolderId(value: RouteFolderValue) {
+	const target = normalizeRouteFolder(value)
+	if (!target)
+		return ''
+
+	return gallery.some(folder => folder.id === target) ? target : ''
+}
+
+function getRouteFolderId() {
+	const paramFolderRaw = normalizeRouteFolder(route.params.folder as RouteFolderValue)
+	if (paramFolderRaw)
+		return resolveFolderId(route.params.folder as RouteFolderValue)
+
+	return resolveFolderId(route.query.c as RouteFolderValue)
+}
+
+function syncFolderFromRoute() {
+	activeFolderId.value = getRouteFolderId()
+}
+
+function getFolderPath(id: string) {
+	return `/gallery/${encodeURIComponent(id)}`
+}
+
+function replaceLegacyFolderQuery() {
+	const paramFolderRaw = normalizeRouteFolder(route.params.folder as RouteFolderValue)
+	const legacyFolderRaw = normalizeRouteFolder(route.query.c as RouteFolderValue)
+	if (paramFolderRaw || !legacyFolderRaw)
+		return
+
+	const legacyFolder = resolveFolderId(route.query.c as RouteFolderValue)
+	void router.replace(legacyFolder ? getFolderPath(legacyFolder) : '/gallery')
+}
+
+syncFolderFromRoute()
+
+const activeFolder = computed(() => gallery.find(folder => folder.id === activeFolderId.value))
+const showingFolder = computed(() => Boolean(activeFolder.value))
 
 function getImageAlt(image: GalleryImage, index: number) {
 	if (typeof image !== 'string' && image.title)
@@ -79,22 +129,36 @@ const {
 
 const viewerOpen = computed(() => lightboxStatus.value === 'open')
 const hasViewerNav = computed(() => shuffledImages.value.length > 1)
+const viewerSwitching = ref(false)
 
 function getImageElement(index: number) {
 	return galleryPage.value?.querySelector<HTMLImageElement>(`.image-card[data-viewer-index="${index}"] img`) || null
+}
+
+async function showViewer(index: number, imageEl?: HTMLImageElement | null) {
+	const targetImage = imageEl || getImageElement(index)
+	if (!targetImage || viewerSwitching.value)
+		return
+
+	viewerSwitching.value = true
+	try {
+		if (lightboxStatus.value !== 'closed')
+			await closeLightbox()
+
+		viewerIndex.value = index
+		viewerTargetEl.value = targetImage
+		openLightbox()
+	}
+	finally {
+		viewerSwitching.value = false
+	}
 }
 
 function openViewer(index: number, e?: MouseEvent) {
 	const targetFromClick = e?.currentTarget instanceof HTMLElement
 		? e.currentTarget.querySelector<HTMLImageElement>('img')
 		: null
-	const imageEl = targetFromClick || getImageElement(index)
-	if (!imageEl)
-		return
-
-	viewerIndex.value = index
-	viewerTargetEl.value = imageEl
-	openLightbox()
+	void showViewer(index, targetFromClick)
 }
 
 function closeViewer() {
@@ -108,10 +172,7 @@ function goPrevViewer() {
 	if (!total)
 		return
 	const next = (viewerIndex.value - 1 + total) % total
-	viewerIndex.value = next
-	const nextImage = getImageElement(next)
-	if (nextImage)
-		viewerTargetEl.value = nextImage
+	void showViewer(next)
 }
 
 function goNextViewer() {
@@ -119,14 +180,11 @@ function goNextViewer() {
 	if (!total)
 		return
 	const next = (viewerIndex.value + 1) % total
-	viewerIndex.value = next
-	const nextImage = getImageElement(next)
-	if (nextImage)
-		viewerTargetEl.value = nextImage
+	void showViewer(next)
 }
 
-function shuffleImages(images: GalleryImage[]) {
-	const list = [...images]
+function shuffleList<T>(items: T[]) {
+	const list = [...items]
 	for (let i = list.length - 1; i > 0; i -= 1) {
 		const randomIndex = Math.floor(Math.random() * (i + 1))
 		const current = list[i]
@@ -136,13 +194,32 @@ function shuffleImages(images: GalleryImage[]) {
 	return list
 }
 
-function refreshOrder() {
-	shuffledImages.value = shuffleImages(activeFolder.value?.images || [])
+function refreshFolderOrder() {
+	shuffledFolders.value = shuffleList(gallery)
 }
 
-watch(activeFolder, () => {
+function refreshOrder() {
+	shuffledImages.value = shuffleList(activeFolder.value?.images || [])
+}
+
+watch(() => route.params.folder, () => {
+	if (!hydrated.value)
+		return
+
+	syncFolderFromRoute()
+})
+
+watch(() => route.query.c, () => {
+	if (!hydrated.value)
+		return
+
+	syncFolderFromRoute()
+	replaceLegacyFolderQuery()
+})
+
+watch(activeFolder, (folder) => {
 	if (!hydrated.value) {
-		shuffledImages.value = []
+		shuffledImages.value = [...(folder?.images || [])]
 		closeViewer()
 		return
 	}
@@ -163,7 +240,9 @@ watch(lightboxStatus, (status) => {
 
 onMounted(() => {
 	hydrated.value = true
-	applyFolderFromRoute(route.query.c as string | string[] | undefined)
+	syncFolderFromRoute()
+	replaceLegacyFolderQuery()
+	refreshFolderOrder()
 	refreshOrder()
 })
 
@@ -181,13 +260,6 @@ useEventListener('keydown', (e) => {
 	}
 })
 
-function openFolder(id: string) {
-	router.replace({
-		path: '/gallery',
-		query: { c: id },
-	})
-}
-
 function backToFolders() {
 	closeViewer()
 	router.replace('/gallery')
@@ -201,15 +273,15 @@ function backToFolders() {
 	<div v-if="!showingFolder" class="folder-panel">
 		<header class="panel-head">
 			<h3>分类</h3>
-			<span>共 {{ gallery.length }} 个</span>
+			<span>共 {{ shuffledFolders.length }} 个</span>
 		</header>
 
 		<div class="folder-grid">
-			<button
-				v-for="folder in gallery"
+			<NuxtLink
+				v-for="folder in shuffledFolders"
 				:key="folder.id"
 				class="folder-card"
-				@click="openFolder(folder.id)"
+				:to="getFolderPath(folder.id)"
 			>
 				<div class="folder-cover">
 					<NuxtImg
@@ -226,7 +298,7 @@ function backToFolders() {
 						{{ folder.images.length }} 张图片
 					</p>
 				</div>
-			</button>
+			</NuxtLink>
 		</div>
 	</div>
 
@@ -329,10 +401,13 @@ function backToFolders() {
 }
 
 .folder-card {
+	display: block;
 	overflow: hidden;
 	border-radius: 0.6rem;
 	box-shadow: 0 0 0 1px var(--c-bg-soft);
 	text-align: left;
+	color: inherit;
+	text-decoration: none;
 	transition: transform var(--delay), box-shadow var(--delay);
 
 	&:hover {

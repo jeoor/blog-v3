@@ -1,6 +1,6 @@
-import type { GalleryFolder, GalleryImage } from '~/types/gallery'
+import type { GalleryFolder } from '~/types/gallery'
 
-const galleryBase: Omit<GalleryFolder, 'cover'>[] = [
+export default [
 	{
 		id: 'flowers',
 		name: '花',
@@ -106,31 +106,26 @@ const galleryBase: Omit<GalleryFolder, 'cover'>[] = [
 			'https://bu.dusays.com/2026/03/05/69a9a5191a453.webp',
 		],
 	},
-]
-
-function getImageUrl(image?: GalleryImage) {
-	if (!image)
-		return undefined
-	return typeof image === 'string' ? image : image.url
-}
-
-function getStableIndex(seed: string, length: number) {
-	let hash = 0
-	for (let i = 0; i < seed.length; i += 1)
-		hash = (hash * 31 + seed.charCodeAt(i)) >>> 0
-	return hash % length
-}
-
-function pickStableImage(images: GalleryImage[], seed: string) {
-	if (!images.length)
-		return undefined
-	const index = getStableIndex(seed, images.length)
-	return getImageUrl(images[index])
-}
-
-const gallery: GalleryFolder[] = galleryBase.map(folder => ({
-	...folder,
-	cover: pickStableImage(folder.images, folder.id),
-}))
-
-export default gallery
+	{
+		id: 'zhezhi',
+		name: '折纸',
+		images: [
+			{
+				url: 'https://bu.dusays.com/2026/03/15/69b62dfe479e8.webp',
+				title: '迷你千纸鹤',
+			},
+			{
+				url: 'https://bu.dusays.com/2026/03/15/69b62dfd7f901.webp',
+				title: '牛',
+			},
+			{
+				url: 'https://bu.dusays.com/2026/03/15/69b62dfcbf2e0.webp',
+				title: '马',
+			},
+			{
+				url: 'https://bu.dusays.com/2026/03/15/69b62dfc1ca16.webp',
+				title: '猫',
+			},
+		],
+	},
+] satisfies Omit<GalleryFolder, 'cover'>[]
