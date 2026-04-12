@@ -2,7 +2,7 @@
 title: 如何使用 ollama 和 open-webui 搭建自己的本地 AI 助手
 description: 在本地搭建一个 AI 助手，使用 ollama 作为后端模型服务，open-webui 作为前端界面，提供一个便捷的交互平台。
 date: 2026-03-01 21:40:21
-updated: 2026-03-01 21:40:21
+updated: 2026-04-12 14:37:25
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/f1249d8
 categories: [技术]

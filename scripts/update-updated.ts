@@ -58,8 +58,8 @@ function updateFrontmatter(filePath: string, gitDate: string): FileResult {
 	const frontmatter = match[1]!
 	const existingUpdated = frontmatter.match(/^updated:\s*(.+)$/m)?.[1]?.trim()
 
-	// 已是最新则跳过
-	if (existingUpdated === gitDate) {
+	// 已是最新则跳过（只比较日期，避免提交 updated 本身产生新时间戳导致死循环）
+	if (existingUpdated?.split(' ')[0] === gitDate.split(' ')[0]) {
 		return { path: filePath, updated: false, newDate: gitDate }
 	}
 

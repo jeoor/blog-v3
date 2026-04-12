@@ -2,7 +2,7 @@
 title: 如何使用 Ventoy 制作一个便捷的 Arch Linux to go
 description: 使用 Ventoy 制作一个属于自己的 Arch Linux to go，方便在不同设备上使用自己的 Linux 环境
 date: 2026-03-01 21:36:58
-updated: 2026-03-01 21:36:58
+updated: 2026-04-12 14:37:25
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/2a0607d
 categories: [技术]
