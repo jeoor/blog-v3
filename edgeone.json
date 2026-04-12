@@ -20,6 +20,11 @@
     }
   ],
   "redirects": [
+        {
+      "source": "/sitemap.xml/",
+      "destination": "/sitemap.xml",
+      "statusCode": 308
+    },
     {
       "destination": "https://www.zhilu.site/api/icon",
       "source": "/favicon.ico",
