@@ -40,7 +40,7 @@ export default defineNuxtConfig({
 			templateParams: {
 				separator: '|',
 			},
-			titleTemplate: `%s | ${blogConfig.title}`,
+			titleTemplate: `%s %separator ${blogConfig.title}`,
 			script: blogConfig.scripts,
 		},
 		rootAttrs: {
