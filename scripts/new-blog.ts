@@ -146,6 +146,19 @@ if (type === 'custom') {
 }
 // #endregion
 
+// #region 赞赏
+const donation = normalize(await select({
+	message: '是否启用赞赏',
+	options: [
+		{ value: 'true', label: '启用' },
+		{ value: 'false', label: '不启用' },
+	],
+	initialValue: 'true',
+}))
+if (!donation)
+	process.exit(0)
+// #endregion
+
 // #region frontmatter
 const frontmatter = {
 	title,
@@ -157,6 +170,7 @@ const frontmatter = {
 	type: type === 'tech' ? undefined : type,
 	categories: category === blogConfig.defaultCategory ? undefined : `[${category}]`,
 	tags: tags ? `[${tags.join(', ')}]` : undefined,
+	donation: donation === 'false' ? false : undefined,
 	// draft: 'true # 撰写完成后，请删除此行',
 }
 // #endregion
