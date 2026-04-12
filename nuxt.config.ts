@@ -28,19 +28,19 @@ export default defineNuxtConfig({
 				{ rel: 'icon', href: blogConfig.favicon },
 				{ rel: 'alternate', type: 'application/atom+xml', href: '/atom.xml' },
 				{ rel: 'preconnect', href: blogConfig.twikoo.preload },
-				{ rel: 'stylesheet', href: 'https://lib.baomitu.com/KaTeX/0.16.9/katex.min.css', media: 'print', onload: 'this.media="all"' },
+				{ rel: 'stylesheet', href: 'https://registry.npmmirror.com/katex/0.16.45/files/dist/katex.min.css', media: 'print', onload: 'this.media="all"' },
 				// "InterVariable", "Inter", "InterDisplay"
 				{ rel: 'stylesheet', href: 'https://rsms.me/inter/inter.css', media: 'print', onload: 'this.media="all"' },
 				// "JetBrains Mono", 思源宋体 "Noto Serif SC"
 				{ rel: 'preconnect', href: 'https://fonts.gstatic.cn', crossorigin: '' },
 				{ rel: 'stylesheet', href: 'https://fonts.googleapis.cn/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Serif+SC:wght@200..900&display=swap', media: 'print', onload: 'this.media="all"' },
-				// 抖音美好体 "DOUYINSANSBOLD-GB"
-				{ rel: 'stylesheet', href: 'https://fonts.bytedance.com/dfd/api/v1/css?family=DOUYINSANSBOLD-GB&display=swap', media: 'print', onload: 'this.media="all"' },
+				// 鸿蒙字体 "HarmonyOS_Regular"
+				{ rel: 'stylesheet', href: 'https://s1.hdslb.com/bfs/static/jinkela/long/font/regular.css', media: 'print', onload: 'this.media="all"' },
 			],
 			templateParams: {
 				separator: '|',
 			},
-			titleTemplate: `%s %separator ${blogConfig.title}`,
+			titleTemplate: `%s | ${blogConfig.title}`,
 			script: blogConfig.scripts,
 		},
 		rootAttrs: {
@@ -96,8 +96,7 @@ export default defineNuxtConfig({
 		public: {
 			arch,
 			buildTime: Temporal.Now.zonedDateTimeISO().toString(),
-			// EdgeOne 检测暂时不可用
-			ci: env.TENCENTCLOUD_RUNENV === 'SCF' ? 'EdgeOne' : ciName || '',
+			ci: env.DEPLOY_TARGET === 'edgeone' ? 'EdgeOne' : ciName || '',
 			nodeVersion,
 			platform,
 		},

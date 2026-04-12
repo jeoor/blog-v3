@@ -12,8 +12,8 @@ const ciPlatform = computed(() => {
 	if (!iconName)
 		return ''
 
-	const iconNode = iconName.startsWith('http')
-		? h('img', { src: iconName, alt: '' })
+	const iconNode = iconName.startsWith('http') || iconName.startsWith('/')
+		? h('img', { src: iconName, alt: '', style: 'width:1.2em;height:1.2em;vertical-align:middle' })
 		: h(Icon, { name: iconName })
 
 	return h('span', {}, [iconNode, ` ${ci.split(' ')[0]}`])
@@ -25,7 +25,7 @@ const [pm, pmVersion] = packageManager.split('@') as [string, string]
 
 const service = computed(() => ([
 	...ci ? [{ label: '构建平台', value: ciPlatform }] : [],
-	{ label: '图片存储', value: () => [h(Icon, { name: 'devicon:cloudflare' }), ' R2'] },
+	{ label: '图片存储', value: () => [h(Icon, { name: 'zi:7bu' }), ' 去不图床'] },
 	{ label: '软件协议', value: 'MIT' },
 	{ label: '文章许可', value: appConfig.copyright.abbr },
 	{ label: '规范域名', value: getDomain(appConfig.url) },

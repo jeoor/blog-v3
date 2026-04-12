@@ -1,7 +1,9 @@
 <script setup lang="tsx">
 import type { TippyComponent } from 'vue-tippy'
+import { LazyPopoverLightbox } from '#components'
 
 const appConfig = useAppConfig()
+const modalStore = useModalStore()
 
 const commentEl = useTemplateRef('comment')
 const popoverEl = useTemplateRef<TippyComponent>('popover')
@@ -11,10 +13,20 @@ const showUndo = ref(false)
 
 const popoverBind = ref<TippyComponent['$props']>({})
 
-/** 评论区链接守卫 */
+/** 评论区链接守卫 与 评论图片放大 */
 useEventListener(commentEl, 'click', (e) => {
 	if (!(e.target instanceof Element))
 		return
+
+	if (e.target.tagName === 'IMG' && e.target.closest('.tk-content')) {
+		const imgEl = e.target as HTMLImageElement
+		e.preventDefault()
+		modalStore.use(
+			() => h(LazyPopoverLightbox, { el: imgEl, caption: imgEl.alt || '' }),
+			{ unique: true },
+		).open()
+		return
+	}
 
 	if (e.target.matches('.tk-avatar-img'))
 		e.stopPropagation()
@@ -112,7 +124,9 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .z-comment {
-	margin: 3rem 1rem;
+	--comment-control-radius: 0.5rem;
+	margin: 2rem auto;
+	padding: 0 1rem;
 
 	> h3 {
 		margin-top: 3rem;
@@ -143,19 +157,17 @@ onMounted(() => {
 	}
 }
 
+// ====== Twikoo 评论区 ======
 :deep(#twikoo) {
-	margin: 2em 0;
-
+	// 管理面板
 	.tk-admin-container {
 		position: fixed;
 		z-index: calc(var(--z-index-popover) + 1);
 	}
 
-	.tk-input {
-		font-family: var(--font-monospace);
-	}
-
+	// 头像
 	.tk-avatar {
+		overflow: hidden;
 		border-radius: 50%;
 
 		@supports (corner-shape: squircle) {
@@ -167,36 +179,195 @@ onMounted(() => {
 		}
 	}
 
-	.tk-time {
-		color: var(--c-text-3);
+	// ====== 提交区布局：输入框 → 信息栏 → 按钮 ======
+	.tk-submit {
+		display: flex;
+		flex-direction: column;
+
+		.tk-avatar,
+		a.tk-submit-action-icon.__markdown { display: none; }
+
+		.tk-preview-container { margin: 0 0 0.5rem; }
+
+		.tk-row.actions {
+			justify-content: flex-end;
+			order: 3;
+			margin: 0 0 0.5rem;
+		}
+
+		.tk-input {
+			order: 1;
+			margin-bottom: 0.5rem;
+			font-family: var(--font-monospace);
+
+			.el-textarea__inner {
+				padding: 0.8rem;
+				border: 1px solid var(--c-border);
+				border-radius: var(--comment-control-radius);
+				background-color: var(--c-bg-2);
+				transition: border-color 0.2s;
+
+				&:focus {
+					border-color: var(--c-primary);
+				}
+			}
+		}
+
+		.tk-meta-input {
+			order: 2;
+
+			.el-input-group {
+				border: 1px solid var(--c-border);
+				border-radius: var(--comment-control-radius);
+				background: var(--c-bg-2);
+				transition: border-color 0.2s;
+
+				&:focus-within { border-color: var(--c-primary); }
+			}
+
+			.el-input__inner { border: none; }
+
+			.el-input-group__prepend {
+				border: none;
+				border-radius: var(--comment-control-radius) 0 0 var(--comment-control-radius);
+				background: var(--c-bg-1);
+				color: var(--c-text-2);
+			}
+		}
 	}
 
-	.tk-content {
-		margin-top: 0;
+	// 按钮
+	.tk-preview, .tk-cancel {
+		border: 1px solid var(--c-bg-soft);
+		border-radius: var(--comment-control-radius);
+		background-color: var(--ld-bg-card);
+		color: var(--c-text-1);
+		transition: background-color 0.2s;
+
+		&:hover { background-color: var(--c-bg-2); }
 	}
 
-	.tk-comments-title, .tk-nick {
+	.tk-send {
+		border: 1px solid var(--c-primary);
+		border-radius: var(--comment-control-radius);
+		background-color: var(--c-primary);
+		color: var(--c-bg);
+		transition: background-color 0.2s;
+
+		&:hover { opacity: 0.85; }
+	}
+
+	// 表情面板
+	.OwO .OwO-logo {
+		border: 1px solid var(--c-bg-soft);
+		border-radius: var(--comment-control-radius);
+		background-color: var(--c-bg-2);
+		color: var(--c-text-2);
+		transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+
+		&:hover {
+			border-color: var(--c-primary);
+			background-color: var(--c-bg-3);
+		}
+	}
+
+	.OwO .OwO-body {
+		overflow: hidden;
+		border: 1px solid var(--c-bg-soft);
+		border-radius: var(--comment-control-radius);
+		background-color: var(--ld-bg-card);
+		color: var(--c-text);
+
+		.OwO-items { padding: 0.4rem; }
+
+		.OwO-item {
+			border-radius: calc(var(--comment-control-radius) - 0.125rem);
+			transition: transform 0.2s;
+
+			&:hover {
+				transform: scale(1.2);
+			}
+		}
+
+		.OwO-bar {
+			border-top: 1px solid var(--c-border);
+			background-color: var(--c-bg-2);
+		}
+
+		.OwO-packages {
+			padding: 0.25rem;
+
+			li {
+				border-radius: calc(var(--comment-control-radius) - 0.125rem);
+				color: var(--c-text-2);
+				transition: background-color 0.2s, color 0.2s;
+
+				&:hover {
+					background-color: var(--c-bg-3);
+					color: var(--c-text);
+				}
+			}
+
+			.OwO-package-active,
+			li[aria-selected="true"] {
+				background-color: var(--c-primary-soft);
+				color: var(--c-text);
+			}
+		}
+	}
+
+	// ====== 评论内容 ======
+	.tk-comments-title, .tk-nick > strong {
 		font-family: var(--font-creative);
 	}
 
-	.tk-owo-emotion {
-		width: auto;
-		height: 1.4em;
-		vertical-align: text-bottom;
+	.tk-nick-link { color: var(--c-primary); }
+	.tk-time { color: var(--c-text-3); }
+
+	.tk-comment .tk-main {
+		.tk-meta { margin-bottom: 0.3rem; }
+
+		.tk-extras {
+			margin-top: 0.5rem;
+			font-size: 0.75rem;
+			color: var(--c-text-3);
+		}
+
+		.tk-action .tk-action-link:first-child { display: none; }
 	}
 
-	.tk-extras, .tk-footer {
-		font-size: 0.7em;
-		color: var(--c-text-3);
+	// 内容区
+	.tk-content {
+		margin-top: 0;
+		font-size: 0.95rem;
+		line-height: 1.6;
+
+		.tk-owo-emotion {
+			width: auto;
+			height: 1.4em;
+			vertical-align: text-bottom;
+		}
 	}
 
+	// 回复折叠
 	.tk-replies:not(.tk-replies-expand) {
-		mask-image: linear-gradient(to top, transparent, #FFF 4em);
+		mask-image: linear-gradient(#FFF 50%, transparent);
 	}
 
+	// 加载更多
 	.tk-expand {
-		border-radius: 0.5em;
-		transition: background-color 0.1s;
+		padding: 0.375rem 1rem;
+		border-radius: var(--comment-control-radius);
+		background-color: var(--c-bg-2);
+		color: var(--c-text-1);
+		transition: background-color 0.2s;
+
+		&:hover { background-color: var(--c-bg-3); }
+	}
+
+	.tk-footer {
+		font-size: 0.7rem;
+		color: var(--c-text-3);
 	}
 
 	.tippy-svg-arrow > svg {
@@ -206,19 +377,39 @@ onMounted(() => {
 	}
 }
 
-:deep(:where(.tk-preview-container,.tk-content)) {
+// ====== 评论内容富文本 ======
+:deep(:where(.tk-preview-container, .tk-content)) {
 	pre {
 		overflow: auto;
-		border-radius: 0.5em;
-		font-size: 0.85em;
+		border-radius: var(--comment-control-radius);
+		font-size: 0.8125rem;
 	}
 
-	p {
-		margin: 0.2em 0;
-	}
+	p { margin: 0.2em 0; }
 
 	img {
-		border-radius: 0.5em;
+		border-radius: var(--comment-control-radius);
+		cursor: zoom-in;
+	}
+
+	code {
+		padding: 0.15em 0.35em;
+		border: 1px solid var(--c-border);
+		border-radius: 4px;
+		background: var(--c-bg-2);
+	}
+
+	a {
+		margin: -0.1em -0.2em;
+		padding: 0.1em 0.2em;
+		background: linear-gradient(var(--c-primary-soft), var(--c-primary-soft)) no-repeat center bottom / 100% 0.1em;
+		color: var(--c-primary);
+		transition: all 0.2s;
+
+		&:hover {
+			border-radius: 0.3em;
+			background-size: 100% 100%;
+		}
 	}
 
 	menu, ol, ul {
@@ -229,20 +420,18 @@ onMounted(() => {
 
 		> li {
 			margin: 0.2em 0;
-
-			&::marker {
-				color: var(--c-primary);
-			}
+			&::marker { color: var(--c-primary); }
 		}
 	}
 
 	blockquote {
-		margin: 0.5em 0;
-		padding: 0.2em 0.5em;
-		border-inline-start: 4px solid var(--c-border);
-		border-radius: 4px;
-		background-color: var(--c-bg-2);
-		font-size: 0.9em;
+		margin: 0.5rem 0 0.8rem;
+		padding: 0.6rem 0.8rem;
+		border-left: 3px solid var(--c-border);
+		border-radius: 0.2rem;
+		background: var(--c-bg-2);
+		font-size: 0.9rem;
+		color: var(--c-text-2);
 	}
 }
 </style>

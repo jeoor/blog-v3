@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { orderBy } from 'es-toolkit/array'
+import { getFixedDelay } from '~/utils/anim'
 
 const appConfig = useAppConfig()
 useSeoMeta({
@@ -8,7 +9,7 @@ useSeoMeta({
 })
 
 const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'comm-group'])
+layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
 const { data: listRaw } = await useAsyncData('index_posts', () => useArticleIndexOptions(), { default: () => [] })
 const { listSorted, isAscending, sortOrder } = useArticleSort(listRaw, { bindDirectionQuery: 'asc', bindOrderQuery: 'sort' })
@@ -19,7 +20,10 @@ watch(category, () => {
 	page.value = 1
 })
 
-useSeoMeta({ title: () => (page.value > 1 ? `第${page.value}页` : '') })
+useSeoMeta({
+	title: page.value > 1 ? `第${page.value}页` : appConfig.title,
+	titleTemplate: page.value > 1 ? '%s | ' + appConfig.title : '%s',
+})
 
 const listRecommended = computed(() => orderBy(
 	listRaw.value.filter(item => item.recommend !== null),

@@ -1,7 +1,7 @@
 {
   "name": "clarity",
   "type": "module",
-  "version": "3.7.0-alpha.2",
+  "version": "3.7.0α2",
   "private": true,
   "packageManager": "pnpm@10.33.0",
   "homepage": "https://github.com/L33Z22L11/blog-v3",
@@ -22,8 +22,11 @@
     "lint:fix": "eslint --fix && stylelint '**/*.{vue,scss}' --fix",
     "init-project": "tsx scripts/init-project",
     "new": "tsx scripts/new-blog",
+    "new:essay": "tsx scripts/new-essay",
     "check:feed": "tsx scripts/framework/get-feed",
-    "check:feed/all": "tsx scripts/framework/check-all-feeds"
+    "check:feed/all": "tsx scripts/framework/check-all-feeds",
+    "fc": "tsx scripts/generate-friend.ts",
+    "updated": "tsx scripts/update-updated.ts"
   },
   "dependencies": {
     "@bikariya/image-viewer": "catalog:ui",
@@ -49,6 +52,7 @@
     "minisearch": "catalog:util",
     "nuxt": "catalog:framework",
     "parse-domain": "catalog:util",
+    "pinia": "^3.0.4",
     "plain-shiki": "catalog:content",
     "shiki": "catalog:content",
     "site-config-stack": "catalog:util",

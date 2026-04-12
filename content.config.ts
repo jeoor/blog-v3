@@ -25,6 +25,7 @@ export interface ArticleSchema {
 	draft?: boolean
 	permalink?: string
 
+	donation?: boolean
 	readingTime?: ReadTimeResults
 }
 
@@ -47,6 +48,7 @@ const articleSchema = z.object({
 	draft: z.boolean().default(false),
 	permalink: z.string().optional(),
 
+	donation: z.boolean().default(true),
 	readingTime: z.object({
 		text: z.string(),
 		minutes: z.number(),

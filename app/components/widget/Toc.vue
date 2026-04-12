@@ -100,7 +100,7 @@ function hasHeading(tocTree: TocLink, heading?: string): boolean {
 		a {
 			display: block;
 			overflow: hidden;
-			padding: 0.2em 0.5em;
+			padding: 0.35em 0.5em;
 			border-radius: 0.5em;
 			white-space: nowrap;
 			text-overflow: ellipsis;

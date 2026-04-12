@@ -4,6 +4,8 @@ const route = useRoute()
 const layoutStore = useLayoutStore()
 layoutStore.setAside(['toc'])
 
+useSeoMeta({ titleTemplate: '%s' })
+
 const { data: post } = await useAsyncData(
 	route.path,
 	() => queryCollection('content').path(route.path).first(),
@@ -24,6 +26,7 @@ setTocAndMeta()
 if (post.value) {
 	useSeoMeta({
 		title: post.value.title,
+		titleTemplate: '%s | ' + useAppConfig().title,
 		ogType: 'article',
 		ogImage: post.value.image,
 		description: post.value.description,
@@ -33,8 +36,8 @@ if (post.value) {
 else {
 	const event = useRequestEvent()
 	event && setResponseStatus(event, 404)
-	route.meta.title = '404'
-	layoutStore.setAside(['blog-log'])
+	useSeoMeta({ title: '404', titleTemplate: '%s | ' + useAppConfig().title })
+	layoutStore.setAside(['blog-tech'])
 }
 
 if (import.meta.dev) {
@@ -58,6 +61,7 @@ if (import.meta.dev) {
 	/>
 
 	<PostFooter v-bind="post" />
+	<PostDonation v-if="post.donation" />
 	<PostSurround />
 	<PostComment />
 </template>

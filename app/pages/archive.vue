@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ArticleProps } from '~/types/article'
 import { mapValues, sumBy } from 'es-toolkit'
+import { getFixedDelay } from "~/utils/anim"
 import { groupBy } from 'es-toolkit/array'
 
 const appConfig = useAppConfig()
@@ -14,7 +15,7 @@ const spacing = ref(0)
 const column = ref(1)
 
 const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-log'])
+layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
 const tuningRef = useTemplateRef('tuning-panel')
 useAvoidTarget(tuningRef, showTuning)

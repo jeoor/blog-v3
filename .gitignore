@@ -26,3 +26,8 @@ logs
 # Custom
 .vercel
 content/posts/test.md
+
+.claude
+
+public/friend.json
+CLAUDE.md
