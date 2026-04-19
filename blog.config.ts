@@ -37,6 +37,8 @@ const blogConfig = {
 			技术: { icon: 'tabler:mouse', color: '#33aaff' },
 			/** 编程：代码实现/工程实践/开发方法 */
 			开发: { icon: 'tabler:code', color: '#7777ff' },
+			/** 学习笔记：课程/书籍/资料的学习总结 */
+			笔记: { icon: 'tabler:book', color: '#77bb77' },
 			/** 安全：漏洞/CTF/恶意软件/安全事件分析 */
 			安全: { icon: 'tabler:bug', color: '#ff7733' },
 			/** 思考：观点讨论/复盘反思/行业或产品观察 */
