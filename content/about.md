@@ -13,6 +13,8 @@ date: 2026-02-13
 
 会一点折纸，可以去[这里](/gallery?c=zhezhi)看看👀我折的一些作品😁。
 
+当然，我也有[独立的**相册网站**](https://gallery.kayro.cn/)。
+
 ## 关于网站
 
 网站基于[纸鹿大佬](https://www.zhilu.site/)开源的 [blog-v3](https://github.com/L33Z22L11/blog-v3)，经过我的一番配置后，已经比较符合我对静态博客的设想。
