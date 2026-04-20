@@ -2,7 +2,7 @@ import type { EssayItem } from '~/types/essay'
 
 const essays: EssayItem[] = [
 	{
-		text: "在评论区添加我我自己的表情包",
+		text: "在评论区添加了我自己的表情包",
 		date: '2026-04-20T16:57',
 		images: [
 			{
