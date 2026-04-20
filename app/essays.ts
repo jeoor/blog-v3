@@ -2,6 +2,30 @@ import type { EssayItem } from '~/types/essay'
 
 const essays: EssayItem[] = [
 	{
+		text: "在评论区添加我我自己的表情包",
+		date: '2026-04-20T16:57',
+		images: [
+			{
+				src: "https://bu.dusays.com/2026/04/20/69e5ead38bb09.webp",
+				alt: "林小天",
+				height: 240,
+			},
+		],
+		tags: ["网站"],
+	},
+	{
+		text: "有个服务器闲着，部署个 Hermes Agent 玩玩",
+		date: '2026-04-20T13:48',
+		images: [
+			{
+				src: "https://bu.dusays.com/2026/04/20/69e5bdef1f3b9.webp",
+				alt: "ai竟然教育我",
+				height: 240,
+			},
+		],
+		tags: ["分享"],
+	},
+	{
 		text: "折腾的终点是默认",
 		date: '2026-04-11T22:38',
 		tags: ["网站"],

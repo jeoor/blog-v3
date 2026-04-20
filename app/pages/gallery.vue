@@ -10,7 +10,7 @@ const router = useRouter()
 
 const title = '相册'
 const description = '用镜头记录生活。'
-const image = '/assets/gallery-banner.webp'
+const image = '/banners/gallery-banner.webp'
 useSeoMeta({ title, description, ogImage: image })
 
 const hydrated = ref(false)

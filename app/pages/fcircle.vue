@@ -6,7 +6,7 @@ layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
 const title = '友圈'
 const description = '发现更多有趣的博主。'
-const image = '/assets/fcircle-banner.webp'
+const image = '/banners/fcircle-banner.webp'
 useSeoMeta({ title, description, ogImage: image })
 
 const API_URL = 'https://fc.kayro.cn/'

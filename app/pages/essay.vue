@@ -10,8 +10,8 @@ layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 const { author } = useAppConfig()
 
 const title = '即刻'
-const description = '记录生活点滴，一些想法。'
-const image = '/assets/essay-banner.webp'
+const description = '记录生活点滴，一些想法和自言自语。'
+const image = '/banners/essay-banner.webp'
 useSeoMeta({ title, description, ogImage: image })
 
 const PAGE_SIZE = 20

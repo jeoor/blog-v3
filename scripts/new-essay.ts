@@ -120,7 +120,7 @@ if (videoType) {
 	}
 }
 
-const tags = exitIfCancel(await multiselect({
+let selectedTags: string[] = exitIfCancel(await multiselect({
 	message: '选择标签（空格选中，回车确认）',
 	options: [
 		{ value: '生活', label: '生活' },
@@ -128,9 +128,23 @@ const tags = exitIfCancel(await multiselect({
 		{ value: '想法', label: '想法' },
 		{ value: '技术', label: '技术' },
 		{ value: '分享', label: '分享' },
+		{ value: '__custom__', label: '自定义' },
 	],
 	required: false,
 }))
+
+let tags: string[] = selectedTags.filter(t => t !== '__custom__')
+
+if (selectedTags.includes('__custom__')) {
+	const customTag = normalize(exitIfCancel(await text({
+		message: '请输入自定义标签',
+		placeholder: '自定义标签',
+		validate: val => val?.trim() === '' ? '标签不能为空' : undefined,
+	})))
+	if (customTag) {
+		tags.push(customTag)
+	}
+}
 
 if (!text_ && images.length === 0 && !linkCard && !videoBlock && tags.length === 0) {
 	cancel('至少填写内容、图片、链接卡片、视频、标签中的一项')

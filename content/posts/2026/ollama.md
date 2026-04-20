@@ -6,7 +6,7 @@ updated: 2026-04-12 14:37:25
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/f1249d8
 categories: [技术]
-tags: [linux, ai, ollama]
+tags: [linux, ai]
 ---
 
 ## 下载 Ollama 与 Docker

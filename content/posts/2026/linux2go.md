@@ -6,7 +6,7 @@ updated: 2026-04-12 14:37:25
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/2a0607d
 categories: [技术]
-tags: [linux, linux2go]
+tags: [linux]
 ---
 
 本文以 Arch Linux 为例，你也可以替换为其他 Linux 发行版。

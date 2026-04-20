@@ -6,7 +6,7 @@ updated: 2026-04-12 14:37:25
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/f72a9d9
 categories: [技术]
-tags: [linux, install]
+tags: [linux, 安装]
 ---
 
 Arch Linux 的安装没有图形化界面，完全使用命令行安装，为了方便和避免错误，这里使用了 Arch Linux 官方社区提供的自动化脚本 archinstall 进行安装部署。
