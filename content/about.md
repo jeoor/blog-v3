@@ -13,7 +13,7 @@ date: 2026-02-13
 
 会一点折纸，可以去[这里](/gallery?c=zhezhi)看看👀我折的一些作品😁。
 
-当然，我也有[独立的**相册网站**](https://gallery.kayro.cn/)。
+当然，我也有[独立的**相册网站**](https://gallery.kayro.cn/)，可以去看看😄。
 
 ## 关于网站
 
