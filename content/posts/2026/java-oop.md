@@ -101,8 +101,8 @@ Interface i = new Impl();
 
 规则相同：
 
-* 只能调用接口中定义的方法
-* 执行实现类的方法
+- 只能调用接口中定义的方法
+- 执行实现类的方法
 
 ---
 
@@ -129,8 +129,8 @@ public abstract static void cry(); // 错
 
 原因：
 
-* abstract：没有方法体
-* static：必须有方法体
+- abstract：没有方法体
+- static：必须有方法体
 
 两者冲突，不能同时使用
 
@@ -153,22 +153,22 @@ public abstract static void cry(); // 错
 
 接口：
 
-* 方法默认 public abstract
-* 变量是常量（public static final）
+- 方法默认 public abstract
+- 变量是常量（public static final）
 
 实现接口：
 
-* 方法必须 public
-* 必须全部实现
+- 方法必须 public
+- 必须全部实现
 
 多态：
 
-* 看左边决定能不能调用
-* 看右边决定执行结果
+- 看左边决定能不能调用
+- 看右边决定执行结果
 
 重写：
 
-* 方法名相同
-* 参数相同
-* 权限不能降低
+- 方法名相同
+- 参数相同
+- 权限不能降低
 
