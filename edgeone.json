@@ -3,6 +3,23 @@
     {
       "headers": [
         {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, OPTIONS"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "source": "/owo.json"
+    },
+    {
+      "headers": [
+        {
           "key": "Content-Type",
           "value": "application/json"
         }
