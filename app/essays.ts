@@ -2,6 +2,11 @@ import type { EssayItem } from '~/types/essay'
 
 const essays: EssayItem[] = [
 	{
+		text: "AI时代，是幸运还是不幸？",
+		date: '2026-04-29T22:50',
+		tags: ["想法"],
+	},
+	{
 		text: "在评论区添加了我自己的表情包",
 		date: '2026-04-20T16:57',
 		images: [

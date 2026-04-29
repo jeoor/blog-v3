@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import type { LocationQueryValue } from 'vue-router'
 import type { ArticleProps } from '~/types/article'
 import { orderBy } from 'es-toolkit/array'
 
 const layoutStore = useLayoutStore()
 layoutStore.setAside(['blog-stats', 'blog-tech', 'countdown'])
+const route = useRoute()
+const router = useRouter()
 
 const appConfig = useAppConfig()
 const title = '标签'
@@ -40,9 +43,26 @@ function getTagCount(tag: string): number {
 	return articlesByTag.value[tag]?.length ?? 0
 }
 
+function normalizeTagQuery(tag: LocationQueryValue | LocationQueryValue[] | undefined): string {
+	if (Array.isArray(tag)) {
+		return tag[0] ?? ''
+	}
+
+	return tag ?? ''
+}
+
 // 排序后的标签列表（按文章数量降序）
 const sortedTags = computed(() => Object.keys(articlesByTag.value)
 	.sort((a, b) => getTagCount(b) - getTagCount(a)))
+
+watch(
+	() => [route.query.tag, sortedTags.value] as const,
+	([tagQuery, tags]) => {
+		const tag = normalizeTagQuery(tagQuery)
+		selectedTag.value = tags.includes(tag) ? tag : ''
+	},
+	{ immediate: true },
+)
 
 // 根据文章数量计算标签大小的函数
 function getTagSize(count: number): 'small' | 'medium' | 'large' {
@@ -70,13 +90,15 @@ function getTagSize(count: number): 'small' | 'medium' | 'large' {
 
 // 点击标签显示对应文章
 function handleTagClick(tag: string) {
-	selectedTag.value = tag
+	router.push({ query: { ...route.query, tag } })
 	window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 // 取消选中标签，返回标签云视图
 function clearSelectedTag() {
-	selectedTag.value = ''
+	const query = { ...route.query }
+	delete query.tag
+	router.push({ query })
 }
 </script>
 
