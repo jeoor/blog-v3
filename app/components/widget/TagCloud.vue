@@ -1,12 +1,19 @@
 <script setup lang="ts">
-const { data: articles } = await useAsyncData('widget-tags', () => useArticleIndexOptions(), { default: () => [] })
+const { data: articles } = await useAsyncData('widget-tags', () => getArticleIndexOptions(), { default: () => [] })
 
 const tagsWithCount = computed(() => {
 	const map = new Map<string, number>()
 	for (const article of articles.value) {
-		if (!article.tags)
+		const tags = Array.isArray(article.tags)
+			? article.tags
+			: typeof article.tags === 'string'
+				? [article.tags]
+				: []
+
+		if (!tags.length)
 			continue
-		for (const tag of article.tags)
+
+		for (const tag of tags)
 			map.set(tag, (map.get(tag) ?? 0) + 1)
 	}
 

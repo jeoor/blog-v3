@@ -385,20 +385,6 @@ onMounted(() => {
 		font-size: 0.8125rem;
 	}
 
-	p { margin: 0.2em 0; }
-
-	img {
-		border-radius: var(--comment-control-radius);
-		cursor: zoom-in;
-	}
-
-	code {
-		padding: 0.15em 0.35em;
-		border: 1px solid var(--c-border);
-		border-radius: 4px;
-		background: var(--c-bg-2);
-	}
-
 	a {
 		margin: -0.1em -0.2em;
 		padding: 0.1em 0.2em;
@@ -410,6 +396,14 @@ onMounted(() => {
 			border-radius: 0.3em;
 			background-size: 100% 100%;
 		}
+	}
+
+	p {
+		margin: 0.2em 0;
+	}
+
+	img {
+		border-radius: 0.5em;
 	}
 
 	menu, ol, ul {
