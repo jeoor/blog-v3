@@ -22,7 +22,7 @@ export function useToc(toc: MaybeRefOrGetter<Toc | undefined>, scrollableEl?: Ma
 
 	const tocOffsets = computedWithControl(
 		refDebounced(bodyHeight),
-		() => flattenToc(toValue(toc)?.links || []).reverse(),
+		() => document ? flattenToc(toValue(toc)?.links || []).reverse() : [],
 	)
 
 	const { y: windowScrollY } = useWindowScroll()
