@@ -123,6 +123,29 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+#twikoo > p {
+	padding: 2rem;
+	text-align: center;
+	color: var(--c-text-3);
+	animation: float-in 0.2s;
+
+	&::before {
+		content: '';
+		display: block;
+		width: 8px;
+		height: 8px;
+		margin: 0 auto 0.75rem;
+		background: var(--c-primary);
+		border-radius: 50%;
+		animation: dot-breathe 1.5s ease-in-out infinite;
+	}
+}
+
+@keyframes dot-breathe {
+	0%, 100% { transform: scale(0.6); opacity: 0.4; }
+	50% { transform: scale(1); opacity: 1; }
+}
+
 .z-comment {
 	--comment-control-radius: 0.5rem;
 	margin: 2rem auto;
