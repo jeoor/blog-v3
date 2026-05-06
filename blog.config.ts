@@ -32,7 +32,7 @@ const blogConfig = {
 
 	article: {
 		categories: {
-			[basicConfig.defaultCategory]: { icon: 'tabler:folder-open' },
+			[basicConfig.defaultCategory]: { icon: 'tabler:circle-dashed' },
 			/** 实践可复用操作经验：工具/系统/部署/排障 */
 			技术: { icon: 'tabler:mouse', color: '#33aaff' },
 			/** 编程：代码实现/工程实践/开发方法 */
@@ -46,7 +46,6 @@ const blogConfig = {
 			/** 记录叙事：个人经历/校园家庭/日常片段 */
 			生活: { icon: 'tabler:leaf', color: '#ff7777' },
 		},
-		defaultCategoryIcon: 'tabler:folder',
 		/** 文章版式，首个为默认版式 */
 		types: {
 			tech: {},
@@ -91,7 +90,7 @@ const blogConfig = {
 		// // 自己网站的 Cloudflare Insights 统计服务
 		// { 'src': 'https://static.cloudflareinsights.com/beacon.min.js', 'data-cf-beacon': '{"token": "97a4fe32ed8240ac8284e9bffaf03962"}', 'defer': true },
 		// Twikoo 评论系统
-		{ src: 'https://registry.npmmirror.com/twikoo/1.7.7/files/dist/twikoo.min.js', defer: true },
+		{ src: 'https://registry.npmmirror.com/twikoo/1.7.8/files/dist/twikoo.min.js', defer: true },
 	],
 
 	/** 自己部署的 Twikoo 服务 */
