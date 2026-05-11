@@ -1,15 +1,16 @@
 <script setup lang="ts">
 const { donation } = useAppConfig()
+const donationItems = computed(() => Object.entries(donation.items))
 </script>
 
 <template>
 <div v-if="donation?.enable" class="donation">
 	<Tooltip :delay="200" interactive hide-on-click="toggle" max-width="">
-		<ZButton class="donate-button" icon="tabler:heart" text="赞赏作者" />
+		<ZButton class="donate-button" icon="tabler:heart" text="赞赏站长" />
 		<template #content>
 			<div class="donation-content">
-				<div v-if="Object.keys(donation.items).length" class="donation-list">
-					<figure v-for="(image, label) in donation.items" class="donation-item">
+				<div v-if="donationItems.length" class="donation-list">
+					<figure v-for="[label, image] in donationItems" :key="label" class="donation-item">
 						<UtilImg class="image" width="160" height="160" :src="image" />
 						<figcaption class="label">{{ label }}</figcaption>
 					</figure>

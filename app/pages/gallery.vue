@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { GalleryFolder, GalleryImage } from '~/types/gallery'
 import galleryBase from '~/gallery'
+import { getFixedDelay } from '~/utils/anim'
 
 const layoutStore = useLayoutStore()
 layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
@@ -64,7 +65,7 @@ function shuffleList<T>(items: T[]): T[] {
 		const randomIndex = Math.floor(Math.random() * (i + 1))
 		const current = list[i]
 		list[i] = list[randomIndex]!
-		list[i] = current!
+		list[randomIndex] = current!
 	}
 	return list
 }
@@ -107,10 +108,11 @@ function backToFolders(): void {
 
 		<div class="folder-grid">
 			<NuxtLink
-				v-for="folder in gallery"
+				v-for="(folder, index) in gallery"
 				:key="folder.id"
 				class="folder-card"
 				:to="getFolderPath(folder.id)"
+				:style="getFixedDelay(index * 0.05)"
 			>
 				<div class="folder-cover">
 					<NuxtImg
@@ -149,6 +151,7 @@ function backToFolders(): void {
 				v-for="(pic, index) in shuffledImages"
 				:key="`${getImageUrl(pic)}-${index}`"
 				class="image-card"
+				:style="getFixedDelay((index % 12) * 0.04)"
 			>
 				<Pic
 					class="image"
@@ -277,14 +280,15 @@ function backToFolders(): void {
 	display: inline-flex;
 	align-items: center;
 	gap: .25rem;
-	padding: .35rem .6rem;
-	border-radius: .45rem;
-	font-size: .8rem;
+	padding: .3rem .7rem;
+	border-radius: .5rem;
+	background-color: var(--c-bg-2);
 	color: var(--c-text-2);
-	transition: color var(--delay), background-color var(--delay);
+	font-size: .85rem;
+	transition: background-color .2s, color .2s;
 
 	&:hover {
-		background-color: var(--c-bg-soft);
+		background-color: var(--c-bg-3);
 		color: var(--c-text);
 	}
 }

@@ -6,6 +6,21 @@ const runtimeConfig = useRuntimeConfig()
 
 // 响应头不正确时，stats.value 可能会是字符串，首次属性访问可能为 undefined
 const { data: stats } = useFetch('/api/stats')
+const { data: umami, execute: loadUmami } = useFetch('/api/umami', {
+	server: false,
+	immediate: false,
+})
+
+const expand = ref(false)
+const umamiLoaded = ref(false)
+
+watch(expand, async (value) => {
+	if (!value || umamiLoaded.value)
+		return
+
+	umamiLoaded.value = true
+	await loadUmami()
+})
 
 const yearlyTip = computed(() => Object
 	.entries(stats.value?.annual || {})
@@ -30,10 +45,24 @@ const blogStats = [{
 	value: computed(() => formatNumber(stats.value?.total?.words) || '--'),
 	tip: yearlyTip,
 }]
+
+const visitStats = [{
+	label: '总访客',
+	value: computed(() => formatNumber(umami.value?.total_uv) || '--'),
+}, {
+	label: '总访问次数',
+	value: computed(() => formatNumber(umami.value?.total_visits) || '--'),
+}, {
+	label: '总浏览量',
+	value: computed(() => formatNumber(umami.value?.total_pv) || '--'),
+}]
 </script>
 
 <template>
 <BlogWidget card title="博客统计">
 	<ZDlGroup :items="blogStats" size="small" />
+	<ZExpand v-model="expand" in-place name="访问统计">
+		<ZDlGroup size="small" :items="visitStats" />
+	</ZExpand>
 </BlogWidget>
 </template>

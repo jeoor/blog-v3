@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { EssayImage, EssayItem } from '~/types/essay'
 import essays from '~/essays'
+import { getFixedDelay } from '~/utils/anim'
 
 const DATE_SLASH_RE = /\//g
 
@@ -22,6 +23,12 @@ const sortedEssays = essays
 const displayCount = ref(PAGE_SIZE)
 const displayedEssays = computed(() => sortedEssays.slice(0, displayCount.value))
 const hasMore = computed(() => sortedEssays.length > displayCount.value)
+const essayList = computed(() => displayedEssays.value.map((essay, index) => ({
+	essay,
+	index,
+	key: getEssayKey(essay, index),
+	images: essay.images?.map(normalizeEssayImage) || [],
+})))
 
 function getEssaySortTime(date: string): number {
 	try {
@@ -94,7 +101,12 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 <ZPageBanner :title :description :image />
 
 <div class="essay-list">
-	<div v-for="(essay, index) in displayedEssays" :key="getEssayKey(essay, index)" class="essay-item">
+	<div
+		v-for="{ essay, index, key, images } in essayList"
+		:key="key"
+		class="essay-item"
+		:style="getFixedDelay(index * 0.05)"
+	>
 		<div class="essay-meta">
 			<NuxtImg class="avatar" :src="author.avatar" :alt="author.name" />
 			<div class="info">
@@ -118,15 +130,15 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 				/>
 			</div>
 			<div
-				v-if="essay.images?.length"
+				v-if="images.length"
 				class="images"
 				:class="getImageLayoutClass(essay.images)"
 			>
 				<Pic
-					v-for="imageItem in essay.images.map(normalizeEssayImage)"
+					v-for="imageItem in images"
 					:key="imageItem.src"
 					class="image"
-					:class="essay.images.length > 1 ? 'image--multi' : 'image--single'"
+					:class="images.length > 1 ? 'image--multi' : 'image--single'"
 					:src="imageItem.src"
 					:alt="imageItem.alt"
 					:width="imageItem.width"
@@ -162,7 +174,6 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 
 	.essay-item {
 		animation: float-in .3s backwards;
-		animation-delay: var(--delay);
 		border-radius: 8px;
 		box-shadow: 0 0 0 1px var(--c-bg-soft);
 		display: flex;

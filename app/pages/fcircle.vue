@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { getFixedDelay } from '~/utils/anim'
+
 const DATE_SLASH_RE = /\//g
 
 const layoutStore = useLayoutStore()
@@ -9,22 +11,65 @@ const description = '发现更多有趣的博主。'
 const image = '/banners/fcircle-banner.webp'
 useSeoMeta({ title, description, ogImage: image })
 
+interface FcApiData {
+	article_data: Array<{
+		title: string
+		link: string
+		author: string
+		created: string
+		avatar: string
+	}>
+}
+
+interface FriendArticle {
+	id: string
+	title: string
+	link: string
+	author: string
+	created: string
+	avatar: string
+}
+
 const API_URL = 'https://fc.kayro.cn/'
 const PAGE_SIZE = 20
 
-const allArticles = ref<FriendArticle[]>([])
+const { data: fcData, status } = useFetch<FcApiData>(`${API_URL}all.json`, {
+	default: () => ({ article_data: [] }),
+	server: false,
+})
+
 const displayCount = ref(PAGE_SIZE)
-const isLoading = ref(true)
 const randomArticle = ref<FriendArticle | null>(null)
 const showAvatarPopup = ref(false)
 const selectedAuthor = ref('')
 const selectedAuthorAvatar = ref('')
 const selectedArticleLink = ref('')
-const articlesByAuthor = ref<Record<string, FriendArticle[]>>({})
-const lastUpdatedDate = ref('')
-
+const allArticles = computed<FriendArticle[]>(() => fcData.value.article_data.map(item => ({
+	id: item.link,
+	title: item.title,
+	link: item.link,
+	author: item.author,
+	created: item.created,
+	avatar: item.avatar,
+})))
+const isLoading = computed(() => status.value === 'pending')
+const articlesByAuthor = computed(() => allArticles.value.reduce<Record<string, FriendArticle[]>>((acc, article) => {
+	const list = acc[article.author]
+	if (list)
+		list.push(article)
+	else
+		acc[article.author] = [article]
+	return acc
+}, {}))
+const lastUpdatedDate = computed(() => {
+	const latest = [...allArticles.value].sort((a, b) =>
+		new Date(b.created).getTime() - new Date(a.created).getTime(),
+	)[0]
+	return latest ? formatDate(latest.created) : ''
+})
 const displayedArticles = computed(() => allArticles.value.slice(0, displayCount.value))
 const hasMoreArticles = computed(() => allArticles.value.length > displayCount.value)
+const isError = computed(() => status.value === 'error')
 
 function formatDate(dateString: string): string {
 	if (!dateString) return ''
@@ -52,89 +97,22 @@ function closeAvatarPopup(): void {
 	showAvatarPopup.value = false
 }
 
-function handleClickOutside(event: MouseEvent): void {
-	const popup = document.getElementById('avatar-popup')
-	if (popup && !popup.contains(event.target as Node) && showAvatarPopup.value) {
-		closeAvatarPopup()
-	}
-}
-
-async function fetchArticles(): Promise<void> {
-	try {
-		isLoading.value = true
-		const response = await fetch(`${API_URL}all.json`)
-		const data = await response.json() as FcApiData
-
-		allArticles.value = data.article_data.map(item => ({
-			id: item.link + Math.random(),
-			title: item.title,
-			link: item.link,
-			author: item.author,
-			created: item.created,
-			avatar: item.avatar,
-		}))
-
-		articlesByAuthor.value = allArticles.value.reduce<Record<string, FriendArticle[]>>((acc, article) => {
-			const list = acc[article.author]
-			if (list) {
-				list.push(article)
-			}
-			else {
-				acc[article.author] = [article]
-			}
-			return acc
-		}, {})
-
-		refreshRandomArticle()
-
-		if (allArticles.value.length > 0) {
-			const sorted = [...allArticles.value].sort((a, b) =>
-				new Date(b.created).getTime() - new Date(a.created).getTime(),
-			)
-			const latest = sorted[0]
-			if (latest) {
-				lastUpdatedDate.value = formatDate(latest.created)
-			}
-		}
-	}
-	finally {
-		isLoading.value = false
-	}
-}
-
 onMounted(() => {
-	fetchArticles()
-	document.addEventListener('click', handleClickOutside)
+	if (allArticles.value.length)
+		refreshRandomArticle()
 })
 
-onUnmounted(() => {
-	document.removeEventListener('click', handleClickOutside)
+watch(allArticles, (articles) => {
+	if (articles.length && !randomArticle.value)
+		refreshRandomArticle()
 })
-
-interface FriendArticle {
-	id: string
-	title: string
-	link: string
-	author: string
-	created: string
-	avatar: string
-}
-
-interface FcApiData {
-	article_data: Array<{
-		title: string
-		link: string
-		author: string
-		created: string
-		avatar: string
-	}>
-}
 </script>
 
 <template>
 <ZPageBanner :title :description :image>
 	<div class="fcircle-stats">
-		<div class="fcircle-stats__update-time">Updated at {{ lastUpdatedDate || '2025-07-17' }}</div>
+		<div v-if="lastUpdatedDate" class="fcircle-stats__update-time">Updated at {{ lastUpdatedDate }}</div>
+		<div v-else-if="isLoading" class="fcircle-stats__update-time">Updating...</div>
 		<div class="fcircle-stats__powered-by">Powered by FriendCircleLite</div>
 	</div>
 </ZPageBanner>
@@ -159,7 +137,7 @@ interface FcApiData {
 				v-for="(article, index) in displayedArticles"
 				:key="article.id"
 				class="article-item article-item--new"
-				:style="{ '--delay': `${(index % PAGE_SIZE) * 0.05}s` }"
+				:style="getFixedDelay((index % PAGE_SIZE) * 0.05)"
 			>
 				<div class="article-item__image" @click="showAuthorPosts(article.author, article.avatar, article.link)">
 					<NuxtImg :src="article.avatar" :alt="article.author" loading="lazy" />
@@ -175,10 +153,15 @@ interface FcApiData {
 
 		<ZButton v-show="hasMoreArticles" class="btn-load-more gradient-card" @click="loadMore" text="加载更多" />
 
-		<div v-if="!isLoading && allArticles.length === 0" class="error-container">
+		<div v-if="isError" class="error-container">
 			<Icon class="error-container__icon" name="tabler:file-alert" />
-			<p>暂无文章数据</p>
+			<p>友圈数据加载失败</p>
 			<p class="empty-hint">请稍后再试</p>
+		</div>
+
+		<div v-else-if="!isLoading && allArticles.length === 0" class="error-container">
+			<Icon class="error-container__icon" name="tabler:notes-off" />
+			<p>暂无文章数据</p>
 		</div>
 
 		<Transition name="modal">
@@ -202,7 +185,7 @@ interface FcApiData {
 								v-for="(article, index) in articlesByAuthor[selectedAuthor]?.slice(0, 10) ?? []"
 								:key="article.id"
 								class="timeline__item"
-								:style="{ '--delay': `${0.2 + index * 0.1}s` }"
+								:style="getFixedDelay(0.2 + index * 0.1)"
 							>
 								<span class="timeline__date">{{ formatDate(article.created) }}</span>
 								<a :href="article.link" target="_blank" rel="noopener noreferrer" class="timeline__title"

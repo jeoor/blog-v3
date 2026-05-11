@@ -2,7 +2,7 @@
 const layoutStore = useLayoutStore()
 layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
 
-const { author, subtitle } = useAppConfig()
+const { author, footer, subtitle } = useAppConfig()
 
 const title = '关于'
 const description = '关于我，关于这个博客。'
@@ -12,6 +12,8 @@ const { data: postAbout } = await useAsyncData(
 	'/about',
 	() => queryCollection('content').path('/about').first(),
 )
+
+const contactLinks = computed(() => footer.iconNav.filter(({ url }) => url.startsWith('http') || url.startsWith('mailto:')))
 </script>
 
 <template>
@@ -36,19 +38,15 @@ const { data: postAbout } = await useAsyncData(
 	<section class="about-section">
 		<h2 class="text-creative">联系方式</h2>
 		<div class="contact-list">
-			<a href="https://www.kayro.cn/" target="_blank" rel="noopener noreferrer">
-				<Icon name="tabler:home" />
-				<span>主页</span>
-			</a><a href="https://space.bilibili.com/513671572" target="_blank" rel="noopener noreferrer">
-				<Icon name="tabler:brand-bilibili" />
-				<span>哔哩哔哩</span>
-			</a>
-			<a href="https://github.com/jeoor" target="_blank" rel="noopener noreferrer">
-				<Icon name="tabler:brand-github" />
-				<span>GitHub</span>
-			</a><a href="mailto:i@kayro.cn" target="_blank" rel="noopener noreferrer">
-				<Icon name="tabler:mail" />
-				<span>邮箱</span>
+			<a
+				v-for="item in contactLinks"
+				:key="item.url"
+				:href="item.url"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				<Icon :name="item.icon" />
+				<span>{{ item.text }}</span>
 			</a>
 		</div>
 	</section>

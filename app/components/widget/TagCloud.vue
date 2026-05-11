@@ -3,15 +3,13 @@ const { data: articles } = await useAsyncData('widget-tags', () => getArticleInd
 
 const tagsWithCount = computed(() => {
 	const map = new Map<string, number>()
+
 	for (const article of articles.value) {
 		const tags = Array.isArray(article.tags)
 			? article.tags
 			: typeof article.tags === 'string'
 				? [article.tags]
 				: []
-
-		if (!tags.length)
-			continue
 
 		for (const tag of tags)
 			map.set(tag, (map.get(tag) ?? 0) + 1)
@@ -29,7 +27,7 @@ const tagsWithCount = computed(() => {
 		<NuxtLink
 			v-for="[tag, count] in tagsWithCount"
 			:key="tag"
-			:to="`/tags?tag=${encodeURIComponent(tag)}`"
+			:to="{ path: '/tags', query: { tag } }"
 			class="tag-item"
 		>
 			{{ tag }} <span class="tag-count">{{ count }}</span>
@@ -74,9 +72,9 @@ const tagsWithCount = computed(() => {
 }
 
 .empty {
+	width: 100%;
 	color: var(--c-text-3);
 	font-size: .85rem;
 	text-align: center;
-	width: 100%;
 }
 </style>

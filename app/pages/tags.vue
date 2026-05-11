@@ -2,9 +2,11 @@
 import type { LocationQueryValue } from 'vue-router'
 import type { ArticleProps } from '~/types/article'
 import { orderBy } from 'es-toolkit/array'
+import { getFixedDelay } from '~/utils/anim'
 
 const layoutStore = useLayoutStore()
 layoutStore.setAside(['blog-stats', 'blog-tech', 'countdown'])
+
 const route = useRoute()
 const router = useRouter()
 
@@ -13,25 +15,19 @@ const title = '标签'
 const description = `${appConfig.title}的所有文章标签。`
 useSeoMeta({ title, description })
 
-const { data: listRaw } = await useAsyncData('index_posts', () => getArticleIndexOptions(), { default: () => [] })
+const { data: listRaw } = await useAsyncData('posts:index', () => getArticleIndexOptions(), { default: () => [] })
 
-// 选中的标签
-const selectedTag = ref('')
-
-// 计算每个标签对应的文章
 const articlesByTag = computed(() => {
 	const result: Record<string, ArticleProps[]> = {}
 	const articles = orderBy(listRaw.value, ['date'], ['desc'])
 
 	for (const article of articles) {
-		if (!article.tags) {
+		if (!article.tags)
 			continue
-		}
 
 		for (const tag of article.tags) {
-			if (!result[tag]) {
+			if (!result[tag])
 				result[tag] = []
-			}
 			result[tag].push(article)
 		}
 	}
@@ -44,57 +40,43 @@ function getTagCount(tag: string): number {
 }
 
 function normalizeTagQuery(tag: LocationQueryValue | LocationQueryValue[] | undefined): string {
-	if (Array.isArray(tag)) {
+	if (Array.isArray(tag))
 		return tag[0] ?? ''
-	}
-
 	return tag ?? ''
 }
 
-// 排序后的标签列表（按文章数量降序）
 const sortedTags = computed(() => Object.keys(articlesByTag.value)
 	.sort((a, b) => getTagCount(b) - getTagCount(a)))
 
-watch(
-	() => [route.query.tag, sortedTags.value] as const,
-	([tagQuery, tags]) => {
-		const tag = normalizeTagQuery(tagQuery)
-		selectedTag.value = tags.includes(tag) ? tag : ''
-	},
-	{ immediate: true },
-)
+const selectedTag = computed(() => {
+	const tag = normalizeTagQuery(route.query.tag)
+	return sortedTags.value.includes(tag) ? tag : ''
+})
 
-// 根据文章数量计算标签大小的函数
 function getTagSize(count: number): 'small' | 'medium' | 'large' {
 	const counts = Object.values(articlesByTag.value).map(articles => articles.length)
-	if (!counts.length) {
+	if (!counts.length)
 		return 'medium'
-	}
 
 	const maxCount = Math.max(...counts)
 	const minCount = Math.min(...counts)
 	const range = maxCount - minCount
-	if (range === 0) {
+	if (range === 0)
 		return 'medium'
-	}
 
 	const ratio = (count - minCount) / range
-	if (ratio < 0.33) {
+	if (ratio < 0.33)
 		return 'small'
-	}
-	if (ratio < 0.66) {
+	if (ratio < 0.66)
 		return 'medium'
-	}
 	return 'large'
 }
 
-// 点击标签显示对应文章
 function handleTagClick(tag: string) {
 	router.push({ query: { ...route.query, tag } })
 	window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-// 取消选中标签，返回标签云视图
 function clearSelectedTag() {
 	const query = { ...route.query }
 	delete query.tag
@@ -104,16 +86,16 @@ function clearSelectedTag() {
 
 <template>
 <div class="tags">
-	<!-- 选中标签时显示 -->
 	<div v-if="selectedTag" class="tag-selected">
 		<div class="tag-selected-header">
 			<h1 class="tag-selected-title">
 				<span class="tag-hashtag">#</span> {{ selectedTag }}
 			</h1>
-			<button class="tag-clear-btn" aria-label="返回标签云" @click="clearSelectedTag">
+			<button class="tag-clear-btn" aria-label="Clear tag filter" @click="clearSelectedTag">
 				<Icon name="tabler:playstation-x" />
 			</button>
 		</div>
+
 		<div class="tag-selected-info">
 			共 {{ getTagCount(selectedTag) }} 篇文章
 		</div>
@@ -125,17 +107,17 @@ function clearSelectedTag() {
 					:key="article.path"
 					v-bind="article"
 					:to="article.path"
-					:style="{ '--delay': `${index * 0.03}s` }"
+					:style="getFixedDelay(index * 0.03)"
 				/>
 			</TransitionGroup>
 		</menu>
 	</div>
 
-	<!-- 标签云视图 -->
 	<div v-else class="tag-cloud">
 		<h1 class="tag-cloud-title">
 			{{ title }}
 		</h1>
+
 		<div class="tag-cloud-content">
 			<button
 				v-for="tag in sortedTags"
@@ -158,11 +140,11 @@ function clearSelectedTag() {
 
 <style lang="scss" scoped>
 .tags {
+	animation: float-in .2s backwards;
 	margin: 1rem;
 	padding: 2rem 0;
 }
 
-// 标签云样式
 .tag-cloud {
 	margin: 0 auto;
 	max-width: 800px;
@@ -229,7 +211,6 @@ function clearSelectedTag() {
 	text-align: center;
 }
 
-// 选中标签时的样式
 .tag-selected {
 	margin: 0 auto;
 	max-width: 800px;
@@ -290,7 +271,6 @@ function clearSelectedTag() {
 	margin-top: 1.5rem;
 }
 
-// 响应式设计
 @media (max-width: 768px) {
 	.tags {
 		margin: .5rem;
