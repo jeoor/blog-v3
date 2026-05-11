@@ -6,6 +6,7 @@ const { author, footer, subtitle } = useAppConfig()
 
 const title = '关于'
 const description = '关于我，关于这个博客。'
+const contactHeading = '联系我'
 useSeoMeta({ title, description })
 
 const { data: postAbout } = await useAsyncData(
@@ -31,12 +32,14 @@ const contactLinks = computed(() => footer.iconNav.filter(({ url }) => url.start
 		:value="postAbout"
 		class="about-content"
 	/>
-	<p v-else class="text-center">
+	<p v-else class="about-empty text-center">
 		可于 content/about.md 编写关于内容。
 	</p>
 
 	<section class="about-section">
-		<h2 class="text-creative">联系方式</h2>
+		<h2 :id="contactHeading">
+			<a :href="`#${contactHeading}`">{{ contactHeading }}</a>
+		</h2>
 		<div class="contact-list">
 			<a
 				v-for="item in contactLinks"
@@ -130,13 +133,25 @@ const contactLinks = computed(() => footer.iconNav.filter(({ url }) => url.start
 	}
 }
 
+.about-empty {
+	margin: 2rem 0 2.5rem;
+	color: var(--c-text-2);
+	line-height: 1.8;
+}
+
 .about-section {
 	margin-top: 2.5rem;
 
 	h2 {
-		margin-bottom: .75rem;
+		margin: 2.5rem 0 .75rem;
 		font-size: 1.15rem;
+		color: var(--c-text);
 		font-weight: 550;
+
+		a {
+			color: inherit;
+			text-decoration: none;
+		}
 	}
 }
 

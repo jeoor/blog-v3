@@ -92,7 +92,7 @@ function clearSelectedTag() {
 				<span class="tag-hashtag">#</span> {{ selectedTag }}
 			</h1>
 			<button class="tag-clear-btn" aria-label="Clear tag filter" @click="clearSelectedTag">
-				<Icon name="tabler:playstation-x" />
+				<Icon name="tabler:x" />
 			</button>
 		</div>
 
