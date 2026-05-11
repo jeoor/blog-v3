@@ -2,6 +2,19 @@ import type { EssayItem } from '~/types/essay'
 
 const essays: EssayItem[] = [
 	{
+		text: "改博客添加了umami统计显示，使用 EdgeOne 的 Cloud Functions，使用梦爱吃鱼大佬的在线工具生成Token",
+		date: '2026-05-11T21:47',
+		linkCards: [
+			{
+				link: "https://ums.bsgun.cn/",
+				title: "Umami API 生成工具",
+				description: "梦爱吃鱼大佬的在线工具",
+				icon: "https://www.bsgun.cn/favicon.ico",
+			},
+		],
+		tags: ["网站"],
+	},
+	{
 		text: "AI时代，是幸运还是不幸？",
 		date: '2026-04-29T22:50',
 		tags: ["想法"],
