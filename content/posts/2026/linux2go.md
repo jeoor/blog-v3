@@ -7,6 +7,9 @@ image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/2a0607d
 categories: [技术]
 tags: [linux]
+references:
+   - title: Ventoy Arch Linux To Go 十分钟速通
+     link: https://young-lord.github.io/posts/arch-to-go
 ---
 
 本文以 Arch Linux 为例，你也可以替换为其他 Linux 发行版。
