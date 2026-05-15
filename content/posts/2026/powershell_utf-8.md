@@ -31,7 +31,7 @@ tags: [powershell, windows]
 
 ## 打开 PowerShell，输入以下命令：
 
-:copy{code="notepad $PROFILE"}
+:copy{prompt="PS>" lang="ps1" code="notepad $PROFILE"}
 
 这将打开 PowerShell 的配置文件。如果文件不存在，Notepad 会提示你创建一个新的文件。
 
