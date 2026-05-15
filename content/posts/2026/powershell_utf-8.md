@@ -6,7 +6,7 @@ updated: 2026-05-11 23:53:45
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/6c61ee2
 categories: [技术]
-tags: [powershell]
+tags: [powershell, windows]
 ---
 
 ::chat

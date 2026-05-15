@@ -6,7 +6,7 @@ updated: 2026-04-24 00:44:30
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/132cbd8
 categories: [笔记]
-tags: [java]
+tags: [java, code]
 ---
 
 ## 一、接口 vs 抽象类（高频考点）
