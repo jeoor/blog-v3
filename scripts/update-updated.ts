@@ -25,42 +25,121 @@ interface FileResult {
 	newDate: string
 }
 
+interface CommitEntry {
+	hash: string
+	date: string
+}
+
+function shellQuote(value: string): string {
+	return `"${value.replaceAll('"', '\\"')}"`
+}
+
+function normalizeGitCommitDate(raw: string): string | null {
+	const parts = raw.trim().split(' ')
+	if (!parts[0] || !parts[1])
+		return null
+	return `${parts[0]} ${parts[1]}`
+}
+
 function getGitLastCommitDate(filePath: string): string | null {
 	try {
 		const output = execSync(
-			`git log -1 --format=%ci -- ${filePath}`,
+			`git log -1 --format=%ci -- ${shellQuote(filePath)}`,
 			{ encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] },
 		).trim()
 
 		if (!output)
 			return null
 
-		// git log %ci 格式: 2026-04-11 17:25:03 +0800
-		const parts = output.split(' ')
-		if (!parts[0] || !parts[1])
-			return null
-		return `${parts[0]} ${parts[1]}`
+		return normalizeGitCommitDate(output)
 	}
 	catch {
 		return null
 	}
 }
 
-function updateFrontmatter(filePath: string, gitDate: string): FileResult {
+function getGitCommitHistory(filePath: string): CommitEntry[] {
+	try {
+		const output = execSync(
+			`git log --format=%H|%ci -- ${shellQuote(filePath)}`,
+			{ encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] },
+		).trim()
+
+		if (!output)
+			return []
+
+		return output
+			.split(/\r?\n/)
+			.map((line) => {
+				const [hash, rawDate] = line.split('|')
+				const date = rawDate ? normalizeGitCommitDate(rawDate) : null
+				if (!hash || !date)
+					return null
+
+				return { hash, date }
+			})
+			.filter((entry): entry is CommitEntry => entry !== null)
+	}
+	catch {
+		return []
+	}
+}
+
+function isUpdatedOnlyCommit(filePath: string, commitHash: string): boolean {
+	try {
+		const output = execSync(
+			`git show --format= --unified=0 ${commitHash} -- ${shellQuote(filePath)}`,
+			{ encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] },
+		)
+
+		const changedLines = output
+			.split(/\r?\n/)
+			.filter(line => /^[+-]/.test(line))
+			.filter(line => !/^\+\+\+|^---/.test(line))
+			.filter(line => !/^[+-]updated:\s*/.test(line.trim()))
+
+		return changedLines.length === 0
+	}
+	catch {
+		return false
+	}
+}
+
+function hasMeaningfulChangesInDiff(output: string): boolean {
+	const changedLines = output
+		.split(/\r?\n/)
+		.filter(line => /^[+-]/.test(line))
+		.filter(line => !/^\+\+\+|^---/.test(line))
+		.filter(line => !/^[+-]updated:\s*/.test(line.trim()))
+
+	return changedLines.length > 0
+}
+
+function getLastMeaningfulCommitDate(filePath: string): string | null {
+	const commits = getGitCommitHistory(filePath)
+
+	for (const commit of commits) {
+		if (!isUpdatedOnlyCommit(filePath, commit.hash))
+			return commit.date
+	}
+
+	return getGitLastCommitDate(filePath)
+}
+
+function updateFrontmatter(filePath: string, nextDate: string): FileResult {
 	const content = fs.readFileSync(filePath, 'utf-8')
 	const NL = content.includes('\r\n') ? '\r\n' : '\n'
 	const match = content.match(FRONTMATTER_RE)
 
 	if (!match) {
-		return { path: filePath, updated: false, newDate: gitDate }
+		return { path: filePath, updated: false, newDate: nextDate }
 	}
 
 	const frontmatter = match[1]!
 	const existingUpdated = frontmatter.match(/^updated:\s*(.+)$/m)?.[1]?.trim()
 
-	// 已是最新则跳过（只比较日期，避免提交 updated 本身产生新时间戳导致死循环）
-	if (existingUpdated?.split(' ')[0] === gitDate.split(' ')[0]) {
-		return { path: filePath, updated: false, newDate: gitDate }
+	if (existingUpdated === nextDate) {
+		return { path: filePath, updated: false, newDate: nextDate }
 	}
 
 	// 没有 updated 字段时在 date 后面插入
@@ -69,29 +148,29 @@ function updateFrontmatter(filePath: string, gitDate: string): FileResult {
 		if (dateLineMatch?.index != null) {
 			const dateLineEnd = dateLineMatch.index + dateLineMatch[0].length
 			const newFrontmatter = frontmatter.slice(0, dateLineEnd)
-				+ `${NL}updated: ${gitDate}`
+				+ `${NL}updated: ${nextDate}`
 				+ frontmatter.slice(dateLineEnd)
 
 			const newContent = content.replace(frontmatter, newFrontmatter)
 			if (!DRY_RUN)
 				fs.writeFileSync(filePath, newContent, 'utf-8')
 
-			return { path: filePath, updated: true, newDate: gitDate }
+			return { path: filePath, updated: true, newDate: nextDate }
 		}
 
-		return { path: filePath, updated: false, newDate: gitDate }
+		return { path: filePath, updated: false, newDate: nextDate }
 	}
 
 	// 替换已有 updated
 	const newFrontmatter = frontmatter.replace(
 		/^updated:\s*.+$/m,
-		`updated: ${gitDate}`,
+		`updated: ${nextDate}`,
 	)
 	const newContent = content.replace(frontmatter, newFrontmatter)
 	if (!DRY_RUN)
 		fs.writeFileSync(filePath, newContent, 'utf-8')
 
-	return { path: filePath, updated: true, oldDate: existingUpdated, newDate: gitDate }
+	return { path: filePath, updated: true, oldDate: existingUpdated, newDate: nextDate }
 }
 
 // 扫描所有文章
@@ -103,11 +182,11 @@ console.log(`扫描 ${files.length} 篇文章...\n`)
 let changed = 0
 
 for (const file of files) {
-	const gitDate = getGitLastCommitDate(file)
-	if (!gitDate)
+	const date = getLastMeaningfulCommitDate(file)
+	if (!date)
 		continue
 
-	const result = updateFrontmatter(file, gitDate)
+	const result = updateFrontmatter(file, date)
 
 	if (result.updated) {
 		changed += 1
