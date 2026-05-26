@@ -7,6 +7,9 @@ const { author, footer, subtitle } = useAppConfig()
 const title = '关于'
 const description = '关于我，关于这个博客。'
 const contactHeading = '联系我'
+const excludedContactTexts: string[] = [
+	'开往-友链接力',
+]
 useSeoMeta({ title, description })
 
 const { data: postAbout } = await useAsyncData(
@@ -14,7 +17,12 @@ const { data: postAbout } = await useAsyncData(
 	() => queryCollection('content').path('/about').first(),
 )
 
-const contactLinks = computed(() => footer.iconNav.filter(({ url }) => url.startsWith('http') || url.startsWith('mailto:')))
+const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
+	if (!(url.startsWith('http') || url.startsWith('mailto:')))
+		return false
+
+	return !excludedContactTexts.includes(text)
+}))
 </script>
 
 <template>

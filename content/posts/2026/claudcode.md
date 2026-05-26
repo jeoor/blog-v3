@@ -9,7 +9,7 @@ categories: [技术]
 tags: [ai, 安装]
 ---
 
-# Claude Code是什么？
+## Claude Code 是什么？
 
 它是当前很流行的 AI 智能体工具，由 Anthropic 开发，默认使用 Claude 模型
 
@@ -28,7 +28,7 @@ tags: [ai, 安装]
    2. 许可协议界面，勾选 `I accept...`，点击 `Next`
    3. 安装路径界面，按自己习惯修改路径，点击 `Next`
    4. 自定义安装界面，保持默认，点击 `Next`
-   5. 最后的工具安装界面，`不要`勾选，否组会下载很大的工具包，点击 `Next`
+   5. 最后的工具安装界面，`不要`勾选，否则会下载很大的工具包，点击 `Next`
    6. 点击 `Install`，等待进度条走完，点击 `Finish`
 
 ::alert{icon="tabler:bounce-right" title="验证安装"}
@@ -37,25 +37,25 @@ tags: [ai, 安装]
 输入 `node -v` 和 `npm -v`，如果能看到版本信息就说明安装成功了。
 ::
 
-## 设置国内镜像
+## 设置 npm 国内镜像
 
-为在国内有较快的速度来安装软件，我们需要配置镜像源
+为在国内有较快的速度来使用 npm 安装软件，我们需要配置镜像源
 
 :key{code="R" win} 输入 `cmd` 打开命令行，输入：
 
 :copy{prompt="PS>" lang="ps1" code="npm config set registry https://registry.npmmirror.com"}
 
-用一下命令验证，看到 `https://registry.npmmirror.com` 即可：
+用以下命令验证，看到 `https://registry.npmmirror.com` 即可：
 
 :copy{prompt="PS>" lang="ps1" code="npm config get registry"}
 
 ## 安装 git
 
-Claude Code 在 Windows 需使用 Git Bash
+Claude Code 在工作时需要终端工具，推荐使用 Git Bash
 
-看[这篇文章](/posts/f9cc792)
+看[这篇文章](/posts/f9cc792)安装 git，会自动安装 Git Bash
 
-## 安装 Claude Code
+## 用 npm 安装 Claude Code
 
 运行以下命令：
 
@@ -106,7 +106,7 @@ height: 320
 ::pic
 ---
 src: https://bu.dusays.com/2026/05/26/6a156ea7040eb.webp
-caption: 选择 Deepseek
+caption: 填写 api key
 height: 320
 ---
 ::
@@ -116,21 +116,21 @@ height: 320
 ::pic
 ---
 src: https://bu.dusays.com/2026/05/26/6a156efb2e314.webp
-caption: 选择 Deepseek
+caption: 勾选选项
 height: 320
 ---
 ::
 
 之后点击右下角`+添加`，添加后会自动激活配置
 
-## 使用 Claude code
+## 使用 Claude Code
 
 配置完后，打开终端，输入 `claude` 即可运行 Claude Code
 
 ::pic
 ---
 src: https://bu.dusays.com/2026/05/26/6a156fff0a469.webp
-caption: 选择 Deepseek
+caption: Claude Code
 height: 320
 ---
 ::

@@ -60,8 +60,8 @@ export default defineAppConfig({
 			{ icon: 'tabler:home', text: '个人主页', url: blogConfig.author.homepage },
 			{ icon: 'tabler:brand-bilibili', text: '哔哩哔哩: 敖苛', url: 'https://space.bilibili.com/513671572' },
 			{ icon: 'tabler:brand-github', text: 'GitHub: jeoor', url: 'https://github.com/jeoor' },
-			{ icon: 'tabler:rss', text: 'Atom订阅', url: '/atom.xml' },
 			{ icon: 'tabler:mail', text: blogConfig.author.email, url: `mailto:${blogConfig.author.email}` },
+			{ icon: 'ri:subway-line', text: '开往-友链接力', url: 'https://www.travellings.cn/go.html' },
 		],
 
 		nav: [
@@ -69,8 +69,8 @@ export default defineAppConfig({
 				title: '探索',
 				items: [
 					{ icon: 'tabler:rss', text: 'Atom订阅', url: '/atom.xml' },
-					{ icon: 'tabler:sitemap', text: '站点地图', url: '/sitemap.xml' },
 					{ icon: 'tabler:planet', text: '异次元之旅', url: 'https://travel.moe/go.html?travel=on' },
+					{ icon: 'ri:subway-line', text: '开往-友链接力', url: 'https://www.travellings.cn/go.html' },
 				],
 			},
 			{
