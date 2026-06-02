@@ -2,6 +2,18 @@ import type { EssayItem } from '~/types/essay'
 
 const essays: EssayItem[] = [
 	{
+		text: "折腾几天，做了个自己形象的设定图，并挂在了关于页",
+		date: '2026-06-02T21:06',
+		images: [
+			{
+				src: "https://bu.dusays.com/2026/06/02/6a1eb34b88046.webp",
+				alt: "敖苛设定图",
+				height: 240,
+			},
+		],
+		tags: ["分享"],
+	},
+	{
 		text: "改博客添加了umami统计显示，使用 EdgeOne 的 Cloud Functions，使用梦爱吃鱼大佬的在线工具生成Token",
 		date: '2026-05-11T21:47',
 		linkCards: [
