@@ -38,7 +38,7 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 	<ContentRenderer
 		v-if="postAbout"
 		:value="postAbout"
-		class="about-content"
+		class="article about-content"
 	/>
 	<p v-else class="about-empty text-center">
 		可于 content/about.md 编写关于内容。
@@ -100,7 +100,7 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 }
 
 .about-content {
-	margin-bottom: 2.5rem;
+	margin: 0 0 2.5rem;
 
 	:deep(h2) {
 		margin: 2.5rem 0 .75rem;
