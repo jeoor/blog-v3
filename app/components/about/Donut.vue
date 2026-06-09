@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const SOURCE_URL = 'https://www.a1k0n.net/2011/07/20/donut-math.html'
+const SOURCE_NAME = 'a1k0n — Donut math: how donut.c works'
 const WIDTH = 80
 const HEIGHT = 23
 const BANNER_LINES = [
@@ -107,7 +108,7 @@ onMounted(() => {
 			<Icon v-else name="tabler:player-play" />
 		</button>
 		<ProseA class="donut-source" :href="SOURCE_URL" :icon="false">
-			{{ SOURCE_URL }}
+			{{ SOURCE_NAME }}
 		</ProseA>
 	</figcaption>
 </figure>

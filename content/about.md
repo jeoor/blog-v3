@@ -3,7 +3,7 @@ title: 关于
 date: 2026-02-13
 ---
 
-如对上方甜甜圈感兴趣，可以看[这篇文章](/posts/e6681c2)，搬自[作者 a1k0n 的博客](https://www.a1k0n.net/2011/07/20/donut-math.html)
+如对上方甜甜圈感兴趣，可以看[这篇文章](/posts/e6681c2)，整理自[作者 a1k0n 的博客](https://www.a1k0n.net/2011/07/20/donut-math.html)
 
 ## 关于我
 
