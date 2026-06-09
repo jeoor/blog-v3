@@ -30,7 +30,7 @@ height: 320
 
 Deepseek 怎么会犯这么低级的错误呢？只靠一个简单的 `<think>` 就能让它`串台`，泄露其他用户的对话内容？
 
-## <think> 是特殊 token
+## `<think>` 是特殊 token
 
 Deepseek 在训练时使用 `<think>` 和 `</think>` 标记思维链推理过程。`<think>` 被识别成了特殊 token，当用户单独发送时，模型会误以为自己进入了思考模式。
 

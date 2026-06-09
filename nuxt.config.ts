@@ -1,6 +1,4 @@
-import { resolve } from 'node:path'
 import { arch, env, version as nodeVersion, platform } from 'node:process'
-import { pathToFileURL } from 'node:url'
 import { name as ciName, CLOUDFLARE_PAGES, GITHUB_ACTIONS, NETLIFY } from 'ci-info'
 import { mapValues } from 'es-toolkit/object'
 import { pascalCase } from 'es-toolkit/string'
@@ -8,10 +6,8 @@ import { Temporal } from 'temporal-polyfill'
 import blogConfig from './blog.config'
 import packageJson from './package.json'
 import redirectList from './redirects.json'
-
-function pluginPath(path: string) {
-	return pathToFileURL(resolve(`./remark-plugins/${path}.ts`)).href
-}
+import rehypeMetaSlots from './remark-plugins/rehype-meta-slots'
+import remarkMusic from './remark-plugins/remark-music'
 
 // 此处配置无需修改
 export default defineNuxtConfig({
@@ -168,14 +164,22 @@ export default defineNuxtConfig({
 				highlight: false,
 				// @keep-sorted
 				remarkPlugins: {
-					[pluginPath('remark-music')]: {},
 					'remark-math': {},
+					'remark-music': {
+						instance: remarkMusic,
+						options: {},
+						src: '~~/remark-plugins/remark-music',
+					},
 					'remark-reading-time': {},
 				},
 				// @keep-sorted
 				rehypePlugins: {
-					[pluginPath('rehype-meta-slots')]: {},
 					'rehype-katex': {},
+					'rehype-meta-slots': {
+						instance: rehypeMetaSlots,
+						options: {},
+						src: '~~/remark-plugins/rehype-meta-slots',
+					},
 				},
 				toc: { depth: 4, searchDepth: 4 },
 			},

@@ -35,6 +35,8 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 		<p class="subtitle">{{ subtitle }}</p>
 	</section>
 
+	<AboutDonut />
+
 	<ContentRenderer
 		v-if="postAbout"
 		:value="postAbout"
