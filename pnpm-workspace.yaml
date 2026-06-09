@@ -86,4 +86,7 @@ patchedDependencies:
   '@vue/shared': patches/@vue__shared.patch
   plain-shiki: patches/plain-shiki.patch
 
+overrides:
+  ws: '>=8.20.1'
+
 shamefullyHoist: true

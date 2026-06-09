@@ -5,7 +5,7 @@ date: 2026-06-09 21:19:49
 updated: 2026-06-09 21:19:49
 image: # 封面图推荐 2：1，不含与标题重复的文字
 permalink: /posts/e6681c2
-categories: [技术]
+categories: [开发]
 tags: [code, c/c++, math]
 donation: false
 references:

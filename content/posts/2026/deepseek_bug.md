@@ -5,7 +5,7 @@ date: 2026-05-15 16:40:49
 updated: 2026-05-15 16:40:49
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/ce24957
-categories: [技术]
+categories: [杂谈]
 tags: [ai]
 references:
    - title: deepseek的bug

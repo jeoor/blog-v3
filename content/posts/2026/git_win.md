@@ -6,7 +6,7 @@ updated: 2026-05-15 23:00:50
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/f9cc792
 categories: [技术]
-tags: [git, windows, 安装]
+tags: [git, windows, install]
 ---
 
 ## 获取安装包

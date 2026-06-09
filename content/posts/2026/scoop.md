@@ -6,7 +6,7 @@ updated: 2026-05-15 20:32:17
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/ed5b381
 categories: [技术]
-tags: [scoop, 安装, windows]
+tags: [scoop, install, windows]
 references:
    - title: scoop 国内镜像
      link: https://gitee.com/scoop-installer/scoop

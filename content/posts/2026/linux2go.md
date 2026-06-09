@@ -6,7 +6,7 @@ updated: 2026-04-12 14:37:25
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/2a0607d
 categories: [技术]
-tags: [linux]
+tags: [linux, install]
 references:
    - title: Ventoy Arch Linux To Go 十分钟速通
      link: https://young-lord.github.io/posts/arch-to-go

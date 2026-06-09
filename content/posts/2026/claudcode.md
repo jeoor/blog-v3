@@ -6,7 +6,7 @@ updated: 2026-05-26 18:06:21
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/54cd2e3
 categories: [技术]
-tags: [ai, 安装]
+tags: [ai, install]
 ---
 
 ## Claude Code 是什么？
