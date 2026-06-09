@@ -12,10 +12,14 @@ const donationItems = computed(() => Object.entries(donation.items))
 				<div v-if="donationItems.length" class="donation-list">
 					<figure v-for="[label, image] in donationItems" :key="label" class="donation-item">
 						<UtilImg class="image" width="160" height="160" :src="image" />
-						<figcaption class="label">{{ label }}</figcaption>
+						<figcaption class="label">
+							{{ label }}
+						</figcaption>
 					</figure>
 				</div>
-				<p v-if="donation.message" class="donation-message">{{ donation.message }}</p>
+				<p v-if="donation.message" class="donation-message">
+					{{ donation.message }}
+				</p>
 			</div>
 		</template>
 	</Tooltip>
@@ -29,13 +33,13 @@ const donationItems = computed(() => Object.entries(donation.items))
 }
 
 .donate-button {
-	padding: .6rem .8rem;
+	padding: 0.6rem 0.8rem;
 	border: 1px solid var(--c-border);
 	box-shadow: none;
 }
 
 .donation-content {
-	padding: .5rem .6rem;
+	padding: 0.5rem 0.6rem;
 	text-align: center;
 }
 
@@ -44,17 +48,17 @@ const donationItems = computed(() => Object.entries(donation.items))
 	flex-wrap: wrap;
 	justify-content: center;
 	gap: 1.5rem;
-	padding: .5rem 0;
+	padding: 0.5rem 0;
 }
 
 .donation-item {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: .5rem;
+	gap: 0.5rem;
 
 	.image {
-		border-radius: .5rem;
+		border-radius: 0.5rem;
 	}
 
 	.label {

@@ -27,7 +27,8 @@
     "check:feed": "tsx scripts/framework/get-feed",
     "check:feed/all": "tsx scripts/framework/check-all-feeds",
     "fc": "tsx scripts/generate-friend.ts",
-    "updated": "tsx scripts/update-updated.ts"
+    "updated": "tsx scripts/update-updated.ts",
+    "updated:dry": "tsx scripts/update-updated.ts --dry-run"
   },
   "dependencies": {
     "@bikariya/image-viewer": "catalog:ui",

@@ -72,12 +72,14 @@ const hasMoreArticles = computed(() => allArticles.value.length > displayCount.v
 const isError = computed(() => status.value === 'error')
 
 function formatDate(dateString: string): string {
-	if (!dateString) return ''
+	if (!dateString)
+		return ''
 	return toZdtLocaleString(dateString, 'date').replace(DATE_SLASH_RE, '-')
 }
 
 function refreshRandomArticle(): void {
-	if (!allArticles.value.length) return
+	if (!allArticles.value.length)
+		return
 	const index = Math.floor(Math.random() * allArticles.value.length)
 	randomArticle.value = allArticles.value[index] ?? null
 }
@@ -111,25 +113,35 @@ watch(allArticles, (articles) => {
 <template>
 <ZPageBanner :title :description :image>
 	<div class="fcircle-stats">
-		<div v-if="lastUpdatedDate" class="fcircle-stats__update-time">Updated at {{ lastUpdatedDate }}</div>
-		<div v-else-if="isLoading" class="fcircle-stats__update-time">Updating...</div>
-		<div class="fcircle-stats__powered-by">Powered by FriendCircleLite</div>
+		<div v-if="lastUpdatedDate" class="fcircle-stats__update-time">
+			Updated at {{ lastUpdatedDate }}
+		</div>
+		<div v-else-if="isLoading" class="fcircle-stats__update-time">
+			Updating...
+		</div>
+		<div class="fcircle-stats__powered-by">
+			Powered by FriendCircleLite
+		</div>
 	</div>
 </ZPageBanner>
 
 <div class="page-fcircle">
 	<div class="fcircle">
 		<div v-if="randomArticle" class="fcircle__random-article">
-			<div class="fcircle__random-title">随机文章</div>
+			<div class="fcircle__random-title">
+				随机文章
+			</div>
 			<div class="article-item">
-				<a :href="randomArticle.link" target="_blank" rel="noopener noreferrer"
-					class="article-item__container gradient-card">
+				<a
+					:href="randomArticle.link" target="_blank" rel="noopener noreferrer"
+					class="article-item__container gradient-card"
+				>
 					<span class="article-item__author">{{ randomArticle.author }}</span>
 					<span class="article-item__title">{{ randomArticle.title }}</span>
 					<span class="article-item__date">{{ formatDate(randomArticle.created) }}</span>
 				</a>
 			</div>
-			<ZButton class="btn-refresh gradient-card" @click="refreshRandomArticle" icon="uim:process" />
+			<ZButton class="btn-refresh gradient-card" icon="uim:process" @click="refreshRandomArticle" />
 		</div>
 
 		<div class="fcircle__articles">
@@ -142,8 +154,10 @@ watch(allArticles, (articles) => {
 				<div class="article-item__image" @click="showAuthorPosts(article.author, article.avatar, article.link)">
 					<NuxtImg :src="article.avatar" :alt="article.author" loading="lazy" />
 				</div>
-				<a :href="article.link" target="_blank" rel="noopener noreferrer"
-					class="article-item__container gradient-card">
+				<a
+					:href="article.link" target="_blank" rel="noopener noreferrer"
+					class="article-item__container gradient-card"
+				>
 					<span class="article-item__author">{{ article.author }}</span>
 					<span class="article-item__title">{{ article.title }}</span>
 					<span class="article-item__date">{{ formatDate(article.created) }}</span>
@@ -151,12 +165,14 @@ watch(allArticles, (articles) => {
 			</div>
 		</div>
 
-		<ZButton v-show="hasMoreArticles" class="btn-load-more gradient-card" @click="loadMore" text="加载更多" />
+		<ZButton v-show="hasMoreArticles" class="btn-load-more gradient-card" text="加载更多" @click="loadMore" />
 
 		<div v-if="isError" class="error-container">
 			<Icon class="error-container__icon" name="tabler:file-alert" />
 			<p>友圈数据加载失败</p>
-			<p class="empty-hint">请稍后再试</p>
+			<p class="empty-hint">
+				请稍后再试
+			</p>
 		</div>
 
 		<div v-else-if="!isLoading && allArticles.length === 0" class="error-container">
@@ -188,8 +204,10 @@ watch(allArticles, (articles) => {
 								:style="getFixedDelay(0.2 + index * 0.1)"
 							>
 								<span class="timeline__date">{{ formatDate(article.created) }}</span>
-								<a :href="article.link" target="_blank" rel="noopener noreferrer" class="timeline__title"
-									@click="closeAvatarPopup">
+								<a
+									:href="article.link" target="_blank" rel="noopener noreferrer" class="timeline__title"
+									@click="closeAvatarPopup"
+								>
 									{{ article.title }}
 								</a>
 							</div>
@@ -207,37 +225,37 @@ watch(allArticles, (articles) => {
 
 <style lang="scss" scoped>
 .page-fcircle {
-	animation: float-in .2s backwards;
 	margin: 1rem;
+	animation: float-in 0.2s backwards;
 }
 
 .fcircle-stats {
-	align-items: flex-end;
-	color: #eee;
 	display: flex;
 	flex-direction: column;
+	align-items: flex-end;
+	gap: 0.1rem;
+	opacity: 0.7;
 	font-family: var(--font-monospace);
-	font-size: .7rem;
-	gap: .1rem;
-	opacity: .7;
-	text-shadow: 0 4px 5px rgba(0, 0, 0, .5);
+	font-size: 0.7rem;
+	text-shadow: 0 4px 5px rgb(0 0 0 / 50%);
+	color: #EEE;
 
 	.fcircle-stats__update-time {
 		opacity: 1;
 	}
 
 	.fcircle-stats__powered-by {
-		opacity: .8;
+		opacity: 0.8;
 	}
 }
 
 .fcircle {
 	.fcircle__random-article {
-		align-items: center;
 		display: flex;
 		flex-direction: row;
-		gap: 10px;
+		align-items: center;
 		justify-content: space-between;
+		gap: 10px;
 		margin: 1rem 0;
 
 		.fcircle__random-title {
@@ -254,8 +272,8 @@ watch(allArticles, (articles) => {
 
 				.article-item__title {
 					overflow: hidden;
-					text-overflow: ellipsis;
 					white-space: nowrap;
+					text-overflow: ellipsis;
 				}
 			}
 		}
@@ -264,97 +282,97 @@ watch(allArticles, (articles) => {
 	.fcircle__articles {
 		display: flex;
 		flex-direction: column;
-		gap: .5rem;
+		gap: 0.5rem;
 	}
 }
 
 .article-item {
-	align-items: center;
 	display: flex;
+	align-items: center;
 	gap: 10px;
 	width: 100%;
 
 	&.article-item--new {
-		animation: float-in .2s var(--delay) backwards;
+		animation: float-in 0.2s var(--delay) backwards;
 	}
 
 	.article-item__image {
-		border-radius: 50%;
-		box-shadow: 0 0 0 1px var(--c-bg-soft);
 		display: flex;
 		flex-shrink: 0;
-		height: 2rem;
 		overflow: hidden;
 		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
+		box-shadow: 0 0 0 1px var(--c-bg-soft);
 
 		img {
-			height: 100%;
-			object-fit: cover;
-			opacity: .8;
-			transition: all .2s;
+			opacity: 0.8;
 			width: 100%;
+			height: 100%;
+			transition: all 0.2s;
+			object-fit: cover;
 		}
 	}
 
 	.article-item__container {
+		display: flex;
 		align-items: center;
+		gap: 5px;
+		overflow: hidden;
+		width: 100%;
+		height: 2.5rem;
+		padding: 10px;
 		border-radius: 8px;
 		box-shadow: 0 0 0 1px var(--c-bg-soft);
-		display: flex;
-		gap: 5px;
-		height: 2.5rem;
-		overflow: hidden;
-		padding: 10px;
-		width: 100%;
 
 		&:hover .article-item__title {
 			color: var(--c-text);
 		}
 
 		.article-item__author {
-			align-items: center;
-			color: var(--c-text-3);
 			display: flex;
 			flex-shrink: 0;
-			font-size: .85rem;
+			align-items: center;
+			font-size: 0.85rem;
+			color: var(--c-text-3);
 		}
 
 		.article-item__title {
-			align-items: center;
-			color: var(--c-text-2);
 			display: flex;
 			flex: 1;
-			font-size: .9375rem;
+			align-items: center;
 			overflow: hidden;
-			text-overflow: ellipsis;
-			transition: color .2s;
+			font-size: 0.9375rem;
 			white-space: nowrap;
+			text-overflow: ellipsis;
+			color: var(--c-text-2);
+			transition: color 0.2s;
 		}
 
 		.article-item__date {
-			align-items: center;
-			color: var(--c-text-3);
 			display: flex;
 			flex-shrink: 0;
+			align-items: center;
 			font-family: var(--font-monospace);
-			font-size: .75rem;
+			font-size: 0.75rem;
+			color: var(--c-text-3);
 		}
 	}
 }
 
 .btn-refresh {
-	align-items: center;
-	background-color: unset;
-	border-radius: 8px;
-	box-shadow: none;
-	color: var(--c-text-2);
-	cursor: pointer;
 	display: flex;
 	flex-shrink: 0;
-	height: 2.5rem;
+	align-items: center;
 	justify-content: center;
-	transition: all .2s ease;
 	width: 2.5rem;
+	height: 2.5rem;
+	border-radius: 8px;
+	box-shadow: none;
+	background-color: unset;
+	color: var(--c-text-2);
+	transition: all 0.2s ease;
+	cursor: pointer;
 
 	&:hover {
 		background-color: unset;
@@ -362,15 +380,15 @@ watch(allArticles, (articles) => {
 }
 
 .btn-load-more {
-	background-color: var(--ld-bg-card);
-	border-radius: 8px;
-	box-shadow: .1em .2em .5rem var(--ld-shadow);
 	display: block;
-	font-size: .875rem;
+	width: 200px;
 	height: 42px;
 	margin: 1rem auto;
-	padding: .75rem;
-	width: 200px;
+	padding: 0.75rem;
+	border-radius: 8px;
+	box-shadow: 0.1em 0.2em 0.5rem var(--ld-shadow);
+	background-color: var(--ld-bg-card);
+	font-size: 0.875rem;
 
 	&:hover {
 		color: var(--c-text);
@@ -378,55 +396,51 @@ watch(allArticles, (articles) => {
 }
 
 .modal {
-	align-items: center;
-	-webkit-backdrop-filter: blur(20px);
-	backdrop-filter: blur(20px);
-	bottom: 0;
 	display: flex;
+	align-items: center;
 	justify-content: center;
-	left: 0;
 	position: fixed;
-	right: 0;
-	top: 0;
+	inset: 0;
+	backdrop-filter: blur(20px);
 	z-index: 100;
 
 	.modal__content {
-		background-color: var(--c-bg-a50);
+		position: relative;
+		overflow-y: auto;
+		width: 90%;
+		max-width: 500px;
+		max-height: 80vh;
+		padding: 1.25rem;
 		border-radius: 12px;
 		box-shadow: 0 0 0 1px var(--c-bg-soft);
-		max-height: 80vh;
-		max-width: 500px;
-		overflow-y: auto;
-		padding: 1.25rem;
-		position: relative;
-		width: 90%;
+		background-color: var(--c-bg-a50);
 
 		.modal__header {
-			align-items: center;
-			border-bottom: 1px solid var(--c-bg-soft);
 			display: flex;
+			align-items: center;
 			gap: 15px;
 			margin-bottom: 20px;
 			padding-bottom: 15px;
+			border-bottom: 1px solid var(--c-bg-soft);
 
 			img {
-				border-radius: 50%;
-				height: 50px;
-				object-fit: cover;
 				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+				object-fit: cover;
 			}
 
 			h3 {
 				flex: 1;
-				font-size: 1.2rem;
 				margin: 0;
+				font-size: 1.2rem;
 			}
 
 			.modal__author-link {
+				padding: 8px;
 				border-radius: 8px;
 				color: var(--c-text-2);
-				padding: 8px;
-				transition: all .3s;
+				transition: all 0.3s;
 
 				&:hover {
 					background: var(--c-bg-soft);
@@ -440,33 +454,33 @@ watch(allArticles, (articles) => {
 				position: relative;
 
 				&::after {
-					background-color: var(--c-bg-soft);
-					bottom: 0;
 					content: "";
-					left: .25rem;
 					position: absolute;
-					top: .5rem;
-					transform: translate(-50%);
+					top: 0.5rem;
+					bottom: 0;
+					left: 0.25rem;
 					width: 2px;
+					background-color: var(--c-bg-soft);
+					transform: translate(-50%);
 				}
 
 				.timeline__item {
-					animation: float-in .3s var(--delay) backwards;
-					color: var(--c-text-2);
-					padding: 0 0 1rem 1.25rem;
 					position: relative;
+					padding: 0 0 1rem 1.25rem;
+					color: var(--c-text-2);
+					animation: float-in 0.3s var(--delay) backwards;
 
 					&::before {
-						background-color: var(--c-text-2);
-						border-radius: 50%;
 						content: "";
-						height: .5rem;
-						left: .25rem;
 						position: absolute;
-						top: .5rem;
+						top: 0.5rem;
+						left: 0.25rem;
+						width: 0.5rem;
+						height: 0.5rem;
+						border-radius: 50%;
+						background-color: var(--c-text-2);
 						transform: translateY(-50%) translate(-50%);
-						transition: transform .3s ease, box-shadow .3s ease;
-						width: .5rem;
+						transition: transform 0.3s ease, box-shadow 0.3s ease;
 						z-index: 1;
 					}
 
@@ -476,17 +490,17 @@ watch(allArticles, (articles) => {
 					}
 
 					.timeline__date {
-						color: var(--c-text-3);
 						display: block;
+						margin-bottom: 0.3rem;
 						font-family: var(--font-monospace);
-						font-size: .875rem;
-						margin-bottom: .3rem;
+						font-size: 0.875rem;
+						color: var(--c-text-3);
 					}
 
 					.timeline__title {
-						color: var(--c-text-2);
 						line-height: 1.4;
-						transition: color .3s;
+						color: var(--c-text-2);
+						transition: color 0.3s;
 
 						&:hover {
 							color: var(--c-text);
@@ -497,22 +511,22 @@ watch(allArticles, (articles) => {
 		}
 
 		.modal__avatar {
-			border-radius: 50%;
-			bottom: 1.25rem;
-			filter: blur(5px);
-			height: 128px;
-			opacity: .6;
-			overflow: hidden;
-			pointer-events: none;
 			position: absolute;
+			overflow: hidden;
+			opacity: 0.6;
 			right: 1.25rem;
+			bottom: 1.25rem;
 			width: 128px;
+			height: 128px;
+			border-radius: 50%;
+			filter: blur(5px);
+			pointer-events: none;
 			z-index: 1;
 
 			img {
+				width: 100%;
 				height: 100%;
 				object-fit: cover;
-				width: 100%;
 			}
 		}
 	}
@@ -522,7 +536,7 @@ watch(allArticles, (articles) => {
 .modal-enter-active .modal__content,
 .modal-leave-active,
 .modal-leave-active .modal__content {
-	transition: all .3s ease;
+	transition: all 0.3s ease;
 }
 
 .modal-enter-from,
@@ -546,13 +560,13 @@ watch(allArticles, (articles) => {
 }
 
 .error-container {
-	align-items: center;
-	color: var(--c-text-2);
 	display: flex;
 	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 	gap: 12px;
 	height: 400px;
-	justify-content: center;
+	color: var(--c-text-2);
 
 	.error-container__icon {
 		font-size: 4rem;

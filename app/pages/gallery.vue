@@ -170,8 +170,8 @@ function backToFolders(): void {
 
 <style lang="scss" scoped>
 .gallery-page {
-	animation: float-in .2s backwards;
 	margin: 1rem;
+	animation: float-in 0.2s backwards;
 }
 
 .folder-panel,
@@ -194,7 +194,7 @@ function backToFolders(): void {
 	}
 
 	span {
-		font-size: .85rem;
+		font-size: 0.85rem;
 		color: var(--c-text-3);
 	}
 }
@@ -202,7 +202,7 @@ function backToFolders(): void {
 .folder-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-	gap: .8rem;
+	gap: 0.8rem;
 
 	@media (max-width: $breakpoint-mobile) {
 		grid-template-columns: 1fr;
@@ -212,11 +212,11 @@ function backToFolders(): void {
 .folder-card {
 	display: block;
 	overflow: hidden;
-	border-radius: .6rem;
+	border-radius: 0.6rem;
 	box-shadow: 0 0 0 1px var(--c-bg-soft);
 	text-align: left;
-	color: inherit;
 	text-decoration: none;
+	color: inherit;
 	transition: transform var(--delay), box-shadow var(--delay);
 
 	&:hover {
@@ -237,17 +237,17 @@ function backToFolders(): void {
 	}
 
 	.folder-meta {
-		padding: .65rem .75rem;
+		padding: 0.65rem 0.75rem;
 		background-color: var(--ld-bg-card);
 
 		h3 {
 			margin: 0;
-			font-size: .95rem;
+			font-size: 0.95rem;
 		}
 
 		.folder-count {
-			margin: .25rem 0 0;
-			font-size: .82rem;
+			margin: 0.25rem 0 0;
+			font-size: 0.82rem;
 			color: var(--c-text-3);
 		}
 	}
@@ -257,7 +257,7 @@ function backToFolders(): void {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: .8rem;
+	gap: 0.8rem;
 	margin-bottom: 1rem;
 
 	@media (max-width: $breakpoint-mobile) {
@@ -267,7 +267,7 @@ function backToFolders(): void {
 	.head-main {
 		display: flex;
 		align-items: baseline;
-		gap: .6rem;
+		gap: 0.6rem;
 		margin-inline-end: auto;
 
 		h2 {
@@ -279,13 +279,13 @@ function backToFolders(): void {
 .back-btn {
 	display: inline-flex;
 	align-items: center;
-	gap: .25rem;
-	padding: .3rem .7rem;
-	border-radius: .5rem;
+	gap: 0.25rem;
+	padding: 0.3rem 0.7rem;
+	border-radius: 0.5rem;
 	background-color: var(--c-bg-2);
+	font-size: 0.85rem;
 	color: var(--c-text-2);
-	font-size: .85rem;
-	transition: background-color .2s, color .2s;
+	transition: background-color 0.2s, color 0.2s;
 
 	&:hover {
 		background-color: var(--c-bg-3);
@@ -295,7 +295,7 @@ function backToFolders(): void {
 
 .image-grid {
 	column-count: 3;
-	column-gap: .8rem;
+	column-gap: 0.8rem;
 
 	@media (max-width: $breakpoint-mobile) {
 		column-count: 2;
@@ -304,8 +304,8 @@ function backToFolders(): void {
 
 .image-card {
 	overflow: hidden;
-	margin-bottom: .8rem;
-	border-radius: .6rem;
+	margin-bottom: 0.8rem;
+	border-radius: 0.6rem;
 	box-shadow: 0 0 0 1px var(--c-bg-soft);
 	transition: transform var(--delay), box-shadow var(--delay);
 	break-inside: avoid;

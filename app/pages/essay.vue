@@ -161,7 +161,7 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 		</div>
 	</div>
 
-	<ZButton v-show="hasMore" class="btn-load-more gradient-card" @click="displayCount += PAGE_SIZE" text="加载更多" />
+	<ZButton v-show="hasMore" class="btn-load-more gradient-card" text="加载更多" @click="displayCount += PAGE_SIZE" />
 </div>
 
 <PostComment />
@@ -169,28 +169,28 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 
 <style lang="scss" scoped>
 .essay-list {
-	animation: float-in .2s backwards;
 	margin: 1rem;
+	animation: float-in 0.2s backwards;
 
 	.essay-item {
-		animation: float-in .3s backwards;
-		border-radius: 8px;
-		box-shadow: 0 0 0 1px var(--c-bg-soft);
 		display: flex;
 		flex-direction: column;
-		gap: .5rem;
+		gap: 0.5rem;
 		margin-bottom: 1rem;
 		padding: 1rem;
+		border-radius: 8px;
+		box-shadow: 0 0 0 1px var(--c-bg-soft);
+		animation: float-in 0.3s backwards;
 
 		.essay-meta {
-			align-items: center;
 			display: flex;
+			align-items: center;
 			gap: 10px;
 
 			.avatar {
+				width: 3em;
 				border-radius: 50%;
 				box-shadow: 2px 4px 1rem var(--ld-shadow);
-				width: 3em;
 
 				@supports (corner-shape: squircle) {
 					corner-shape: superellipse(1.2);
@@ -198,34 +198,34 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 			}
 
 			.nick {
-				align-items: center;
 				display: flex;
+				align-items: center;
 				gap: 5px;
 			}
 
 			.date {
-				color: var(--c-text-3);
 				font-family: var(--font-monospace);
-				font-size: .8rem;
+				font-size: 0.8rem;
+				color: var(--c-text-3);
 			}
 		}
 
 		.essay-content {
-			color: var(--c-text-2);
 			display: flex;
 			flex-direction: column;
-			gap: .5rem;
+			gap: 0.5rem;
 			line-height: 1.6;
+			color: var(--c-text-2);
 
 			.text :deep(a[href]) {
-				margin: -.1em -.2em;
-				padding: .1em .2em;
-				background: linear-gradient(var(--c-primary-soft), var(--c-primary-soft)) no-repeat center bottom / 100% .1em;
+				margin: -0.1em -0.2em;
+				padding: 0.1em 0.2em;
+				background: linear-gradient(var(--c-primary-soft), var(--c-primary-soft)) no-repeat center bottom / 100% 0.1em;
 				color: var(--c-primary);
-				transition: all .2s;
+				transition: all 0.2s;
 
 				&:hover {
-					border-radius: .3em;
+					border-radius: 0.3em;
 					background-size: 100% 100%;
 				}
 			}
@@ -233,14 +233,14 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 			.link-cards {
 				display: flex;
 				flex-direction: column;
-				gap: .75rem;
+				gap: 0.75rem;
 			}
 
 			.essay-link-card {
 				align-self: center;
-				margin: 0 auto;
-				max-width: 90%;
 				width: 20rem;
+				max-width: 90%;
+				margin: 0 auto;
 			}
 
 			.images {
@@ -253,11 +253,11 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 			}
 
 			.image {
-				border-radius: 8px;
 				overflow: hidden;
+				border-radius: 8px;
 
 				:deep(img) {
-					transition: transform .3s;
+					transition: transform 0.3s;
 
 					&:hover {
 						transform: scale(1.05);
@@ -266,66 +266,66 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 			}
 
 			.image--multi {
-				padding-bottom: 100%;
 				position: relative;
+				padding-bottom: 100%;
 
 				:deep(img) {
 					display: block;
-					height: 100%;
-					object-fit: cover;
 					position: absolute;
 					width: 100%;
+					height: 100%;
+					object-fit: cover;
 				}
 			}
 
 			.image--single {
 				justify-self: start;
-				max-width: min(100%, 26rem);
 				width: fit-content;
+				max-width: min(100%, 26rem);
 
 				:deep(img) {
 					display: block;
+					position: static;
 					max-width: 100%;
 					object-fit: contain;
-					position: static;
 				}
 			}
 
 			.video {
-				border-radius: 8px;
 				margin: 0;
+				border-radius: 8px;
 			}
 		}
 
 		.essay-bottom {
-			align-items: center;
-			color: var(--c-text-3);
 			display: flex;
-			gap: .5rem;
+			align-items: center;
 			justify-content: space-between;
+			gap: 0.5rem;
+			color: var(--c-text-3);
 
 			.tags {
 				display: flex;
-				font-size: .7rem;
 				gap: 4px;
+				font-size: 0.7rem;
 			}
 
 			.tag {
-				align-items: center;
-				background-color: var(--c-bg-2);
-				border-radius: 4px;
-				cursor: pointer;
 				display: flex;
+				align-items: center;
 				padding: 2px 4px;
-				transition: all .2s;
+				border-radius: 4px;
+				background-color: var(--c-bg-2);
+				transition: all 0.2s;
+				cursor: pointer;
 
 				&:hover {
-					opacity: .8;
+					opacity: 0.8;
 				}
 			}
 
 			.tag .tabler-tag + * {
-				margin-left: .15em;
+				margin-left: 0.15em;
 			}
 
 			.comment-btn {

@@ -48,9 +48,9 @@ $PSDefaultParameterValues['Out-File:Encoding'] = 'UTF8'
 $PSDefaultParameterValues['Export-Csv:Encoding'] = 'UTF8'
 ```
 ::folding
-#title
+# title
 代码说明
-#default
+# default
 - 设置 PowerShell 的输入编码为 UTF-8，这样 PowerShell 就可以正确地读取中文输入。
 - 设置 PowerShell 的输出编码为 UTF-8，这样 PowerShell 就可以正确地显示中文输出。
 - 设置 PowerShell 的默认输出编码为 UTF-8，这样 PowerShell 在输出到文件或管道时也会使用 UTF-8 编码。

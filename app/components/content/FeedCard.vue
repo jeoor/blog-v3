@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { FeedEntry } from '~/types/feed'
+// eslint-disable-next-line unused-imports/no-unused-imports
 import { Temporal } from 'temporal-polyfill'
 
 const props = defineProps<FeedEntry>()

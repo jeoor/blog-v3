@@ -8,10 +8,10 @@
  * --dry-run  只输出变更，不写入文件
  */
 
-import fs from 'node:fs'
 import { execSync } from 'node:child_process'
-import { globSync } from 'node:fs'
+import fs, { globSync } from 'node:fs'
 import { join } from 'node:path'
+import process from 'node:process'
 
 const DRY_RUN = process.argv.includes('--dry-run')
 
@@ -105,16 +105,6 @@ function isUpdatedOnlyCommit(filePath: string, commitHash: string): boolean {
 	}
 }
 
-function hasMeaningfulChangesInDiff(output: string): boolean {
-	const changedLines = output
-		.split(/\r?\n/)
-		.filter(line => /^[+-]/.test(line))
-		.filter(line => !/^\+\+\+|^---/.test(line))
-		.filter(line => !/^[+-]updated:\s*/.test(line.trim()))
-
-	return changedLines.length > 0
-}
-
 function getLastMeaningfulCommitDate(filePath: string): string | null {
 	const commits = getGitCommitHistory(filePath)
 
@@ -136,7 +126,8 @@ function updateFrontmatter(filePath: string, nextDate: string): FileResult {
 	}
 
 	const frontmatter = match[1]!
-	const existingUpdated = frontmatter.match(/^updated:\s*(.+)$/m)?.[1]?.trim()
+	// eslint-disable-next-line regexp/no-super-linear-backtracking
+	const existingUpdated = frontmatter.match(/^updated:\s+(.+)$/m)?.[1]?.trim()
 
 	if (existingUpdated === nextDate) {
 		return { path: filePath, updated: false, newDate: nextDate }
@@ -147,9 +138,9 @@ function updateFrontmatter(filePath: string, nextDate: string): FileResult {
 		const dateLineMatch = frontmatter.match(/^(date:.+)$/m)
 		if (dateLineMatch?.index != null) {
 			const dateLineEnd = dateLineMatch.index + dateLineMatch[0].length
-			const newFrontmatter = frontmatter.slice(0, dateLineEnd)
-				+ `${NL}updated: ${nextDate}`
-				+ frontmatter.slice(dateLineEnd)
+			const newFrontmatter = `${frontmatter.slice(0, dateLineEnd)
+			}${NL}updated: ${nextDate}${
+				frontmatter.slice(dateLineEnd)}`
 
 			const newContent = content.replace(frontmatter, newFrontmatter)
 			if (!DRY_RUN)
@@ -163,7 +154,7 @@ function updateFrontmatter(filePath: string, nextDate: string): FileResult {
 
 	// 替换已有 updated
 	const newFrontmatter = frontmatter.replace(
-		/^updated:\s*.+$/m,
+		/^updated:\s*(?:\S.*|[\t\v\f \xA0\u1680\u2000-\u200A\u202F\u205F\u3000\uFEFF])$/m,
 		`updated: ${nextDate}`,
 	)
 	const newContent = content.replace(frontmatter, newFrontmatter)

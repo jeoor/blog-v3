@@ -32,7 +32,9 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 		<h2 class="text-creative">
 			{{ author.name }}
 		</h2>
-		<p class="subtitle">{{ subtitle }}</p>
+		<p class="subtitle">
+			{{ subtitle }}
+		</p>
 	</section>
 
 	<AboutDonut />
@@ -68,8 +70,8 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 
 <style lang="scss" scoped>
 .page-about {
-	animation: float-in .2s backwards;
 	margin: 1rem;
+	animation: float-in 0.2s backwards;
 }
 
 .about-author {
@@ -94,21 +96,21 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 		font-size: 1.8rem;
 	}
 
-		.subtitle {
-			margin: 0;
-			color: var(--c-text-2);
-			font-size: 1rem;
-		}
+	.subtitle {
+		margin: 0;
+		font-size: 1rem;
+		color: var(--c-text-2);
+	}
 }
 
 .about-content {
 	margin: 0 0 2.5rem;
 
 	:deep(h2) {
-		margin: 2.5rem 0 .75rem;
+		margin: 2.5rem 0 0.75rem;
 		font-size: 1.15rem;
-		color: var(--c-text);
 		font-weight: 550;
+		color: var(--c-text);
 
 		&:first-child {
 			margin-top: 0;
@@ -116,18 +118,18 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 	}
 
 	:deep(p) {
-		margin: .5rem 0;
+		margin: 0.5rem 0;
 		line-height: 1.8;
 		color: var(--c-text-2);
 	}
 
 	:deep(ul) {
-		margin: .5rem 0;
+		margin: 0.5rem 0;
 		padding-inline-start: 1.5em;
 		list-style: revert;
 
 		li {
-			margin: .4rem 0;
+			margin: 0.4rem 0;
 			line-height: 1.8;
 			color: var(--c-text-2);
 
@@ -135,7 +137,7 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 
 			a {
 				color: var(--c-primary);
-				transition: color .2s;
+				transition: color 0.2s;
 
 				&:hover { color: var(--c-text); }
 			}
@@ -145,22 +147,22 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 
 .about-empty {
 	margin: 2rem 0 2.5rem;
-	color: var(--c-text-2);
 	line-height: 1.8;
+	color: var(--c-text-2);
 }
 
 .about-section {
 	margin-top: 2.5rem;
 
 	h2 {
-		margin: 2.5rem 0 .75rem;
+		margin: 2.5rem 0 0.75rem;
 		font-size: 1.15rem;
-		color: var(--c-text);
 		font-weight: 550;
+		color: var(--c-text);
 
 		a {
-			color: inherit;
 			text-decoration: none;
+			color: inherit;
 		}
 	}
 }
@@ -168,18 +170,18 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 .contact-list {
 	display: flex;
 	flex-wrap: wrap;
-	gap: .5rem;
+	gap: 0.5rem;
 
 	a {
 		display: flex;
 		align-items: center;
-		gap: .3rem;
-		padding: .3rem .7rem;
-		border-radius: .5rem;
+		gap: 0.3rem;
+		padding: 0.3rem 0.7rem;
+		border-radius: 0.5rem;
 		background-color: var(--c-bg-2);
+		font-size: 0.85rem;
 		color: var(--c-text-2);
-		font-size: .85rem;
-		transition: background-color .2s, color .2s;
+		transition: background-color 0.2s, color 0.2s;
 
 		&:hover {
 			background-color: var(--c-bg-3);

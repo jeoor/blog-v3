@@ -40,7 +40,7 @@ AI 只执行已确认项目
 你可以直接复制粘贴到你的 Agent 工具使用，如 Pi，Claude Code，Codex 等。
 
 ::alert{type="warning"}
-#default
+# default
 适合有基本判断能力的用户，不适合完全把删除权限交给 AI，重要文件请先备份。
 ::
 

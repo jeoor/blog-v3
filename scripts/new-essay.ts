@@ -25,7 +25,7 @@ function normalize(value: string | undefined): string | undefined {
 }
 
 function q(value: string): string {
-	return JSON.stringify(value)
+	return `'${value.replace(/\\/g, '\\\\').replace(/'/g, `\\'`).replace(/\n/g, '\\n')}'`
 }
 
 function parseDimension(value?: string): number | undefined {
@@ -120,7 +120,7 @@ if (videoType) {
 	}
 }
 
-let selectedTags: string[] = exitIfCancel(await multiselect({
+const selectedTags: string[] = exitIfCancel(await multiselect({
 	message: '选择标签（空格选中，回车确认）',
 	options: [
 		{ value: '生活', label: '生活' },
@@ -133,7 +133,7 @@ let selectedTags: string[] = exitIfCancel(await multiselect({
 	required: false,
 }))
 
-let tags: string[] = selectedTags.filter(t => t !== '__custom__')
+const tags: string[] = selectedTags.filter(t => t !== '__custom__')
 
 if (selectedTags.includes('__custom__')) {
 	const customTag = normalize(exitIfCancel(await text({

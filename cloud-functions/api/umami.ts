@@ -1,3 +1,4 @@
+import process from 'node:process'
 import blogConfig from '../../blog.config'
 
 const CACHE_CONTROL = 'public, max-age=60, s-maxage=600, stale-while-revalidate=86400'
@@ -110,7 +111,7 @@ export async function onRequestGet(context: { env?: Record<string, string | unde
 			const url = `${baseUrl}/api/websites/${websiteId}/stats?${params}`
 			const response = await fetch(url, {
 				headers: {
-					Authorization: `Bearer ${umamiToken}`,
+					'Authorization': `Bearer ${umamiToken}`,
 					'Content-Type': 'application/json',
 				},
 			})
@@ -129,7 +130,7 @@ export async function onRequestGet(context: { env?: Record<string, string | unde
 
 		const activeResponse = await fetch(`${baseUrl}/api/websites/${websiteId}/active`, {
 			headers: {
-				Authorization: `Bearer ${umamiToken}`,
+				'Authorization': `Bearer ${umamiToken}`,
 				'Content-Type': 'application/json',
 			},
 		})

@@ -1,4 +1,4 @@
-import type { Nav, NavItem } from '~/types/nav'
+import type { Nav } from '~/types/nav'
 import { pascalCase } from 'es-toolkit/string'
 import { Temporal } from 'temporal-polyfill'
 import blogConfig from '~~/blog.config'

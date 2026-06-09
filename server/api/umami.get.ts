@@ -1,3 +1,4 @@
+import process from 'node:process'
 import blogConfig from '~~/blog.config'
 
 const STORAGE_KEY = 'umami:stats'
@@ -103,7 +104,7 @@ export default defineCachedEventHandler(async (event) => {
 			const url = `${baseUrl}/api/websites/${websiteId}/stats?${params}`
 			const data = await $fetch<Record<string, unknown>>(url, {
 				headers: {
-					Authorization: `Bearer ${umamiToken}`,
+					'Authorization': `Bearer ${umamiToken}`,
 					'Content-Type': 'application/json',
 				},
 				timeout: 15000,
@@ -118,7 +119,7 @@ export default defineCachedEventHandler(async (event) => {
 
 		const activeData = await $fetch<Record<string, unknown>>(`${baseUrl}/api/websites/${websiteId}/active`, {
 			headers: {
-				Authorization: `Bearer ${umamiToken}`,
+				'Authorization': `Bearer ${umamiToken}`,
 				'Content-Type': 'application/json',
 			},
 			timeout: 15000,

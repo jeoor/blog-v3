@@ -1,7 +1,7 @@
 import type { BundledLanguage, CodeToHastOptions } from 'shiki'
-import { defineConfig } from '#shiki/config'
 import { transformerColorizedBrackets } from '@shikijs/colorized-brackets'
 import { transformerNotationDiff, transformerNotationErrorLevel, transformerNotationFocus, transformerNotationHighlight, transformerNotationWordHighlight, transformerRenderIndentGuides, transformerRenderWhitespace } from '@shikijs/transformers'
+import { defineConfig } from '#shiki/config'
 
 type CustomTransformerOptions = Array<
 	| 'ignoreColorizedBrackets'

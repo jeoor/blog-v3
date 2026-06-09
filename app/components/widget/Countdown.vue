@@ -83,7 +83,7 @@ const targetDateText = computed(() => {
 <style lang="scss" scoped>
 .countdown {
 	display: flex;
-	gap: .8rem;
+	gap: 0.8rem;
 }
 
 .left {
@@ -98,15 +98,15 @@ const targetDateText = computed(() => {
 	&::after {
 		content: "";
 		position: absolute;
-		opacity: .8;
-		right: -.4rem;
+		opacity: 0.8;
+		right: -0.4rem;
 		width: 2px;
 		height: 80%;
 		background-color: var(--c-border);
 	}
 
 	.text {
-		font-size: .9rem;
+		font-size: 0.9rem;
 		color: var(--c-text-2);
 	}
 
@@ -125,7 +125,7 @@ const targetDateText = computed(() => {
 	}
 
 	.date {
-		font-size: .85rem;
+		font-size: 0.85rem;
 		color: var(--c-text-3);
 	}
 }
@@ -135,17 +135,17 @@ const targetDateText = computed(() => {
 	flex: 1;
 	flex-direction: column;
 	justify-content: space-between;
-	gap: .35rem;
+	gap: 0.35rem;
 }
 
 .row {
 	display: flex;
 	align-items: center;
-	gap: .45rem;
+	gap: 0.45rem;
 }
 
 .row-name {
-	font-size: .9rem;
+	font-size: 0.9rem;
 	white-space: nowrap;
 	color: var(--c-text-2);
 }
@@ -163,28 +163,28 @@ const targetDateText = computed(() => {
 	height: 100%;
 	border-radius: 8px;
 	background-color: var(--c-primary);
-	transition: width .3s;
+	transition: width 0.3s;
 }
 
 .percent,
 .remain {
 	position: absolute;
 	inset-block-start: 50%;
-	font-size: .8rem;
+	font-size: 0.8rem;
 	font-weight: 600;
 	color: var(--c-text-2);
 	transform: translateY(-50%);
-	transition: opacity .3s, transform .3s;
+	transition: opacity 0.3s, transform 0.3s;
 }
 
 .percent {
-	inset-inline-start: .45rem;
+	inset-inline-start: 0.45rem;
 }
 
 .remain {
 	opacity: 0;
-	inset-inline-end: .45rem;
-	transform: translateY(-50%) translateX(.625rem);
+	inset-inline-end: 0.45rem;
+	transform: translateY(-50%) translateX(0.625rem);
 }
 
 .on-bar {
@@ -199,7 +199,7 @@ const targetDateText = computed(() => {
 
 	.percent {
 		opacity: 0;
-		transform: translateY(-50%) translateX(-.625rem);
+		transform: translateY(-50%) translateX(-0.625rem);
 	}
 }
 
@@ -209,7 +209,7 @@ const targetDateText = computed(() => {
 	}
 
 	.left {
-		padding-bottom: .6rem;
+		padding-bottom: 0.6rem;
 
 		&::after {
 			right: auto;

@@ -140,44 +140,44 @@ function clearSelectedTag() {
 
 <style lang="scss" scoped>
 .tags {
-	animation: float-in .2s backwards;
 	margin: 1rem;
 	padding: 2rem 0;
+	animation: float-in 0.2s backwards;
 }
 
 .tag-cloud {
-	margin: 0 auto;
 	max-width: 800px;
+	margin: 0 auto;
 }
 
 .tag-cloud-title {
 	margin-bottom: 2rem;
-	color: var(--c-text);
 	font-size: 2.5rem;
 	text-align: center;
+	color: var(--c-text);
 }
 
 .tag-cloud-content {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 1rem;
 	justify-content: center;
+	gap: 1rem;
 	margin-bottom: 2rem;
 }
 
 .tag-cloud-item {
+	display: inline-flex;
 	align-items: center;
-	background-color: var(--c-bg-2);
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
 	border-radius: 2rem;
+	background-color: var(--c-bg-2);
+	line-height: 1.4;
 	color: var(--c-text);
 	cursor: pointer;
-	display: inline-flex;
-	gap: .5rem;
-	line-height: 1.4;
-	padding: .5rem 1rem;
 
 	&.small {
-		font-size: .9rem;
+		font-size: 0.9rem;
 	}
 
 	&.medium {
@@ -191,66 +191,66 @@ function clearSelectedTag() {
 }
 
 .tag-count {
-	align-items: center;
-	background-color: var(--c-bg-3);
-	border-radius: 10px;
-	color: var(--c-text-2);
 	display: inline-flex;
-	font-size: .8rem;
-	font-weight: 500;
-	height: 20px;
+	align-items: center;
 	justify-content: center;
+	height: 20px;
 	min-width: 20px;
 	padding: 0 6px;
+	border-radius: 10px;
+	background-color: var(--c-bg-3);
+	font-size: 0.8rem;
+	font-weight: 500;
+	color: var(--c-text-2);
 }
 
 .tag-cloud-stats {
-	color: var(--c-text-2);
-	font-size: .9rem;
 	margin-top: 2rem;
+	font-size: 0.9rem;
 	text-align: center;
+	color: var(--c-text-2);
 }
 
 .tag-selected {
-	margin: 0 auto;
 	max-width: 800px;
+	margin: 0 auto;
 }
 
 .tag-selected-header {
-	align-items: center;
 	display: flex;
+	align-items: center;
 	justify-content: space-between;
 	margin-bottom: 1rem;
 }
 
 .tag-selected-title {
-	color: var(--c-text);
+	margin: 0;
 	font-family: var(--font-creative);
 	font-size: 2.5rem;
 	font-weight: 550;
-	margin: 0;
+	color: var(--c-text);
 }
 
 .tag-hashtag {
-	background-color: var(--c-primary);
-	border-radius: .2rem;
-	color: white;
-	margin-inline-end: .1em;
+	margin-inline-end: 0.1em;
 	padding: 0 2px;
+	border-radius: 0.2rem;
+	background-color: var(--c-primary);
+	color: white;
 }
 
 .tag-clear-btn {
+	display: flex;
 	align-items: center;
-	background-color: var(--c-bg-2);
+	justify-content: center;
+	width: 40px;
+	height: 40px;
 	border: none;
 	border-radius: 50%;
+	background-color: var(--c-bg-2);
 	color: var(--c-text-2);
+	transition: all 0.2s ease;
 	cursor: pointer;
-	display: flex;
-	height: 40px;
-	justify-content: center;
-	transition: all .2s ease;
-	width: 40px;
 
 	&:hover {
 		background-color: var(--c-bg-3);
@@ -260,11 +260,11 @@ function clearSelectedTag() {
 }
 
 .tag-selected-info {
-	border-bottom: 1px solid var(--c-border);
-	color: var(--c-text-2);
-	font-size: 1rem;
 	margin-bottom: 2rem;
 	padding-bottom: 1rem;
+	border-bottom: 1px solid var(--c-border);
+	font-size: 1rem;
+	color: var(--c-text-2);
 }
 
 .archive-list {
@@ -273,7 +273,7 @@ function clearSelectedTag() {
 
 @media (max-width: 768px) {
 	.tags {
-		margin: .5rem;
+		margin: 0.5rem;
 		padding: 1rem 0;
 	}
 
@@ -283,8 +283,8 @@ function clearSelectedTag() {
 	}
 
 	.tag-cloud-item {
-		gap: .4rem;
-		padding: .4rem .8rem;
+		gap: 0.4rem;
+		padding: 0.4rem 0.8rem;
 	}
 
 	.tag-cloud-item.large {

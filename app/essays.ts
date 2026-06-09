@@ -2,63 +2,63 @@ import type { EssayItem } from '~/types/essay'
 
 const essays: EssayItem[] = [
 	{
-		text: "折腾几天，做了个自己形象的设定图，并挂在了关于页",
+		text: '折腾几天，做了个自己形象的设定图，并挂在了关于页',
 		date: '2026-06-02T21:06',
 		images: [
 			{
-				src: "https://bu.dusays.com/2026/06/02/6a1eb34b88046.webp",
-				alt: "敖苛设定图",
+				src: 'https://bu.dusays.com/2026/06/02/6a1eb34b88046.webp',
+				alt: '敖苛设定图',
 				height: 240,
 			},
 		],
-		tags: ["分享"],
+		tags: ['分享'],
 	},
 	{
-		text: "改博客添加了umami统计显示，使用 EdgeOne 的 Cloud Functions，使用梦爱吃鱼大佬的在线工具生成Token",
+		text: '改博客添加了umami统计显示，使用 EdgeOne 的 Cloud Functions，使用梦爱吃鱼大佬的在线工具生成Token',
 		date: '2026-05-11T21:47',
 		linkCards: [
 			{
-				link: "https://ums.bsgun.cn/",
-				title: "Umami API 生成工具",
-				description: "梦爱吃鱼大佬的在线工具",
-				icon: "https://www.bsgun.cn/favicon.ico",
+				link: 'https://ums.bsgun.cn/',
+				title: 'Umami API 生成工具',
+				description: '梦爱吃鱼大佬的在线工具',
+				icon: 'https://www.bsgun.cn/favicon.ico',
 			},
 		],
-		tags: ["网站"],
+		tags: ['网站'],
 	},
 	{
-		text: "AI时代，是幸运还是不幸？",
+		text: 'AI时代，是幸运还是不幸？',
 		date: '2026-04-29T22:50',
-		tags: ["想法"],
+		tags: ['想法'],
 	},
 	{
-		text: "在评论区添加了我自己的表情包",
+		text: '在评论区添加了我自己的表情包',
 		date: '2026-04-20T16:57',
 		images: [
 			{
-				src: "https://bu.dusays.com/2026/04/20/69e5ead38bb09.webp",
-				alt: "林小天",
+				src: 'https://bu.dusays.com/2026/04/20/69e5ead38bb09.webp',
+				alt: '林小天',
 				height: 240,
 			},
 		],
-		tags: ["网站"],
+		tags: ['网站'],
 	},
 	{
-		text: "有个服务器闲着，部署个 Hermes Agent 玩玩",
+		text: '有个服务器闲着，部署个 Hermes Agent 玩玩',
 		date: '2026-04-20T13:48',
 		images: [
 			{
-				src: "https://bu.dusays.com/2026/04/20/69e5bdef1f3b9.webp",
-				alt: "ai竟然教育我",
+				src: 'https://bu.dusays.com/2026/04/20/69e5bdef1f3b9.webp',
+				alt: 'ai竟然教育我',
 				height: 240,
 			},
 		],
-		tags: ["分享"],
+		tags: ['分享'],
 	},
 	{
-		text: "折腾的终点是默认",
+		text: '折腾的终点是默认',
 		date: '2026-04-11T22:38',
-		tags: ["网站"],
+		tags: ['网站'],
 	},
 	{
 		text: '换个字体',

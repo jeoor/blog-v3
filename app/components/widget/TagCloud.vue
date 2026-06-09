@@ -44,21 +44,21 @@ const tagsWithCount = computed(() => {
 .tag-cloud {
 	display: flex;
 	flex-wrap: wrap;
-	gap: .4rem;
+	gap: 0.4rem;
 }
 
 .tag-item {
 	display: inline-flex;
 	align-items: center;
-	gap: .3rem;
-	padding: .2rem .6rem;
-	border-radius: .5rem;
+	gap: 0.3rem;
+	padding: 0.2rem 0.6rem;
+	border-radius: 0.5rem;
 	background-color: var(--c-bg-2);
-	color: var(--c-text-2);
-	font-size: .8rem;
+	font-size: 0.8rem;
 	line-height: 1.4;
 	text-decoration: none;
-	transition: background-color .2s, color .2s;
+	color: var(--c-text-2);
+	transition: background-color 0.2s, color 0.2s;
 
 	&:hover {
 		background-color: var(--c-bg-3);
@@ -67,14 +67,14 @@ const tagsWithCount = computed(() => {
 }
 
 .tag-count {
+	font-size: 0.7rem;
 	color: var(--c-text-3);
-	font-size: .7rem;
 }
 
 .empty {
 	width: 100%;
-	color: var(--c-text-3);
-	font-size: .85rem;
+	font-size: 0.85rem;
 	text-align: center;
+	color: var(--c-text-3);
 }
 </style>

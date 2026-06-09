@@ -6,9 +6,17 @@ export default antfu({
 		indent: 'tab',
 	},
 	pnpm: true,
-	// @keep-sorted
+}, {
+	files: ['**/*.json'],
+	ignores: ['content/**'],
 	rules: {
 		'jsonc/indent': ['error', 2],
+		'style/eol-last': ['warn', 'never'],
+	},
+}, {
+	files: ['**/*.vue'],
+	// @keep-sorted
+	rules: {
 		'vue/block-lang': ['warn', {
 			script: { lang: ['ts', 'tsx'] },
 			style: { lang: ['scss'] },
@@ -17,13 +25,11 @@ export default antfu({
 			allow: ['scoped'],
 		}],
 		'vue/html-indent': ['error', 'tab', { baseIndent: 0 }],
-		'yaml/indent': ['error', 2],
 	},
 }, {
-	files: ['**/*.json'],
-	ignores: ['content/**'],
+	files: ['**/*.yaml', '**/*.yml'],
 	rules: {
-		'style/eol-last': ['warn', 'never'],
+		'yaml/indent': ['error', 2],
 	},
 }, {
 	files: ['content/**'],
@@ -31,7 +37,8 @@ export default antfu({
 	rules: {
 		'antfu/consistent-list-newline': 'off',
 		'eqeqeq': 'off',
-		'jsonc/comma-dangle': ['warn', 'always'],
+		'markdown/heading-increment': 'off',
+		'markdown/no-multiple-h1': 'off',
 		'no-irregular-whitespace': 'off',
 		'no-sequences': 'off',
 		'prefer-arrow-callback': 'off',
