@@ -93,7 +93,7 @@ export default defineNuxtConfig({
 			arch,
 			buildTime: Temporal.Now.zonedDateTimeISO().toString(),
 			ci: env.DEPLOY_TARGET === 'edgeone' ? 'EdgeOne' : ciName || '',
-			nodeVersion,
+			nodeVersion: nodeVersion.slice(1),
 			platform,
 		},
 	},
