@@ -18,11 +18,7 @@ useEventListener(commentEl, 'click', (e) => {
 	if (!(e.target instanceof Element))
 		return
 
-	if (
-		e.target instanceof HTMLImageElement
-		&& e.target.closest('.tk-content')
-		&& !e.target.classList.contains('tk-owo-emotion')
-	) {
+	if (isCommentLightboxImage(e.target)) {
 		const imgEl = e.target
 		e.preventDefault()
 		modalStore.use(
@@ -65,6 +61,20 @@ function undo() {
 
 function confirmOpen() {
 	window.open(popoverInputEl.value?.textContent, '_blank')
+}
+
+function isOwoEmotionImage(img: HTMLImageElement) {
+	const marker = `${img.alt || ''} ${img.title || ''}`.trim()
+
+	return img.classList.contains('tk-owo-emotion')
+		|| !!img.closest('.tk-owo-emotion')
+		|| /^:.+:$/.test(marker)
+}
+
+function isCommentLightboxImage(target: Element): target is HTMLImageElement {
+	return target instanceof HTMLImageElement
+		&& !!target.closest('.tk-content')
+		&& !isOwoEmotionImage(target)
 }
 
 let commentJumpTimer: ReturnType<typeof setInterval> | undefined
@@ -345,7 +355,7 @@ onBeforeUnmount(() => {
 
 		.tk-preview-container {
 			order: 4;
-			margin: 0.5rem 0 0;
+			margin: 0.5rem 0;
 		}
 
 		.tk-row.actions {
@@ -557,7 +567,7 @@ onBeforeUnmount(() => {
 		margin: 0.2em 0;
 	}
 
-	img:not(.tk-owo-emotion) {
+	img:not(.tk-owo-emotion, [alt^=":"][alt$=":"], [title^=":"][title$=":"]) {
 		width: auto;
 		height: auto;
 		max-width: min(100%, 28rem);
@@ -565,11 +575,14 @@ onBeforeUnmount(() => {
 		border-radius: 0.5em;
 	}
 
-	.tk-owo-emotion {
+	.tk-owo-emotion,
+	img[alt^=":"][alt$=":"],
+	img[title^=":"][title$=":"] {
 		display: inline-block;
-		width: auto;
-		height: 1.4em;
-		vertical-align: text-bottom;
+		width: 4em;
+		height: auto;
+		vertical-align: middle;
+		cursor: auto;
 	}
 
 	menu, ol, ul {
@@ -595,7 +608,7 @@ onBeforeUnmount(() => {
 	}
 }
 
-:deep(.tk-content img:not(.tk-owo-emotion)) {
+:deep(.tk-content img:not(.tk-owo-emotion, [alt^=":"][alt$=":"], [title^=":"][title$=":"])) {
 	cursor: zoom-in;
 }
 </style>
