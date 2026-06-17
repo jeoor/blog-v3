@@ -18,8 +18,12 @@ useEventListener(commentEl, 'click', (e) => {
 	if (!(e.target instanceof Element))
 		return
 
-	if (e.target.tagName === 'IMG' && e.target.closest('.tk-content')) {
-		const imgEl = e.target as HTMLImageElement
+	if (
+		e.target instanceof HTMLImageElement
+		&& e.target.closest('.tk-content')
+		&& !e.target.classList.contains('tk-owo-emotion')
+	) {
+		const imgEl = e.target
 		e.preventDefault()
 		modalStore.use(
 			() => h(LazyPopoverLightbox, { el: imgEl, caption: imgEl.alt || '' }),
@@ -63,12 +67,133 @@ function confirmOpen() {
 	window.open(popoverInputEl.value?.textContent, '_blank')
 }
 
+let commentJumpTimer: ReturnType<typeof setInterval> | undefined
+let commentJumpObserver: MutationObserver | undefined
+
+function getCommentHash() {
+	const raw = (window.location.hash || '').replace(/^#/, '')
+	if (!raw)
+		return ''
+
+	try {
+		return decodeURIComponent(raw)
+	}
+	catch {
+		return raw
+	}
+}
+
+function escapeSelectorValue(value: string) {
+	return value
+		.replace(/\\/g, '\\\\')
+		.replace(/"/g, '\\"')
+}
+
+function findCommentTarget(id: string): HTMLElement | null {
+	if (!id)
+		return null
+
+	const byId = document.getElementById(id)
+	if (byId instanceof HTMLElement && byId.closest('#twikoo'))
+		return byId
+
+	const safeId = escapeSelectorValue(id)
+
+	const selectors = [
+		`#twikoo [data-id="${safeId}"]`,
+		`#twikoo [data-key="${safeId}"]`,
+		`#twikoo [data-comment-id="${safeId}"]`,
+		`#twikoo [id$="${safeId}"]`,
+		`#twikoo [data-id$="${safeId}"]`,
+		`#twikoo [data-key$="${safeId}"]`,
+	]
+
+	for (const selector of selectors) {
+		try {
+			const el = document.querySelector<HTMLElement>(selector)
+			if (el)
+				return el
+		}
+		catch {}
+	}
+
+	return null
+}
+
+function jumpToCommentByHash(): boolean {
+	const hash = getCommentHash()
+	if (!hash)
+		return false
+
+	const target = findCommentTarget(hash)
+	if (!target)
+		return false
+
+	const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
+	target.scrollIntoView({
+		behavior: prefersReducedMotion ? 'auto' : 'smooth',
+		block: 'center',
+	})
+
+	return true
+}
+
+function stopCommentHashJump() {
+	if (commentJumpTimer) {
+		clearInterval(commentJumpTimer)
+		commentJumpTimer = undefined
+	}
+
+	commentJumpObserver?.disconnect()
+	commentJumpObserver = undefined
+}
+
+function startCommentHashJump() {
+	stopCommentHashJump()
+
+	if (!getCommentHash())
+		return
+
+	if (jumpToCommentByHash())
+		return
+
+	let count = 0
+
+	commentJumpTimer = setInterval(() => {
+		count++
+
+		if (jumpToCommentByHash() || count > 60)
+			stopCommentHashJump()
+	}, 250)
+
+	const root = commentEl.value || document.getElementById('twikoo') || document.body
+
+	commentJumpObserver = new MutationObserver(() => {
+		if (jumpToCommentByHash())
+			stopCommentHashJump()
+	})
+
+	commentJumpObserver.observe(root, {
+		childList: true,
+		subtree: true,
+	})
+}
+
 onMounted(() => {
 	window.twikoo?.init?.({
 		envId: appConfig.twikoo?.envId,
 		// twikoo 会把挂载后的元素变为 #twikoo
 		el: '#twikoo',
 	})
+
+	startCommentHashJump()
+	window.addEventListener('hashchange', startCommentHashJump)
+})
+
+onBeforeUnmount(() => {
+	stopCommentHashJump()
+	window.removeEventListener('hashchange', startCommentHashJump)
 })
 </script>
 
@@ -218,7 +343,10 @@ onMounted(() => {
 		.tk-avatar,
 		a.tk-submit-action-icon.__markdown { display: none; }
 
-		.tk-preview-container { margin: 0 0 0.5rem; }
+		.tk-preview-container {
+			order: 4;
+			margin: 0.5rem 0 0;
+		}
 
 		.tk-row.actions {
 			justify-content: flex-end;
@@ -369,15 +497,10 @@ onMounted(() => {
 
 	// 内容区
 	.tk-content {
+		overflow-wrap: anywhere;
 		margin-top: 0;
 		font-size: 0.95rem;
 		line-height: 1.6;
-
-		.tk-owo-emotion {
-			width: auto;
-			height: 1.4em;
-			vertical-align: text-bottom;
-		}
 	}
 
 	// 回复折叠
@@ -412,6 +535,7 @@ onMounted(() => {
 :deep(:where(.tk-preview-container, .tk-content)) {
 	pre {
 		overflow: auto;
+		max-width: 100%;
 		border-radius: var(--comment-control-radius);
 		font-size: 0.8125rem;
 	}
@@ -433,8 +557,19 @@ onMounted(() => {
 		margin: 0.2em 0;
 	}
 
-	img {
+	img:not(.tk-owo-emotion) {
+		width: auto;
+		height: auto;
+		max-width: min(100%, 28rem);
+		max-height: 28rem;
 		border-radius: 0.5em;
+	}
+
+	.tk-owo-emotion {
+		display: inline-block;
+		width: auto;
+		height: 1.4em;
+		vertical-align: text-bottom;
 	}
 
 	menu, ol, ul {
@@ -458,5 +593,9 @@ onMounted(() => {
 		font-size: 0.9rem;
 		color: var(--c-text-2);
 	}
+}
+
+:deep(.tk-content img:not(.tk-owo-emotion)) {
+	cursor: zoom-in;
 }
 </style>
