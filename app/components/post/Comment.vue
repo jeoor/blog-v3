@@ -8,14 +8,17 @@ const modalStore = useModalStore()
 const commentEl = useTemplateRef('comment')
 const popoverEl = useTemplateRef<TippyComponent>('popover')
 const popoverJumpTo = ref('')
-const popoverInputEl = useTemplateRef('popover-input')
-const showUndo = ref(false)
+const popoverInput = ref('')
+const showUndo = computed(() => popoverInput.value !== popoverJumpTo.value)
 
 const popoverBind = ref<TippyComponent['$props']>({})
 
 /** 评论区链接守卫 与 评论图片放大 */
 useEventListener(commentEl, 'click', (e) => {
 	if (!(e.target instanceof Element))
+		return
+
+	if (e.target.closest('.popover-confirm'))
 		return
 
 	if (isCommentLightboxImage(e.target)) {
@@ -38,37 +41,46 @@ useEventListener(commentEl, 'click', (e) => {
 	e.preventDefault()
 	popoverEl.value?.hide()
 
-	popoverJumpTo.value = safelyDecodeUriComponent(popoverTarget.href)
+	popoverJumpTo.value = popoverTarget.href
+	popoverInput.value = popoverTarget.href
 	popoverBind.value = {
 		getReferenceClientRect: () => popoverTarget.getBoundingClientRect(),
 		triggerTarget: popoverTarget,
 	}
 
-	nextTick(checkUndoable)
 	popoverEl.value?.show()
 }, { capture: true })
 
-function checkUndoable() {
-	showUndo.value = popoverInputEl.value?.textContent !== popoverJumpTo.value
-}
-
 function undo() {
-	if (!popoverInputEl.value)
-		return
-	popoverInputEl.value.textContent = popoverJumpTo.value
-	checkUndoable()
+	popoverInput.value = popoverJumpTo.value
 }
 
 function confirmOpen() {
-	window.open(popoverInputEl.value?.textContent, '_blank')
+	const raw = popoverInput.value.trim()
+	if (!raw)
+		return
+
+	try {
+		const url = new URL(raw)
+
+		if (!['http:', 'https:'].includes(url.protocol))
+			return
+
+		window.open(url.href, '_blank', 'noopener,noreferrer')
+		popoverEl.value?.hide()
+	}
+	catch {
+		// ignore invalid URL
+	}
 }
 
-function isOwoEmotionImage(img: HTMLImageElement) {
-	const marker = `${img.alt || ''} ${img.title || ''}`.trim()
+const isOwoMarker = (value: string) => /^:[^\s:]+:$/.test(value.trim())
 
+function isOwoEmotionImage(img: HTMLImageElement) {
 	return img.classList.contains('tk-owo-emotion')
 		|| !!img.closest('.tk-owo-emotion')
-		|| /^:.+:$/.test(marker)
+		|| isOwoMarker(img.alt || '')
+		|| isOwoMarker(img.title || '')
 }
 
 function isCommentLightboxImage(target: Element): target is HTMLImageElement {
@@ -93,39 +105,17 @@ function getCommentHash() {
 	}
 }
 
-function escapeSelectorValue(value: string) {
-	return value
-		.replace(/\\/g, '\\\\')
-		.replace(/"/g, '\\"')
-}
-
 function findCommentTarget(id: string): HTMLElement | null {
 	if (!id)
 		return null
 
+	const root = document.getElementById('twikoo')
+	if (!root)
+		return null
+
 	const byId = document.getElementById(id)
-	if (byId instanceof HTMLElement && byId.closest('#twikoo'))
+	if (byId instanceof HTMLElement && root.contains(byId))
 		return byId
-
-	const safeId = escapeSelectorValue(id)
-
-	const selectors = [
-		`#twikoo [data-id="${safeId}"]`,
-		`#twikoo [data-key="${safeId}"]`,
-		`#twikoo [data-comment-id="${safeId}"]`,
-		`#twikoo [id$="${safeId}"]`,
-		`#twikoo [data-id$="${safeId}"]`,
-		`#twikoo [data-key$="${safeId}"]`,
-	]
-
-	for (const selector of selectors) {
-		try {
-			const el = document.querySelector<HTMLElement>(selector)
-			if (el)
-				return el
-		}
-		catch {}
-	}
 
 	return null
 }
@@ -224,15 +214,13 @@ onBeforeUnmount(() => {
 	>
 		<template #content>
 			<div class="popover-confirm">
-				<span
-					ref="popover-input"
+				<input
+					v-model="popoverInput"
 					class="input"
-					contenteditable="plaintext-only"
+					type="url"
 					spellcheck="false"
-					@input="checkUndoable"
 					@keydown.enter.prevent="confirmOpen"
-					v-text="popoverJumpTo"
-				/>
+				>
 
 				<button
 					v-if="showUndo"
@@ -300,7 +288,7 @@ onBeforeUnmount(() => {
 	}
 }
 
-:deep() > [data-tippy-root] > .tippy-box {
+:deep([data-tippy-root] > .tippy-box) {
 	padding: 0;
 }
 
@@ -310,16 +298,21 @@ onBeforeUnmount(() => {
 	overflow-wrap: anywhere;
 
 	> .input {
+		flex: 1;
 		min-width: 0;
 		padding: 0.3em 0.6em;
+		border: none;
 		outline: none;
+		background: transparent;
+		font: inherit;
+		color: inherit;
 	}
 
 	> button {
 		flex-shrink: 0;
 		align-self: stretch;
 		padding: 0.3em;
-		border-radius: 0 0.5em 0.5em 0;
+		border-radius: 0 var(--comment-control-radius) var(--comment-control-radius) 0;
 	}
 }
 
@@ -352,6 +345,37 @@ onBeforeUnmount(() => {
 
 		.tk-avatar,
 		a.tk-submit-action-icon.__markdown { display: none; }
+
+		.tk-submit-action-icon {
+			border: 1px solid transparent;
+			border-radius: var(--comment-control-radius);
+			box-shadow: none;
+			outline: none;
+			background-color: transparent;
+			color: var(--c-text-2);
+			transition: background-color 0.2s, color 0.2s;
+
+			&:hover,
+			&:focus {
+				// 覆盖 Twikoo / 浏览器默认 hover/focus 描边，避免出现蓝色边框
+				border-color: transparent;
+				box-shadow: none;
+				outline: none;
+				background-color: var(--c-bg-3);
+				color: var(--c-text);
+			}
+
+			&:focus-visible {
+				// 键盘用户保留可见焦点，但不用主色蓝边
+				// outline-offset 外扩：按钮嵌在 flex 容器内，内缩会被相邻元素或背景吞掉
+				border-color: transparent;
+				box-shadow: none;
+				outline: 2px solid var(--c-text-3);
+				outline-offset: 2px;
+				background-color: var(--c-bg-3);
+				color: var(--c-text);
+			}
+		}
 
 		.tk-preview-container {
 			order: 4;
@@ -427,19 +451,6 @@ onBeforeUnmount(() => {
 	}
 
 	// 表情面板
-	.OwO .OwO-logo {
-		border: 1px solid var(--c-bg-soft);
-		border-radius: var(--comment-control-radius);
-		background-color: var(--c-bg-2);
-		color: var(--c-text-2);
-		transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-
-		&:hover {
-			border-color: var(--c-primary);
-			background-color: var(--c-bg-3);
-		}
-	}
-
 	.OwO .OwO-body {
 		overflow: hidden;
 		border: 1px solid var(--c-bg-soft);
@@ -450,7 +461,6 @@ onBeforeUnmount(() => {
 		.OwO-items { padding: 0.4rem; }
 
 		.OwO-item {
-			border-radius: calc(var(--comment-control-radius) - 0.125rem);
 			transition: transform 0.2s;
 
 			&:hover {
@@ -467,9 +477,7 @@ onBeforeUnmount(() => {
 			padding: 0.25rem;
 
 			li {
-				border-radius: calc(var(--comment-control-radius) - 0.125rem);
 				color: var(--c-text-2);
-				transition: background-color 0.2s, color 0.2s;
 
 				&:hover {
 					background-color: var(--c-bg-3);
@@ -501,8 +509,6 @@ onBeforeUnmount(() => {
 			font-size: 0.75rem;
 			color: var(--c-text-3);
 		}
-
-		.tk-action .tk-action-link:first-child { display: none; }
 	}
 
 	// 内容区
@@ -515,7 +521,7 @@ onBeforeUnmount(() => {
 
 	// 回复折叠
 	.tk-replies:not(.tk-replies-expand) {
-		mask-image: linear-gradient(#FFF 50%, transparent);
+		mask-image: linear-gradient(black 50%, transparent);
 	}
 
 	// 加载更多
@@ -530,7 +536,7 @@ onBeforeUnmount(() => {
 	}
 
 	.tk-footer {
-		font-size: 0.7rem;
+		font-size: 0.75rem;
 		color: var(--c-text-3);
 	}
 
@@ -547,7 +553,7 @@ onBeforeUnmount(() => {
 		overflow: auto;
 		max-width: 100%;
 		border-radius: var(--comment-control-radius);
-		font-size: 0.8125rem;
+		font-size: 0.875rem;
 	}
 
 	a {
@@ -555,10 +561,10 @@ onBeforeUnmount(() => {
 		padding: 0.1em 0.2em;
 		background: linear-gradient(var(--c-primary-soft), var(--c-primary-soft)) no-repeat center bottom / 100% 0.1em;
 		color: var(--c-primary);
-		transition: all 0.2s;
+		transition: background-size 0.2s, border-radius 0.2s;
 
 		&:hover {
-			border-radius: 0.3em;
+			border-radius: calc(var(--comment-control-radius) * 0.6);
 			background-size: 100% 100%;
 		}
 	}
@@ -572,7 +578,7 @@ onBeforeUnmount(() => {
 		height: auto;
 		max-width: min(100%, 28rem);
 		max-height: 28rem;
-		border-radius: 0.5em;
+		border-radius: var(--comment-control-radius);
 	}
 
 	.tk-owo-emotion,
@@ -600,8 +606,8 @@ onBeforeUnmount(() => {
 	blockquote {
 		margin: 0.5rem 0 0.8rem;
 		padding: 0.6rem 0.8rem;
-		border-left: 3px solid var(--c-border);
-		border-radius: 0.2rem;
+		border-inline-start: 3px solid var(--c-border);
+		border-radius: var(--comment-control-radius);
 		background: var(--c-bg-2);
 		font-size: 0.9rem;
 		color: var(--c-text-2);

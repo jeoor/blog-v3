@@ -2,6 +2,30 @@ import type { EssayItem } from '~/types/essay'
 
 const essays: EssayItem[] = [
 	{
+		text: '让我们嘲笑他',
+		date: '2026-06-18T13:36',
+		images: [
+			{
+				src: 'https://bu.dusays.com/2026/06/18/6a3383c595416.webp',
+				alt: '耳机充电线？',
+				height: 240,
+			},
+		],
+		tags: ['生活', '分享'],
+	},
+	{
+		text: '我竟然也被 DeepSeek 抽中识图模式内测了',
+		date: '2026-06-18T13:03',
+		images: [
+			{
+				src: 'https://bu.dusays.com/2026/06/18/6a337bfb17125.webp',
+				alt: 'DeepSeek 识图模式',
+				height: 240,
+			},
+		],
+		tags: ['分享'],
+	},
+	{
 		text: '折腾几天，做了个自己形象的设定图，并挂在了关于页',
 		date: '2026-06-02T21:06',
 		images: [
@@ -53,7 +77,7 @@ const essays: EssayItem[] = [
 				height: 240,
 			},
 		],
-		tags: ['分享'],
+		tags: ['分享', '技术'],
 	},
 	{
 		text: '折腾的终点是默认',
