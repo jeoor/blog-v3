@@ -31,3 +31,8 @@ content/posts/test.md
 
 public/friend.json
 CLAUDE.md
+
+# Tencent Cloud EdgeOne
+.env
+.edgeone/*
+.tef_dist/*
