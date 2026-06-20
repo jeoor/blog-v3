@@ -1,7 +1,13 @@
 import antfu from '@antfu/eslint-config'
 
 export default antfu({
-	ignores: ['*.yaml'],
+	ignores: [
+		'pnpm-lock.yaml',
+		'.nuxt/**',
+		'.output/**',
+		'.edgeone/**',
+		'.tef_dist/**',
+	],
 	stylistic: {
 		indent: 'tab',
 	},
@@ -11,7 +17,7 @@ export default antfu({
 	ignores: ['content/**'],
 	rules: {
 		'jsonc/indent': ['error', 2],
-		'style/eol-last': ['warn', 'never'],
+		'style/eol-last': ['warn', 'always'],
 	},
 }, {
 	files: ['**/*.vue'],
@@ -27,19 +33,25 @@ export default antfu({
 		'vue/html-indent': ['error', 'tab', { baseIndent: 0 }],
 	},
 }, {
-	files: ['**/*.yaml', '**/*.yml'],
+	files: ['**/*.{yaml,yml}'],
 	rules: {
 		'yaml/indent': ['error', 2],
 	},
 }, {
-	files: ['content/**'],
+	files: ['content/**/*.json'],
+	rules: {
+		'jsonc/comma-dangle': ['warn', 'always'],
+		'jsonc/indent': ['error', 2],
+		'style/eol-last': ['warn', 'always'],
+	},
+}, {
+	files: ['content/**/*.{md,mdc}'],
 	// @keep-sorted
 	rules: {
 		'antfu/consistent-list-newline': 'off',
 		'eqeqeq': 'off',
 		'markdown/heading-increment': 'off',
 		'markdown/no-multiple-h1': 'off',
-		'no-irregular-whitespace': 'off',
 		'no-sequences': 'off',
 		'prefer-arrow-callback': 'off',
 		'prefer-template': 'off',

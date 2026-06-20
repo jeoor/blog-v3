@@ -74,10 +74,13 @@
     "@iconify-json/tabler": "catalog:ui",
     "@nuxt/a11y": "catalog:quality",
     "@nuxt/hints": "catalog:quality",
+    "@types/hast": "catalog:content",
+    "@types/mdast": "catalog:content",
     "@zinkawaii/stylelint-config": "catalog:quality",
     "cspell": "catalog:quality",
     "eslint": "catalog:quality",
     "fast-xml-builder": "catalog:util",
+    "minimark": "catalog:content",
     "nuxt-llms": "catalog:content",
     "oxc-minify": "catalog:util",
     "p-limit": "catalog:util",
@@ -90,6 +93,8 @@
     "stylelint": "catalog:quality",
     "tsx": "catalog:framework",
     "typescript": "catalog:framework",
-    "unplugin-yaml": "catalog:framework"
+    "unist-util-visit": "catalog:content",
+    "unplugin-yaml": "catalog:framework",
+    "vfile": "catalog:content"
   }
 }

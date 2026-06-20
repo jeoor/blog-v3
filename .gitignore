@@ -8,6 +8,7 @@ dist
 
 # Node dependencies
 node_modules
+.pnpm-store/
 
 # Logs
 logs
@@ -31,6 +32,7 @@ content/posts/test.md
 
 public/friend.json
 CLAUDE.md
+AGENTS.md
 
 # Tencent Cloud EdgeOne
 .env
