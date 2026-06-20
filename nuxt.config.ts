@@ -112,6 +112,44 @@ export default defineNuxtConfig({
 	},
 
 	vite: {
+		build: {
+			rollupOptions: {
+				output: {
+					manualChunks(id) {
+						if (!id.includes('node_modules')) {
+							return undefined
+						}
+
+						const normalizedId = id.replaceAll('\\', '/')
+
+						if (normalizedId.includes('/vue/') || normalizedId.includes('/@vue/') || normalizedId.includes('@vue+')) {
+							return 'vendor-vue'
+						}
+
+						if (normalizedId.includes('@vueuse')) {
+							return 'vendor-vueuse'
+						}
+
+						if (
+							normalizedId.includes('@iconify')
+							|| normalizedId.includes('@nuxt/icon')
+							|| normalizedId.includes('@nuxt+icon')
+							|| normalizedId.includes('nuxt-icon')
+						) {
+							return 'vendor-icons'
+						}
+
+						if (normalizedId.includes('shiki')) {
+							return 'vendor-shiki'
+						}
+
+						if (normalizedId.includes('twikoo')) {
+							return 'vendor-twikoo'
+						}
+					},
+				},
+			},
+		},
 		css: {
 			preprocessorOptions: {
 				scss: {
