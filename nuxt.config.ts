@@ -122,12 +122,14 @@ export default defineNuxtConfig({
 
 						const normalizedId = id.replaceAll('\\', '/')
 
-						if (normalizedId.includes('/vue/') || normalizedId.includes('/@vue/') || normalizedId.includes('@vue+')) {
+						// Keep VueUse with Vue to avoid circular vendor chunks.
+						if (
+							normalizedId.includes('/vue/')
+							|| normalizedId.includes('/@vue/')
+							|| normalizedId.includes('@vue+')
+							|| normalizedId.includes('@vueuse')
+						) {
 							return 'vendor-vue'
-						}
-
-						if (normalizedId.includes('@vueuse')) {
-							return 'vendor-vueuse'
 						}
 
 						if (
