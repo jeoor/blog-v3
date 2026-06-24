@@ -207,7 +207,7 @@ overrides:
 
 patchedDependencies:
   '@nuxt/image': 579706651997597c070d331e56e6cf9f3deb05477e3696c678c5c49ff614ea9c
-  '@nuxtjs/mdc': b5d48b9dd5e7a491f1fac75b120ebf15f57f1c2fdba5b78336ad337828186d34
+  '@nuxtjs/mdc': e3ab742eee73724ca809fd9725ec3a173b5a476a3e28cb9c520bbe03eaaea9fc
   '@vue/shared': 57b0a2fe18a728df30b65bd78dd65d488e6a3ae6742a92de1856300d93307a0c
   plain-shiki: 56851d6c1b4dd6fc387d2cd7e584f71d4da7066ca6177e1df1cdae8903dd72be
 
@@ -10020,7 +10020,7 @@ snapshots:
   '@nuxt/content@3.14.0(@valibot/to-json-schema@1.7.1(valibot@1.4.1(typescript@6.0.3)))(magicast@0.5.3)(valibot@1.4.1(typescript@6.0.3))':
     dependencies:
       '@nuxt/kit': 4.4.8(magicast@0.5.3)
-      '@nuxtjs/mdc': 0.22.0(patch_hash=b5d48b9dd5e7a491f1fac75b120ebf15f57f1c2fdba5b78336ad337828186d34)(magicast@0.5.3)
+      '@nuxtjs/mdc': 0.22.0(patch_hash=e3ab742eee73724ca809fd9725ec3a173b5a476a3e28cb9c520bbe03eaaea9fc)(magicast@0.5.3)
       '@shikijs/langs': 4.2.0
       '@sqlite.org/sqlite-wasm': 3.50.4-build1
       '@standard-schema/spec': 1.1.0
@@ -10641,7 +10641,7 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  '@nuxtjs/mdc@0.22.0(patch_hash=b5d48b9dd5e7a491f1fac75b120ebf15f57f1c2fdba5b78336ad337828186d34)(magicast@0.5.3)':
+  '@nuxtjs/mdc@0.22.0(patch_hash=e3ab742eee73724ca809fd9725ec3a173b5a476a3e28cb9c520bbe03eaaea9fc)(magicast@0.5.3)':
     dependencies:
       '@nuxt/kit': 4.4.8(magicast@0.5.3)
       '@shikijs/core': 4.2.0
