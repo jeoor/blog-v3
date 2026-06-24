@@ -21,10 +21,14 @@
     "bump": "pnpx taze -w && rimraf pnpm-lock.yaml && pnpm update && pnpm dedupe",
     "lint": "eslint && stylelint '**/*.{vue,scss}'",
     "lint:fix": "eslint --fix && stylelint '**/*.{vue,scss}' --fix",
-    "init-project": "unrun scripts/init-project",
-    "new": "unrun scripts/new-blog",
-    "check:feed": "unrun scripts/framework/get-feed",
-    "check:feed/all": "unrun scripts/framework/check-all-feeds"
+    "init-project": "unrun scripts/init-project.ts",
+    "new": "unrun scripts/new-blog.ts",
+    "new:essay": "unrun scripts/new-essay.ts",
+    "check:feed": "unrun scripts/framework/get-feed.ts",
+    "check:feed/all": "unrun scripts/framework/check-all-feeds.ts",
+    "fc": "unrun scripts/generate-friend.ts",
+    "updated": "unrun scripts/update-updated.ts",
+    "updated:dry": "unrun scripts/update-updated.ts --dry-run"
   },
   "dependencies": {
     "@bikariya/image-viewer": "catalog:ui",

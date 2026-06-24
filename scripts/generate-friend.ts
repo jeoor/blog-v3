@@ -1,38 +1,54 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import { fileURLToPath } from 'node:url'
 import feedGroups from '../app/feeds'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+type FriendItem = [name: string, link: string, avatar: string]
 
-export function generateFcircleJson() {
-	const blacklist = ['敖苛记']
-	const outputPath = path.resolve(__dirname, '../public/friend.json')
+const blacklist = new Set(['敖苛记'])
+
+function isFriendItem(item: FriendItem | null): item is FriendItem {
+	return item !== null
+}
+
+function generateFcircleJson() {
+	const outputPath = path.resolve(process.cwd(), 'public/friend.json')
 
 	try {
+		const seenLinks = new Set<string>()
+
 		const friends = feedGroups.flatMap(group =>
-			group.entries
-				.filter(entry => !(entry as any).error)
-				.map((entry) => {
-					const name = entry.title || entry.sitenick || entry.author
-					const avatar = entry.avatar || entry.icon || ''
-					if (!name || !entry.link || !avatar) {
+			(group.entries ?? [])
+				.filter(entry => !(entry as { error?: unknown }).error)
+				.map((entry): FriendItem | null => {
+					const name = (entry.title || entry.sitenick || entry.author || '').trim()
+					const link = (entry.link || '').trim()
+					const avatar = (entry.avatar || entry.icon || '').trim()
+
+					if (!name || !link || !avatar)
 						return null
-					}
-					return blacklist.includes(name) ? null : [name, entry.link, avatar]
+
+					if (blacklist.has(name))
+						return null
+
+					if (seenLinks.has(link))
+						return null
+
+					seenLinks.add(link)
+
+					return [name, link, avatar]
 				})
-				.filter(Boolean),
+				.filter(isFriendItem),
 		)
 
-		const publicDir = path.resolve(__dirname, '../public')
-		if (!fs.existsSync(publicDir))
-			fs.mkdirSync(publicDir, { recursive: true })
+		fs.mkdirSync(path.dirname(outputPath), { recursive: true })
 
 		const friendData = { friends }
-		fs.writeFileSync(outputPath, JSON.stringify(friendData, null, 2), 'utf-8')
+
+		fs.writeFileSync(outputPath, `${JSON.stringify(friendData, null, 2)}\n`, 'utf-8')
+
 		console.log(`成功生成 ${friends.length} 个友链: ${outputPath}`)
+
 		return friendData
 	}
 	catch (error) {
@@ -41,12 +57,4 @@ export function generateFcircleJson() {
 	}
 }
 
-function isMainModule() {
-	if (!process.argv[1])
-		return false
-	return path.resolve(process.argv[1]) === __filename
-}
-
-if (isMainModule()) {
-	generateFcircleJson()
-}
+generateFcircleJson()
