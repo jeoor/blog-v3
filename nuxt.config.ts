@@ -82,9 +82,9 @@ export default defineNuxtConfig({
 	routeRules: {
 		...mapValues(redirectList, to => ({ redirect: { to, statusCode: 308 as const } })),
 		'/api/stats': { prerender: true, headers: { 'Content-Type': 'application/json' } },
-		'/atom.xml': { prerender: true, headers: { 'Content-Type': 'application/xml' } },
+		'/atom.xml': { prerender: true, headers: { 'Content-Type': 'application/atom+xml' } },
 		'/favicon.ico': { redirect: { to: blogConfig.favicon } },
-		'/zhilu.opml': { prerender: true, headers: { 'Content-Type': 'application/xml' } },
+		'/feeds.opml': { prerender: true, headers: { 'Content-Type': 'application/xml' } },
 	},
 
 	runtimeConfig: {

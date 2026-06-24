@@ -1,15 +1,23 @@
-# 纸鹿摸鱼处
+# 敖苛记
 
 [![框架](https://img.shields.io/badge/框架-Nuxt-00DC82?logo=Nuxt.js)](https://nuxt.com/)
 [![CMS](https://img.shields.io/badge/CMS-Nuxt%20Content-00DC82?logo=Nuxt.js)](https://content.nuxt.com/)
-[![部署平台](https://img.shields.io/badge/部署平台-Vercel-000000?logo=Vercel)](https://vercel.com/)
+[![部署平台](https://img.shields.io/badge/部署平台-EdgeOne-00A4FF)](https://edgeone.ai/)
 [![访问统计](https://img.shields.io/badge/访问统计-Umami-000000?logo=Umami)](https://github.com/umami-software/umami)
 [![代码风格](https://img.shields.io/badge/代码风格-ESLint-4B32C3?logo=ESLint)](https://eslint.org/)
 [![代码风格](https://img.shields.io/badge/代码风格-Stylelint-263238?logo=Stylelint)](https://stylelint.io/)
 
-我的第三代个人博客，于 2024 年 8 月 11 日上线。
+我的个人博客，于 2026 年 2 月 13 日上线，主要记录技术实践、开源探索与日常生活。
+
+[访问敖苛记](https://blog.kayro.cn/) · [Atom 订阅](https://blog.kayro.cn/atom.xml) · [OPML 订阅集合](https://blog.kayro.cn/feeds.opml)
+
+本项目基于 [Clarity / blog-v3](https://github.com/L33Z22L11/blog-v3) 持续定制。
+
+添加的功能：关于页、相册、即刻（说说）、标签、友圈等独立页面。
 
 ## 耻辱柱 / Hall of Shame
+
+> 本节保留上游项目对授权和内容转载的说明。
 
 > [!CAUTION]
 > - 部署前必须完成项目个性化配置与内容修改，不得将我的信息用于你的网站图标/名称，严禁将项目内我的文章以你的名义重新发布至公开环境。
@@ -21,46 +29,6 @@
 <!-- 1. 2025-12-05 [钟神秀](https://github.com/zsxcoder/Nuxt-blog-v3)：blog.zsxcoder.top《我们的设备被拿来做了什么：软件的背景行为》 -->
 <!-- 2. 2025-12-28 [Axel Beta](https://github.com/ErenAxel/blog-v3)：sc.axel.xin《我们的设备被拿来做了什么：软件的背景行为》《深色模式开发的最佳实践》《寻不回手工油糕》 -->
 
-## 使用本主题的博客
-
-> [!WARNING]
->
-> 修改本项目需要具备**前端开发**和**项目部署**能力。由于这是个人博客，代码经过深度定制，且可能会进行较大幅度的更新，建议您 Fork 后安心使用自己分支的版本；若需引入上游（本仓库）的新功能，建议重新 Fork 最新代码，以避免同步冲突。
->
-> 如果需要协助或有问题咨询，欢迎加入 QQ 群 169994096 讨论/闲聊，我会在空闲时尽力解答。
-
-> 主题吸收了 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 的设计风格，命名为 **Clarity**，寓意清楚的阅读体验和清晰的观点表达。限于下游越来越多，未来将会有选择地收录。
-
-| 博客名称                                     | 作者          | 对应上游版本号 | 下游特色功能                                 |
-| -------------------------------------------- | ------------- | -------------- | -------------------------------------------- |
-| **[纸鹿摸鱼处](https://blog.zhilu.site/)**   | **L33Z22L11** | v3.7.0-rc.1    | (我是上游)                                   |
-| [希乐博客](https://blog.xlenco.top/)         | Xlenco        | v3.4.8         | 最新评论                                     |
-| [月空人](https://www.weilog.me/)             | Whbbit1999    | v3.7.0-alpha.4 | 项目/博客/Snippets页                         |
-| [Mugzx's Blog](https://blog.mugzx.top/)      | Mugzx         | v3.7.0-rc.0    | 设计风格统一                                 |
-| [喵落阁](https://blog-v3.kemeow.top/)        | Kemeow815     | v3.4.7         | 即刻+友圈+最新评论+游戏/番剧页               |
-| [梦爱吃鱼](https://blog.bsgun.cn/)           | JLinmr        | v3.6.0         | 即刻+友圈+最新评论                           |
-| [Mikuの极光星](https://blog.sotkg.com/)      | PaloMiku      | v3.6.5         | 设计风格统一，设置面板                       |
-| [Shenley的存档点](https://blog.shenley.cn/)  | shenlye       | v3.4.4         | 游戏/番剧页，方形卡片+科技风                 |
-| [BiuXin-s Blog](https://zhilu.biuxin.com/)   | damizai       | v3.2-250304    | 即刻+友圈+最新评论                           |
-| [液泡部落格](https://blog.vacu.top/)         | VacuolePaoo   | v3.6.3         | 一言+标签tags+页脚随机友链                   |
-| [闻絮语](https://www.wxuyu.top/)             | 661111        | v3.6.5         | 即刻+友圈+Heo友链轮播/Profile                |
-| [落憾](https://blog.luoh.org/)               | LuoH-AN       | v3.7.0-rc.0    | 即刻+一言+卡片Profile                        |
-| [落尘up](https://www.luochen.chat/)          | luochenup     | v3.3.4         | 侧栏时间轴                                   |
-| [fishcpy的小破站](https://blog.fis.ink/)     | fishcpy       | v3.4.8         | 友圈+Artalk评论                              |
-| [六月墨语](https://blog.june.ink/)           | Akuma-real    | v3.6.3         | 友圈+最新评论                                |
-| [Cталин博客](https://blog.jiclub.site/)      | StalinDev54   | v3.4.8         | 侧栏时间轴+关于页                            |
-| [栖童の小站](https://blog.linux-qitong.top/) | Linux-qitong  | v3.7.0-rc.0    | 即刻+友圈                                    |
-| [墨韵云阁](https://luoyuanxiang.top/)        | luoyuanxiang  | v3.6.0-rc.2    |                                              |
-| [鹊楠の小窝](https://blog.quenan.cn/)        | QNquenan      | v3.4.9         |                                              |
-| [KingKangBlog](https://blog.kingkang.xyz/)   | KingStoning   | v3.4.9         |                                              |
-| [LittleBun](https://blog.wl.do/)             | CiZaii        | v3.5.1         |                                              |
-| [钟神秀](https://blog.zsxcoder.top/)         | mcyzsx        | v3.6.0         |                                              |
-| [林间拾语](https://www.xhhao.com/)           | acanyo        | Halo           | https://www.halo.run/store/apps/app-jglhpodw |
-| [Wa 的小家](https://blog.gslpro.top/)        | Shalomguan    | v3.5.2         |                                              |
-| [青序栈](https://www.qixz.cn/)               | scfcn         | v3.6.4         |                                              |
-| [Axel Beta](https://sc.axel.xin/)            | ErenAxel      | v3.7.0-rc.0    |                                              |
-| [AirTouch](https://www.xsl.im/)              | AirTouch666   | v3.6.0         |                                              |
-
 ## 特性
 
 [主题特性](https://blog.zhilu.site/theme) · [组件示例](https://blog.zhilu.site/previews/example)
@@ -69,57 +37,72 @@
 
 项目使用 [Nuxt 4 项目目录结构](https://nuxt.com/docs/4.x/guide/directory-structure/app/app)。
 
-```sh
+```text
 .
-├── app # 前端
-│   ├── assets # 资源文件
-│   ├── components # 组件
+├── app # 前端应用
+│   ├── assets # SCSS 与图标资源
+│   ├── components # Vue 组件
+│   │   ├── about # 关于页组件
 │   │   ├── blog # 博客布局组件
-│   │   ├── content # MDC组件
-│   │   ├── partial # 微型组件
-│   │   ├── popover # 弹窗组件
+│   │   ├── content # MDC 组件
+│   │   ├── partial # 基础交互组件
+│   │   ├── popover # 搜索与灯箱弹层
 │   │   ├── post # 文章组件
-│   │   ├── util # 功能组件
+│   │   ├── util # 通用功能组件
 │   │   └── widget # 侧栏小组件
 │   ├── composables # Vue 组合式函数
-│   ├── pages # 页面
-│   │   ├── [...slug].vue # 正文、404页面
+│   ├── pages # 页面路由
+│   │   ├── [...slug].vue # 正文与 404 页面
+│   │   ├── about.vue # 关于
 │   │   ├── archive.vue # 归档
-│   │   ├── link.vue # 友链
+│   │   ├── essay.vue # 即刻
+│   │   ├── fcircle.vue # 友圈
+│   │   ├── gallery.vue # 相册
 │   │   ├── index.vue # 首页
-│   │   └── preview.vue # 预览的文章
+│   │   ├── link.vue # 友链
+│   │   ├── preview.vue # 文章预览
+│   │   └── tags.vue # 标签
 │   ├── plugins # Nuxt / Vue 插件
 │   ├── stores # Pinia 状态管理
 │   ├── types # 类型定义
-│   ├── utils # 工具函数
-│   ├── app.config.ts # 前端响应式配置★
-│   ├── app.vue # 基本布局
-│   ├── error.vue # 意外错误页
-│   └── feeds.ts # 友链列表★
-├── content # 文章
-│   ├── posts # 正式文章
-│   ├── previews # 草稿文章，仅可被站内搜索
-│   ├── link.md # 友链要求
-│   └── theme.md # 主题介绍
-├── modules # Nuxt 模块
+│   ├── utils # 前端工具函数
+│   ├── app.config.ts # 前端展示配置★
+│   ├── app.vue # 应用布局
+│   ├── error.vue # 全局错误页
+│   └── feeds.ts # 友链订阅源配置★
+├── cloud-functions # EdgeOne 云函数
+│   └── api/umami.ts # Umami 统计代理
+├── content # Nuxt Content 内容
+│   ├── posts # 博客文章
+│   ├── about.md # 关于页内容
+│   └── link.md # 友链说明
+├── modules # 本地 Nuxt 模块
 │   └── anti-mirror # 恶意反代跳转
-├── patches # npm 包补丁
-├── public # 静态资源，生成在站点根目录
-│   ├── assets # 订阅源 XSLT 模板
-│   └── fonts # 字体
-├── remark-plugins # Unified 生态插件
-├── scripts # npm 脚本
-├── server # 服务端
-│   ├── api # 接口
-│   │   └── stats.get.ts # 博客静态统计
+├── patches # pnpm 第三方依赖补丁
+├── public # 站点根目录静态资源
+│   ├── assets # Atom 订阅源样式
+│   ├── banners # 页面横幅
+│   ├── fonts # 本地字体
+│   └── icons # 平台图标
+├── remark-plugins # Remark / Rehype 内容插件
+├── scripts # 内容与维护脚本
+│   └── framework # 订阅源检测工具
+├── server # Nitro 服务端
+│   ├── api # API 接口
+│   │   ├── stats.get.ts # 博客静态统计
+│   │   └── umami.get.ts # Umami 统计接口
 │   └── routes # 根路由
 │       ├── atom.xml.get.ts # Atom 订阅源
-│       └── zhilu.opml.get.ts # OPML 订阅源聚合
-├── blog.config.ts # 博客静态公共配置★
+│       └── feeds.opml.get.ts # OPML 订阅源集合
+├── shared # 前后端共享工具
+│   └── utils
+├── blog.config.ts # 博客核心配置★
 ├── content.config.ts # Nuxt Content 配置
-├── edgeone.json # EdgeOne 配置
+├── edgeone.json # EdgeOne Makers 配置
 ├── nuxt.config.ts # Nuxt 配置
-└── redirects.json # 旧站点重定向配置
+├── package.json # 项目脚本与依赖
+├── pnpm-workspace.yaml # pnpm catalog 与安装策略
+└── redirects.json # 历史路径重定向
 ```
 
 ## 快速开始
@@ -169,7 +152,7 @@ pnpm preview
 
 ### 部署指南
 
-支持 Vercel、Netlify、Cloudflare Pages、EdgeOne 等平台部署。建议采用静态（SSG）部署方式：
+支持 Vercel、Netlify、Cloudflare Pages、EdgeOne Makers 等平台部署。建议采用静态（SSG）部署方式：
 
 - 构建命令: `pnpm generate`
 - 输出目录: `dist`
@@ -180,7 +163,7 @@ pnpm preview
 #### 疑难解答
 
 - 当你发现文章页面 404 问题时，请注意文章 URL 不应尾随 `/`。
-- 如果修改了 API 路径，使用 EdgeOne 部署需要同步修改 `edgeone.json`。
+- 如果修改了 API 路径，使用 EdgeOne Makers 部署需要同步修改 `edgeone.json`。
 - 运行、部署项目时 Node.js 版本需要遵照 `package.json` 限制，推荐使用 Node LTS 最新版。
 
 ### 检测友链状态
