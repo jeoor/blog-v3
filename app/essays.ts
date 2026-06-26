@@ -2,6 +2,18 @@ import type { EssayItem } from '~/types/essay'
 
 const essays: EssayItem[] = [
 	{
+		text: '第一次追完一部动画片 -- 神奇数字马戏团',
+		date: '2026-06-26T11:57',
+		images: [
+			{
+				src: 'https://bu.dusays.com/2026/06/26/6a3df801b1947.webp',
+				alt: 'The Amazing Digital Circus',
+				height: 240,
+			},
+		],
+		tags: ['生活', '分享'],
+	},
+	{
 		text: '让我们嘲笑他',
 		date: '2026-06-18T13:36',
 		images: [
