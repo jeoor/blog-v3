@@ -20,7 +20,7 @@ function formatIsoDate(date?: string) {
 	if (!date)
 		return
 	try {
-		return toZonedTemporal(date).toInstant().toString()
+		return toZonedTemporal(date).withTimeZone(blogConfig.timeZone).toString({ timeZoneName: 'never' })
 	}
 	catch {
 		console.error('Invalid date format', date)
