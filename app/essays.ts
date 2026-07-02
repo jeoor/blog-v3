@@ -9,7 +9,7 @@ const essays: EssayItem[] = [
 				link: 'https://music.163.com/album?id=384720819&uct2=U2FsdGVkX1+b8dnPszziQRYUzTR81JV8WLWeHor8T2M=',
 				title: '再想想 宋冬野 2026-06-29',
 				description: '《再想想》有如浓茶烈酒，尽蓄生命中的千般滋味，如此丰盈，诱惑着你，去一遍遍地再听听，再想想......',
-				icon: 'http://p1.music.126.net/7RoHUwChyO-K0R5QwJV_GA==/109951173491710736.jpg?param=177y177',
+				icon: 'https://p1.music.126.net/7RoHUwChyO-K0R5QwJV_GA==/109951173491710736.jpg?param=177y177',
 			},
 		],
 		tags: ['生活'],
