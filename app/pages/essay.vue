@@ -5,9 +5,6 @@ import { getFixedDelay } from '~/utils/anim'
 
 const DATE_SLASH_RE = /\//g
 
-const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
-
 const { author } = useAppConfig()
 
 const title = '即刻'
@@ -98,6 +95,13 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 </script>
 
 <template>
+<template #aside>
+	<WidgetBlogStats />
+	<WidgetBlogTech />
+	<WidgetTagCloud />
+	<WidgetCountdown />
+</template>
+
 <ZPageBanner :title :description :image />
 
 <div class="essay-list">

@@ -3,9 +3,6 @@ import type { GalleryFolder, GalleryImage } from '~/types/gallery'
 import galleryBase from '~/gallery'
 import { getFixedDelay } from '~/utils/anim'
 
-const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
-
 const route = useRoute()
 const router = useRouter()
 
@@ -97,6 +94,13 @@ function backToFolders(): void {
 </script>
 
 <template>
+<template #aside>
+	<WidgetBlogStats />
+	<WidgetBlogTech />
+	<WidgetTagCloud />
+	<WidgetCountdown />
+</template>
+
 <ZPageBanner :title :description :image />
 
 <div class="gallery-page">

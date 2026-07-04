@@ -1,7 +1,4 @@
 <script setup lang="ts">
-const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
-
 const { author, footer, subtitle } = useAppConfig()
 
 const title = '关于'
@@ -26,6 +23,13 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 </script>
 
 <template>
+<template #aside>
+	<WidgetBlogStats />
+	<WidgetBlogTech />
+	<WidgetTagCloud />
+	<WidgetCountdown />
+</template>
+
 <div class="page-about">
 	<section class="about-author">
 		<NuxtImg class="avatar" :src="author.avatar" :alt="author.name" />

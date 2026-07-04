@@ -4,9 +4,6 @@ import type { ArticleProps } from '~/types/article'
 import { orderBy } from 'es-toolkit/array'
 import { getFixedDelay } from '~/utils/anim'
 
-const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'countdown'])
-
 const route = useRoute()
 const router = useRouter()
 
@@ -85,6 +82,12 @@ function clearSelectedTag() {
 </script>
 
 <template>
+<template #aside>
+	<WidgetBlogStats />
+	<WidgetBlogTech />
+	<WidgetCountdown />
+</template>
+
 <div class="tags">
 	<div v-if="selectedTag" class="tag-selected">
 		<div class="tag-selected-header">

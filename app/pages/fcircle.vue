@@ -3,9 +3,6 @@ import { getFixedDelay } from '~/utils/anim'
 
 const DATE_SLASH_RE = /\//g
 
-const layoutStore = useLayoutStore()
-layoutStore.setAside(['blog-stats', 'blog-tech', 'tag-cloud', 'countdown'])
-
 const title = '友圈'
 const description = '发现更多有趣的博主。'
 const image = '/banners/fcircle-banner.webp'
@@ -111,6 +108,13 @@ watch(allArticles, (articles) => {
 </script>
 
 <template>
+<template #aside>
+	<WidgetBlogStats />
+	<WidgetBlogTech />
+	<WidgetTagCloud />
+	<WidgetCountdown />
+</template>
+
 <ZPageBanner :title :description :image>
 	<div class="fcircle-stats">
 		<div v-if="lastUpdatedDate" class="fcircle-stats__update-time">

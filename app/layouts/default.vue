@@ -1,7 +1,3 @@
-<script setup lang="ts">
-const layoutStore = useLayoutStore()
-</script>
-
 <template>
 <NuxtLoadingIndicator />
 <NuxtRouteAnnouncer :style="{ position: 'absolute' }" />
@@ -12,11 +8,11 @@ const layoutStore = useLayoutStore()
 		<slot />
 		<BlogFooter />
 	</main>
-	<BlogAside :has-slot="Boolean($slots.aside)">
+	<BlogAside>
 		<slot name="aside" />
 	</BlogAside>
 </div>
-<BlogPanel :has-aside="Boolean($slots.aside) || layoutStore.asideWidgets.length > 0" />
+<BlogPanel :has-aside="Boolean($slots.aside)" />
 <BikariyaModals />
 </template>
 
