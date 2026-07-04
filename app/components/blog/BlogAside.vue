@@ -1,4 +1,8 @@
 <script setup lang="ts">
+defineProps<{
+	hasSlot?: boolean
+}>()
+
 const layoutStore = useLayoutStore()
 const { asideWidgets } = storeToRefs(layoutStore)
 
@@ -14,8 +18,9 @@ const { widgets } = useWidgets(asideWidgets)
 
 <!-- 不能用 Transition 实现弹出收起动画，因为宽屏状态始终显示 -->
 <!-- 如果为空数组则隐藏 -->
-<aside v-if="asideWidgets?.length" id="blog-aside" :class="{ show: layoutStore.state === 'aside' }">
-	<TransitionGroup name="float-in">
+<aside v-if="hasSlot || asideWidgets.length" id="blog-aside" :class="{ show: layoutStore.state === 'aside' }">
+	<slot v-if="hasSlot" />
+	<TransitionGroup v-else name="float-in">
 		<!-- 更换页面时相同 key 的组件不会更新 -->
 		<component :is="widget.comp" v-for="widget in widgets" :key="widget.name" />
 	</TransitionGroup>
@@ -55,6 +60,10 @@ const { widgets } = useWidgets(asideWidgets)
 		&.show {
 			transform: none;
 		}
+	}
+
+	&:empty {
+		display: none;
 	}
 }
 

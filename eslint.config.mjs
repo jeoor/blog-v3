@@ -38,6 +38,11 @@ export default antfu({
 		'yaml/indent': ['error', 2],
 	},
 }, {
+	files: ['app/pages/**/*.vue'],
+	rules: {
+		'vue/valid-v-slot': 'off',
+	},
+}, {
 	files: ['content/**/*.json'],
 	rules: {
 		'jsonc/comma-dangle': ['warn', 'always'],
