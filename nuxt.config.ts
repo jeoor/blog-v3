@@ -67,7 +67,7 @@ export default defineNuxtConfig({
 	},
 
 	features: {
-		inlineStyles: false,
+		inlineStyles: true,
 	},
 
 	nitro: {
