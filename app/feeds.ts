@@ -85,8 +85,8 @@ export default [
 	// #endregion
 	// #region Friends
 	{
-		name: '膜拜',
-		desc: '网络上遇到的大佬',
+		name: '网上邻居',
+		desc: '哗——啵——电波通讯中，欢迎常来串门',
 		// @keep-sorted { "keys": ["date"] }
 		entries: [
 			{
