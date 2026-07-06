@@ -83,4 +83,24 @@ export default [
 		],
 	},
 	// #endregion
+	// #region Friends
+	{
+		name: '膜拜',
+		desc: '网络上遇到的大佬',
+		// @keep-sorted { "keys": ["date"] }
+		entries: [
+			{
+				author: '洪畅',
+				title: '洪畅的博客',
+				desc: '想，全是问题；做，才有答案。',
+				link: 'https://blog.hcbu.cn/',
+				feed: 'https://blog.hcbu.cn/atom.xml',
+				icon: 'https://raw.giteeusercontent.com/hcbug/picture1/raw/master/20260706124317969.webp',
+				avatar: 'https://gitee.com/hcbug/picture1/raw/master/20260607223324364.webp',
+				archs: ['Nuxt', 'Vercel'],
+				date: '2026-07-06',
+			},
+		],
+	},
+	// #endregion
 ] satisfies FeedGroup[]
