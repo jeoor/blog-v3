@@ -28,7 +28,9 @@
     "check:feed/all": "unrun scripts/framework/check-all-feeds.ts",
     "fc": "unrun scripts/generate-friend.ts",
     "updated": "unrun scripts/update-updated.ts",
-    "updated:dry": "unrun scripts/update-updated.ts --dry-run"
+    "updated:dry": "unrun scripts/update-updated.ts --dry-run",
+    "upstream": "pnpm exec unrun scripts/sync-upstream.ts",
+    "upstream:restore": "pnpm exec unrun scripts/sync-upstream.ts --restore"
   },
   "dependencies": {
     "@bikariya/image-viewer": "catalog:ui",
