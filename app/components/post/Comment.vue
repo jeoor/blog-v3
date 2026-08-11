@@ -338,14 +338,163 @@ onBeforeUnmount(() => {
 		}
 	}
 
-	.tk-time {
-		color: var(--c-text-3);
+	// ====== 提交区布局：输入框 → 信息栏 → 按钮 ======
+	.tk-submit {
+		display: flex;
+		flex-direction: column;
+
+		.tk-avatar,
+		a.tk-submit-action-icon.__markdown { display: none; }
+
+		.tk-submit-action-icon {
+			border: 1px solid transparent;
+			border-radius: var(--comment-control-radius);
+			box-shadow: none;
+			outline: none;
+			background-color: transparent;
+			color: var(--c-text-2);
+			transition: background-color 0.2s, color 0.2s;
+
+			&:hover,
+			&:focus {
+				// 覆盖 Twikoo / 浏览器默认 hover/focus 描边，避免出现蓝色边框
+				border-color: transparent;
+				box-shadow: none;
+				outline: none;
+				background-color: var(--c-bg-3);
+				color: var(--c-text);
+			}
+
+			&:focus-visible {
+				// 键盘用户保留可见焦点，但不用主色蓝边
+				// outline-offset 外扩：按钮嵌在 flex 容器内，内缩会被相邻元素或背景吞掉
+				border-color: transparent;
+				box-shadow: none;
+				outline: 2px solid var(--c-text-3);
+				outline-offset: 2px;
+				background-color: var(--c-bg-3);
+				color: var(--c-text);
+			}
+		}
+
+		.tk-preview-container {
+			order: 4;
+			margin: 0.5rem 0;
+		}
+
+		.tk-row.actions {
+			justify-content: flex-end;
+			order: 3;
+			margin: 0 0 0.5rem;
+		}
+
+		.tk-input {
+			order: 1;
+			margin-bottom: 0.5rem;
+			font-family: var(--font-monospace);
+
+			.el-textarea__inner {
+				padding: 0.8rem;
+				border: 1px solid var(--c-border);
+				border-radius: var(--comment-control-radius);
+				background-color: var(--c-bg-2);
+				transition: border-color 0.2s;
+
+				&:focus {
+					border-color: var(--c-primary);
+				}
+			}
+		}
+
+		.tk-meta-input {
+			order: 2;
+
+			.el-input-group {
+				border: 1px solid var(--c-border);
+				border-radius: var(--comment-control-radius);
+				background: var(--c-bg-2);
+				transition: border-color 0.2s;
+
+				&:focus-within { border-color: var(--c-primary); }
+			}
+
+			.el-input__inner { border: none; }
+
+			.el-input-group__prepend {
+				border: none;
+				border-radius: var(--comment-control-radius) 0 0 var(--comment-control-radius);
+				background: var(--c-bg-1);
+				color: var(--c-text-2);
+			}
+		}
 	}
 
-	// 防止 a 被 overflow hidden
-	.tk-content {
-		margin: -0.2em;
-		padding: 0.2em;
+	// 按钮
+	.tk-preview, .tk-cancel {
+		border: 1px solid var(--c-bg-soft);
+		border-radius: var(--comment-control-radius);
+		background-color: var(--ld-bg-card);
+		color: var(--c-text-1);
+		transition: background-color 0.2s;
+
+		&:hover { background-color: var(--c-bg-2); }
+	}
+
+	.tk-send {
+		border: 1px solid var(--c-primary);
+		border-radius: var(--comment-control-radius);
+		background-color: var(--c-primary);
+		color: var(--c-bg);
+		transition: background-color 0.2s;
+
+		&:hover { opacity: 0.85; }
+	}
+
+	// 表情面板
+	.OwO .OwO-body {
+		overflow: hidden;
+		border: 1px solid var(--c-bg-soft);
+		border-radius: var(--comment-control-radius);
+		background-color: var(--ld-bg-card);
+		color: var(--c-text);
+
+		.OwO-items { padding: 0.4rem; }
+
+		.OwO-item {
+			transition: transform 0.2s;
+
+			&:hover {
+				transform: scale(1.2);
+			}
+		}
+
+		.OwO-bar {
+			border-top: 1px solid var(--c-border);
+			background-color: var(--c-bg-2);
+		}
+
+		.OwO-packages {
+			padding: 0.25rem;
+
+			li {
+				color: var(--c-text-2);
+
+				&:hover {
+					background-color: var(--c-bg-3);
+					color: var(--c-text);
+				}
+			}
+
+			.OwO-package-active,
+			li[aria-selected="true"] {
+				background-color: var(--c-primary-soft);
+				color: var(--c-text);
+			}
+		}
+	}
+
+	.tk-time {
+		color: var(--c-text-3);
 	}
 
 	.tk-comments-title, .tk-nick {
@@ -353,7 +502,6 @@ onBeforeUnmount(() => {
 	}
 
 	.tk-nick-link { color: var(--c-primary); }
-	.tk-time { color: var(--c-text-3); }
 
 	.tk-comment .tk-main {
 		.tk-meta { margin-bottom: 0.3rem; }
@@ -368,7 +516,10 @@ onBeforeUnmount(() => {
 	// 内容区
 	.tk-content {
 		overflow-wrap: anywhere;
-		margin-top: 0;
+
+		// 防止 a 被 overflow hidden
+		margin: -0.2em;
+		padding: 0.2em;
 		font-size: 0.95rem;
 		line-height: 1.6;
 	}
