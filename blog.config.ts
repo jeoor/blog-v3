@@ -4,7 +4,7 @@ const basicConfig = {
 	title: '敖苛记',
 	subtitle: '敖致天·苛制人',
 	// 长 description 利好于 SEO
-	description: '敖苛记是敖苛的个人博客，始终秉持“生活不息，折腾不止”的记录方式，专注分享技术折腾、开源探索与日常生活中的真实经历。博客内容持续覆盖编程学习、项目实践、效率提升与个人成长等方向，包括编程语言与框架的学习笔记、实际开发中的踩坑记录与解决思路、实用工具与工作流推荐，以及技术之外的生活思考。这里既有扎实的技术干货，也保留轻松与温度，希望能为来访的朋友提供实用经验、带来启发灵感，同时收获一点简单的快乐。',
+	description: '敖苛记是敖苛的个人博客，始终秉持"生活不息，折腾不止"的记录方式，专注分享技术折腾、开源探索与日常生活中的真实经历。博客内容持续覆盖编程学习、项目实践、效率提升与个人成长等方向，包括编程语言与框架的学习笔记、实际开发中的踩坑记录与解决思路、实用工具与工作流推荐，以及技术之外的生活思考。这里既有扎实的技术干货，也保留轻松与温度，希望能为来访的朋友提供实用经验、带来启发灵感，同时收获一点简单的快乐。',
 	author: {
 		name: '敖苛',
 		avatar: 'https://blog.kayro.cn/avatar.webp',
@@ -86,7 +86,7 @@ const blogConfig = {
 	/** 向 <head> 中添加脚本 */
 	scripts: [
 		// 自己部署的 Umami 统计服务
-		{ 'src': 'https://umami.kayro.cn/script.js', 'data-website-id': '4440adbb-bae6-444c-9cc4-443e490567a1', 'defer': true },
+		// { 'src': 'https://umami.kayro.cn/script.js', 'data-website-id': '4440adbb-bae6-444c-9cc4-443e490567a1', 'defer': true },
 		// 自己网站的 Cloudflare Insights 统计服务
 		// { 'src': 'https://static.cloudflareinsights.com/beacon.min.js', 'data-cf-beacon': '{"token": "97a4fe32ed8240ac8284e9bffaf03962"}', 'defer': true },
 		// Twikoo 评论系统

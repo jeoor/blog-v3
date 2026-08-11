@@ -3,7 +3,6 @@
 [![框架](https://img.shields.io/badge/框架-Nuxt-00DC82?logo=Nuxt.js)](https://nuxt.com/)
 [![CMS](https://img.shields.io/badge/CMS-Nuxt%20Content-00DC82?logo=Nuxt.js)](https://content.nuxt.com/)
 [![部署平台](https://img.shields.io/badge/部署平台-EdgeOne-00A4FF)](https://edgeone.ai/)
-[![访问统计](https://img.shields.io/badge/访问统计-Umami-000000?logo=Umami)](https://github.com/umami-software/umami)
 [![代码风格](https://img.shields.io/badge/代码风格-ESLint-4B32C3?logo=ESLint)](https://eslint.org/)
 [![代码风格](https://img.shields.io/badge/代码风格-Stylelint-263238?logo=Stylelint)](https://stylelint.io/)
 
@@ -70,8 +69,7 @@
 │   ├── app.vue # 应用布局
 │   ├── error.vue # 全局错误页
 │   └── feeds.ts # 友链订阅源配置★
-├── cloud-functions # EdgeOne 云函数
-│   └── api/umami.ts # Umami 统计代理
+
 ├── content # Nuxt Content 内容
 │   ├── posts # 博客文章
 │   ├── about.md # 关于页内容
@@ -89,8 +87,7 @@
 │   └── framework # 订阅源检测工具
 ├── server # Nitro 服务端
 │   ├── api # API 接口
-│   │   ├── stats.get.ts # 博客静态统计
-│   │   └── umami.get.ts # Umami 统计接口
+│   │   └── stats.get.ts # 博客静态统计
 │   └── routes # 根路由
 │       ├── atom.xml.get.ts # Atom 订阅源
 │       └── feeds.opml.get.ts # OPML 订阅源集合
@@ -122,7 +119,7 @@ pnpm init-project # 初始化项目配置
 ```
 
 - 在启动或部署项目时，你需要移除我的文章、我的个人信息、我的统计/评论配置。
-  - `blog.config.ts` 中的站点信息、Umami 站点统计、Cloudflare Insights 统计、Twikoo 评论服务源。
+  - `blog.config.ts` 中的站点信息、Twikoo 评论服务源。
   - `app.config.ts` 中的页脚导航、出生年份等。
 
 - 为保证开发体验，需要安装 ESLint、Stylelint 等 VS Code 扩展。如果你不喜欢此项目的格式化风格，可以在 `./eslint.config.mjs` 和 `./.vscode/settings.json` 中调整或者不安装 VS Code 扩展。
