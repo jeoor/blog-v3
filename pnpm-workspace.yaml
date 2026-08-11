@@ -51,7 +51,7 @@ catalogs:
     zod: ^4.4.3
   framework:
     ci-info: ^4.4.0
-    nuxt: ^4.4.8
+    nuxt: ^4.5.1
     pinia: ^3.0.4
     sass-embedded: ^1.100.0
     typescript: ^6.0.3
