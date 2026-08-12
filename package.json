@@ -7,7 +7,7 @@
   "license": "(MIT OR CC-BY-NC-SA-4.0)",
   "homepage": "https://github.com/L33Z22L11/blog-v3",
   "engines": {
-    "node": "^22.5 || ^23.6 || >=24",
+    "node": "^22.18 || ^23.6 || >=24",
     "pnpm": ">=10"
   },
   "scripts": {
@@ -29,8 +29,8 @@
     "fc": "unrun scripts/generate-friend.ts",
     "updated": "unrun scripts/update-updated.ts",
     "updated:dry": "unrun scripts/update-updated.ts --dry-run",
-    "upstream": "pnpm exec unrun scripts/sync-upstream.ts",
-    "upstream:restore": "pnpm exec unrun scripts/sync-upstream.ts --restore"
+    "upstream": "unrun scripts/sync-upstream.ts",
+    "upstream:restore": "unrun scripts/sync-upstream.ts --restore"
   },
   "dependencies": {
     "@bikariya/image-viewer": "catalog:ui",
@@ -93,6 +93,7 @@
     "sass-embedded": "catalog:framework",
     "strip-ansi": "catalog:util",
     "stylelint": "catalog:quality",
+    "stylelint-config-standard-scss": "catalog:quality",
     "typescript": "catalog:framework",
     "unist-util-visit": "catalog:content",
     "unplugin-yaml": "catalog:framework",

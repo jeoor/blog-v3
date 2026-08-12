@@ -1,6 +1,13 @@
 import zin from '@zinkawaii/stylelint-config'
 
 export default zin({
+	extends: ['stylelint-config-standard-scss'],
+	overrides: [
+		{
+			customSyntax: 'postcss-html',
+			files: ['**/*.vue'],
+		},
+	],
 	// @keep-sorted
 	rules: {
 		'@stylistic/indentation': 'tab',
