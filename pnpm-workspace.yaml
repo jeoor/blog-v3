@@ -67,7 +67,7 @@ catalogs:
     cspell: ^10.0.1
     eslint: ^10.8.1
     stylelint: ^17.14.1
-    stylelint-config-standard-scss: ^17.0.0
+    stylelint-config-recommended-scss: ^17.0.0
   ui:
     '@bikariya/image-viewer': ^0.0.8
     '@bikariya/modals': ^0.0.8

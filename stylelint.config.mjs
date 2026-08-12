@@ -1,7 +1,7 @@
 import zin from '@zinkawaii/stylelint-config'
 
 export default zin({
-	extends: ['stylelint-config-standard-scss'],
+	extends: ['stylelint-config-recommended-scss'],
 	overrides: [
 		{
 			customSyntax: 'postcss-html',

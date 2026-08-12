@@ -93,7 +93,7 @@
     "sass-embedded": "catalog:framework",
     "strip-ansi": "catalog:util",
     "stylelint": "catalog:quality",
-    "stylelint-config-standard-scss": "catalog:quality",
+    "stylelint-config-recommended-scss": "catalog:quality",
     "typescript": "catalog:framework",
     "unist-util-visit": "catalog:content",
     "unplugin-yaml": "catalog:framework",
