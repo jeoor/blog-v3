@@ -2,6 +2,11 @@ import type { EssayItem } from '~/types/essay'
 
 const essays: EssayItem[] = [
 	{
+		text: '看到这样一句话：如果你看不惯一个人，就在心里默念 “你算蛋！” 三次，千万别说出来，这样你就会变的很自信！！！',
+		date: '2026-08-12T16:44',
+		tags: ['生活', '想法'],
+	},
+	{
 		text: '宋冬野竟然发布了新专辑？',
 		date: '2026-07-02T12:33',
 		linkCards: [
