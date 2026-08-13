@@ -391,19 +391,8 @@ onBeforeUnmount(() => {
 		.tk-input {
 			order: 1;
 			margin-bottom: 0.5rem;
-			font-family: var(--font-monospace);
 
-			.el-textarea__inner {
-				padding: 0.8rem;
-				border: 1px solid var(--c-border);
-				border-radius: var(--comment-control-radius);
-				background-color: var(--c-bg-2);
-				transition: border-color 0.2s;
-
-				&:focus {
-					border-color: var(--c-primary);
-				}
-			}
+			.el-textarea__inner { padding: 0.8rem; }
 		}
 
 		.tk-meta-input {
@@ -429,6 +418,22 @@ onBeforeUnmount(() => {
 		}
 	}
 
+	// 输入框
+	.tk-submit .tk-input,
+	.tk-comments-search .el-input {
+		font-family: var(--font-monospace);
+	}
+
+	.tk-submit .tk-input .el-textarea__inner,
+	.tk-comments-search .el-input__inner {
+		border: 1px solid var(--c-border);
+		border-radius: var(--comment-control-radius);
+		background-color: var(--c-bg-2);
+		transition: border-color 0.2s;
+
+		&:focus { border-color: var(--c-primary); }
+	}
+
 	// 按钮
 	.tk-preview, .tk-cancel {
 		border: 1px solid var(--c-bg-soft);
@@ -440,7 +445,8 @@ onBeforeUnmount(() => {
 		&:hover { background-color: var(--c-bg-2); }
 	}
 
-	.tk-send {
+	.tk-send,
+	.tk-comments-search .el-button--primary {
 		border: 1px solid var(--c-primary);
 		border-radius: var(--comment-control-radius);
 		background-color: var(--c-primary);
