@@ -23,8 +23,8 @@ tags: [linux, ai]
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/03/04/69a8034325be6.webp
-caption: 拉取运行  olmo-3
+src: https://assets.kayro.cn/blog/ollama_pull_olmo3_1786705673.webp
+caption: 拉取运行 olmo-3
 height: 320
 ---
 ::
@@ -57,7 +57,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/03/04/69a8039432c76.webp
+src: https://assets.kayro.cn/blog/ollama_daemon_json_1786705673.webp
 caption: daemon.json
 height: 320
 ---
@@ -104,7 +104,7 @@ icon: https://openwebui.com/favicon.ico
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/03/04/69a8071cbdd94.webp
+src: https://assets.kayro.cn/blog/ollama_model_missing_1786705673.webp
 caption: 找不到模型
 height: 320
 ---

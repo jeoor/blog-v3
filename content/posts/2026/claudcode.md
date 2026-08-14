@@ -83,7 +83,7 @@ cc-switch 是一个很好用的 Claude Code 配置工具，我们使用它来配
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/05/26/6a156d3d01684.webp
+src: https://assets.kayro.cn/blog/ccswitch_plus_1786707129.webp
 caption: cc-switch 右上角加号
 height: 320
 ---
@@ -93,7 +93,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/05/26/6a156dedae9b2.webp
+src: https://assets.kayro.cn/blog/ccswitch_select_deepseek_1786705648.webp
 caption: 选择 Deepseek
 height: 320
 ---
@@ -105,7 +105,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/05/26/6a156ea7040eb.webp
+src: https://assets.kayro.cn/blog/ccswitch_credential_1786707129.webp
 caption: 填写 api key
 height: 320
 ---
@@ -115,7 +115,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/05/26/6a156efb2e314.webp
+src: https://assets.kayro.cn/blog/ccswitch_options_1786705648.webp
 caption: 勾选选项
 height: 320
 ---
@@ -129,7 +129,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/05/26/6a156fff0a469.webp
+src: https://assets.kayro.cn/blog/claude_code_running_1786705649.webp
 caption: Claude Code
 height: 320
 ---

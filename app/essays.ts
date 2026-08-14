@@ -29,7 +29,7 @@ const essays: EssayItem[] = [
 		date: '2026-06-26T11:57',
 		images: [
 			{
-				src: 'https://bu.dusays.com/2026/06/26/6a3df801b1947.webp',
+				src: 'https://assets.kayro.cn/blog/essay_digital_circus_1786705674.webp',
 				alt: 'The Amazing Digital Circus',
 				height: 240,
 			},
@@ -41,7 +41,7 @@ const essays: EssayItem[] = [
 		date: '2026-06-18T13:36',
 		images: [
 			{
-				src: 'https://bu.dusays.com/2026/06/18/6a3383c595416.webp',
+				src: 'https://assets.kayro.cn/blog/essay_earphone_cable_1786705674.webp',
 				alt: '耳机充电线？',
 				height: 240,
 			},
@@ -53,7 +53,7 @@ const essays: EssayItem[] = [
 		date: '2026-06-18T13:03',
 		images: [
 			{
-				src: 'https://bu.dusays.com/2026/06/18/6a337bfb17125.webp',
+				src: 'https://assets.kayro.cn/blog/essay_deepseek_vision_1786705674.webp',
 				alt: 'DeepSeek 识图模式',
 				height: 240,
 			},
@@ -65,7 +65,7 @@ const essays: EssayItem[] = [
 		date: '2026-06-02T21:06',
 		images: [
 			{
-				src: 'https://bu.dusays.com/2026/06/02/6a1eb34b88046.webp',
+				src: 'https://assets.kayro.cn/blog/kayro_character_1786705675.webp',
 				alt: '敖苛设定图',
 				height: 240,
 			},
@@ -82,7 +82,7 @@ const essays: EssayItem[] = [
 		date: '2026-04-20T16:57',
 		images: [
 			{
-				src: 'https://bu.dusays.com/2026/04/20/69e5ead38bb09.webp',
+				src: 'https://assets.kayro.cn/blog/essay_linxiaotian_emoticon_1786705675.webp',
 				alt: '林小天',
 				height: 240,
 			},
@@ -94,7 +94,7 @@ const essays: EssayItem[] = [
 		date: '2026-04-20T13:48',
 		images: [
 			{
-				src: 'https://bu.dusays.com/2026/04/20/69e5bdef1f3b9.webp',
+				src: 'https://assets.kayro.cn/blog/essay_hermes_agent_1786705675.webp',
 				alt: 'ai竟然教育我',
 				height: 240,
 			},
@@ -116,7 +116,7 @@ const essays: EssayItem[] = [
 		date: '2026-03-04T11:55',
 		images: [
 			{
-				src: 'https://bu.dusays.com/2026/03/04/69a7ae3bc2927.webp',
+				src: 'https://assets.kayro.cn/blog/essay_shouxin_ime_1786705675.webp',
 				alt: '手心输入法',
 				height: 240,
 			},
@@ -128,7 +128,7 @@ const essays: EssayItem[] = [
 		date: '2026-03-03T22:30',
 		images: [
 			{
-				src: 'https://bu.dusays.com/2026/03/04/69a7ad5084b96.webp',
+				src: 'https://assets.kayro.cn/blog/essay_lantern_festival_1786705676.webp',
 				alt: '元宵节快乐！',
 				height: 240,
 			},

@@ -18,7 +18,7 @@ references:
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/05/15/6a06dfe45b15c.webp
+src: https://assets.kayro.cn/blog/deepseek_think_hallucination_1786705649.webp
 caption: deepseek 胡说
 height: 320
 ---

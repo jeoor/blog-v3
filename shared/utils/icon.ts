@@ -50,7 +50,7 @@ export function getArchIcon(arch: Arch) {
 export const ciIcons: Record<string, string> = {
 	'Cloudflare Pages': 'devicon:cloudflare',
 	'Cloudflare Workers': 'devicon:cloudflareworkers',
-	'EdgeOne': 'https://blog.kayro.cn/icons/edgeone.webp',
+	'EdgeOne': '/icons/edgeone.webp',
 	'GitHub Actions': 'ri:github-fill',
 	'Netlify CI': 'catppuccin:netlify',
 	'Vercel': 'ri:vercel-fill',

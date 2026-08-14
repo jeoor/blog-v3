@@ -25,7 +25,7 @@ tags: [git, windows, install]
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/05/15/6a07306802a8e.webp
+src: https://assets.kayro.cn/blog/gitwin_components_1786705671.webp
 caption: 选择组件
 height: 320
 ---

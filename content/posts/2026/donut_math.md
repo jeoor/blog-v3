@@ -65,7 +65,7 @@ in(B),t=c*h*g-f*        e;int x=40+30*D*
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/06/09/6a27ee8ac4d9c.gif
+src: https://assets.kayro.cn/blog/donut_run_1786705650.gif
 caption: 运行效果
 height: 320
 ---
@@ -112,7 +112,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/06/09/6a27d2745d00c.webp
+src: https://assets.kayro.cn/blog/donut_perspective_projection_1786705656.webp
 caption: 透视投影示意图
 height: 320
 ---
@@ -151,7 +151,7 @@ $K_1$ 可以根据想要在 2D 窗口中显示的视野来自由选择。例如�
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/06/09/6a27d288c4a28.webp
+src: https://assets.kayro.cn/blog/donut_torus_cross_section_1786705656.webp
 caption: 环面横截面
 height: 320
 ---
@@ -482,7 +482,7 @@ for (int i = 0; i < 314; i++) { // 314 * .02 ~= 2π
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/06/09/6a27d229a5542.webp
+src: https://assets.kayro.cn/blog/donut_rotation_drift_1786705656.webp
 caption: 重复低精度旋转导致正弦余弦向量长度漂移（夸张示意）
 height: 320
 ---
@@ -704,7 +704,7 @@ e-c*d*g       )*m   -c*d*e-f*g-l        *d*n)     ;if(D>z
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/06/09/6a27fb11c5786.gif
+src: https://assets.kayro.cn/blog/donut_v2_run_1786705657.gif
 caption: 2.0 运行结果
 height: 320
 ---

@@ -31,7 +31,7 @@ references:
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/03/02/69a5a9896d170.webp
+src: https://assets.kayro.cn/blog/ventoy2disk_1786705671.webp
 caption: Ventoy2Disk
 height: 320
 ---
@@ -51,7 +51,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/03/02/69a5ac8114c25.webp
+src: https://assets.kayro.cn/blog/vbox_use_efi_1786705671.webp
 caption: 勾选 Use EFI
 height: 320
 ---
@@ -61,7 +61,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/03/02/69a5ac81b6d79.webp
+src: https://assets.kayro.cn/blog/vbox_disk_size_1786705672.webp
 caption: 预先分配全部空间
 height: 320
 ---
@@ -107,7 +107,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/03/02/69a5b3b0cabd7.webp
+src: https://assets.kayro.cn/blog/vtoyboot_mount_iso_1786705672.webp
 caption: 挂载 vtoyboot.iso
 height: 320
 ---
@@ -153,7 +153,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/03/03/69a5b75d8c5e2.webp
+src: https://assets.kayro.cn/blog/arch2go_desktop_1786705672.webp
 caption: 配置好的桌面
 height: 320
 ---

@@ -23,7 +23,7 @@ date: 2026-02-13
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/06/02/6a1eb34b88046.webp
+src: https://assets.kayro.cn/blog/kayro_character_1786705675.webp
 caption: 敖苛
 height: 480
 ---

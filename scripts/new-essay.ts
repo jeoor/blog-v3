@@ -52,7 +52,7 @@ const text_ = normalize(exitIfCancel(await text({
 
 const imageInput = normalize(exitIfCancel(await text({
 	message: '图片 URL（多张用空格隔开，留空跳过）',
-	placeholder: 'https://bu.dusays.com/...',
+	placeholder: 'https://assets.kayro.cn/...',
 })))
 
 const imageUrls = imageInput ? imageInput.split(/\s+/).filter(Boolean) : []

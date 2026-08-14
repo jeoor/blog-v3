@@ -15,7 +15,7 @@ Arch Linux 的安装没有图形化界面，完全使用命令行安装，为了
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/03/04/69a79f67dad25.webp
+src: https://assets.kayro.cn/blog/archinstall_installer_1786707128.webp
 caption: archinstall
 height: 320
 ---
@@ -43,7 +43,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/03/04/69a79f688d9d7.webp
+src: https://assets.kayro.cn/blog/archinstall_done_1786705647.webp
 caption: 安装完成
 height: 320
 ---
@@ -53,7 +53,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/03/04/69a79f6683de9.webp
+src: https://assets.kayro.cn/blog/archinstall_cjk_broken_1786705647.webp
 caption: 中文显示异常
 height: 320
 ---
@@ -69,7 +69,7 @@ height: 320
 
 ::pic
 ---
-src: https://bu.dusays.com/2026/03/04/69a79f6732615.webp
+src: https://assets.kayro.cn/blog/archinstall_cjk_fixed_1786705647.webp
 caption: 中文显示正常
 height: 320
 ---

@@ -56,6 +56,7 @@ export default antfu({
 		'antfu/consistent-list-newline': 'off',
 		'eqeqeq': 'off',
 		'markdown/heading-increment': 'off',
+		'markdown/no-missing-atx-heading-space': 'off',
 		'markdown/no-multiple-h1': 'off',
 		'no-sequences': 'off',
 		'prefer-arrow-callback': 'off',

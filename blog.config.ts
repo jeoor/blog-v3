@@ -69,8 +69,8 @@ const blogConfig = {
 	donation: {
 		enable: true,
 		items: {
-			微信: 'https://bu.dusays.com/2026/02/27/69a0bba66a702.webp',
-			支付宝: 'https://bu.dusays.com/2026/02/27/69a0bba5bae92.webp',
+			微信: 'https://assets.kayro.cn/blog/donate_wechat_1786705676.webp',
+			支付宝: 'https://assets.kayro.cn/blog/donate_alipay_1786705676.webp',
 		},
 		message: '感谢您的支持 ♥️',
 	},
