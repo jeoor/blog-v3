@@ -2,6 +2,11 @@ import type { EssayItem } from '~/types/essay'
 
 const essays: EssayItem[] = [
 	{
+		text: '今日消费 555 😭😭😭',
+		date: '2026-08-16T19:10',
+		tags: ['生活'],
+	},
+	{
 		text: '小猫吃饭吧唧嘴是因为小猫有嘴努子，小狗吃饭吧唧嘴是因为小狗有嘴筒子，而人吃饭吧唧嘴是因为人想吃嘴巴子',
 		date: '2026-08-12T18:19',
 		tags: ['生活', '想法'],
