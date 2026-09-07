@@ -7,7 +7,6 @@ import blogConfig from './blog.config'
 import packageJson from './package.json'
 import redirectList from './redirects.json'
 import rehypeMetaSlots from './remark-plugins/rehype-meta-slots'
-import remarkMusic from './remark-plugins/remark-music'
 
 // 此处配置无需修改
 export default defineNuxtConfig({
@@ -25,8 +24,9 @@ export default defineNuxtConfig({
 				{ rel: 'alternate', type: 'application/atom+xml', href: '/atom.xml' },
 				{ rel: 'preconnect', href: blogConfig.twikoo.preload },
 				{ rel: 'stylesheet', href: 'https://registry.npmmirror.com/katex/0.16.45/files/dist/katex.min.css' },
-				// "InterVariable", "Inter", "InterDisplay"
-				{ rel: 'stylesheet', href: 'https://rsms.me/inter/inter.css' },
+				// "InterVariable", "Inter"
+				{ rel: 'stylesheet', href: 'https://s4.zstatic.net/npm/inter-ui@4.1.1/inter-variable.css' },
+				{ rel: 'stylesheet', href: 'https://s4.zstatic.net/npm/inter-ui@4.1.1/inter.css' },
 				// "JetBrains Mono", 思源宋体 "Noto Serif SC"
 				{ rel: 'preconnect', href: 'https://fonts.gstatic.cn', crossorigin: '' },
 				{ rel: 'stylesheet', href: 'https://fonts.googleapis.cn/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Serif+SC:wght@200..900&display=swap' },
@@ -200,12 +200,13 @@ export default defineNuxtConfig({
 				highlight: false,
 				// @keep-sorted
 				remarkPlugins: {
-					'remark-math': {},
-					'remark-music': {
-						instance: remarkMusic,
-						options: {},
-						src: '~~/remark-plugins/remark-music',
+					[new URL('./remark-plugins/remark-code-component.ts', import.meta.url).href]: {
+						options: {
+							'mermaid': { component: 'mermaid', prop: 'code' },
+							'music-abc': { component: 'music-score', prop: 'abc' },
+						},
 					},
+					'remark-math': {},
 					'remark-reading-time': {},
 				},
 				// @keep-sorted

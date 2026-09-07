@@ -28,6 +28,55 @@
 <!-- 1. 2025-12-05 [钟神秀](https://github.com/zsxcoder/Nuxt-blog-v3)：blog.zsxcoder.top《我们的设备被拿来做了什么：软件的背景行为》 -->
 <!-- 2. 2025-12-28 [Axel Beta](https://github.com/ErenAxel/blog-v3)：sc.axel.xin《我们的设备被拿来做了什么：软件的背景行为》《深色模式开发的最佳实践》《寻不回手工油糕》 -->
 
+-
+
+## 使用本主题的博客
+
+> [!WARNING]
+>
+> 修改本项目需要具备**前端开发**和**项目部署**能力。由于这是个人博客，代码经过深度定制，且可能会进行较大幅度的更新，建议您 Fork 后安心使用自己分支的版本；若需引入上游（本仓库）的新功能，建议重新 Fork 最新代码，以避免同步冲突。
+>
+> 如果需要协助或有问题咨询，欢迎加入 QQ 群 169994096 讨论/闲聊，我会在空闲时尽力解答。
+
+> 主题吸收了 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 的设计风格，命名为 **Clarity**，寓意清楚的阅读体验和清晰的观点表达。限于下游越来越多，未来将会有选择地收录。
+
+版本以站点公开信息为准（2026-09-06）。
+
+| 博客名称                                     | 作者            | 线上版本    | 特色                           |
+| -------------------------------------------- | --------------- | ----------- | ------------------------------ |
+| **[纸鹿摸鱼处](https://blog.zhilu.site/)**   | **L33Z22L11**   | v3.7.1      | 上游                           |
+| [希乐博客](https://blog.xlenco.top/)         | Xlenco          | 未公开      | 最新评论、更新日志             |
+| [Mugzx's Blog](https://blog.mugzx.top/)      | Mugzx           | v3.7.1      | 精简导航、Umami 统计           |
+| [喵洛阁](https://blog-v3.kemeow.top/)        | Kemeow815       | 未公开      | 番剧、影视、书房、游戏页       |
+| [钟神秀](https://blog.zsxcoder.top/)         | mcyzsx          | v3.6.0      | 朋友圈、即刻、装备、追番       |
+| [梦爱吃鱼](https://blog.bsgun.cn/)           | JLinmr          | v3.6.0      | 鱼塘、瞬间、最新评论           |
+| [Mikuの极光星](https://blog.sotkg.com/)      | PaloMiku        | v3.7.0      | Linux 与 Galgame 长文、游戏页  |
+| [BiuXin-s Blog](https://blog.biuxin.de/)     | damizai         | 未公开      | 鱼塘、说说、最新评论           |
+| [液泡部落格](https://blog.vacu.top/)         | VacuolePaoo     | v3.7.1      | 开发工具配置、技术与思考       |
+| [闻絮语](https://www.wxuyu.top/)             | wxuyu           | v3.6.5      | 友链轮播、追更历史、音乐控制   |
+| [落憾](https://blog.luoh.org/)               | LuoH-AN         | v3.7.1      | 原创诗词、闲言、今日诗词       |
+| [fishcpy的小破站](https://blog.fis.ink/)     | fishcpy         | v3.4.8      | 鱼塘、时间盒、监控美化         |
+| [六月墨语](https://blog.june.ink/)           | Akuma-real      | v3.7.1      | 说说、访客卡片、音乐           |
+| [Cталин博客](https://blog.jiclub.site/)      | StalinDev54     | v3.4.8      | 生活长文、动态、关于页         |
+| [栖童の小站](https://blog.linux-qitong.top/) | Linux-qitong    | v3.7.1      | 标签、友圈、Linux 实践         |
+| [鹊楠の小窝](https://blog.quenan.cn/)        | QNquenan        | v3.4.9      | 建站教程、公告、更新日志       |
+| [KingKangBlog](https://blog.kingkang.xyz/)   | KingStoning     | v3.4.9      | 标签筛选、大学随笔             |
+| [Axel's BLOG](https://blog.axelx.cn/)        | AxelEwan        | v3.7.0-rc.0 | 演唱会图文、动态               |
+| [AirTouchの小站](https://www.xsl.im/)        | AirTouch666     | v3.6.0      | 自部署教程、鱼塘、说说         |
+| [Olinl Blog](https://blog.olinl.com/)        | olinll          | v3.7.1      | 部署与容器教程、主题改造笔记   |
+| [古怪杂记本](https://blog.guuguai.site/)     | GuuGuai         | v3.6.3      | 考研复盘、Minecraft 长文       |
+| [敖苛记](https://blog.kayro.cn/)             | jeoor           | v3.7.1      | 相册、标签云、时间进度         |
+| [灯火不休时](https://blog.dhbxs.top/)        | dhbxs           | v3.7.0-rc.0 | Java 与大数据实践、碎碎念      |
+| [郭雨博](https://blog.guoyubo.cn/)           | guojiahaous-alt | v3.7.0-rc.0 | CTF 复盘、折叠好友、音乐播放器 |
+
+### 社区移植
+
+| 框架    | 项目                                                                    | 版本 / 状态 | 特色                                                                             |
+| ------- | ----------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------- |
+| Hugo    | [it985/hugo-theme-clarity](https://github.com/it985/hugo-theme-clarity) | 开发中      | Pagefind、相册、说说                                                             |
+| Halo    | [acanyo/theme-clarity](https://github.com/acanyo/theme-clarity)         | v1.6.6      | 可配置小组件、分享海报；[应用市场](https://www.halo.run/store/apps/app-jglhpodw) |
+| Typecho | [jkjoy/theme-clarity](https://github.com/jkjoy/theme-clarity)           | v1.1.9      | 基于 Halo 版移植，图库、瞬间、追番                                               |
+
 ## 特性
 
 [主题特性](https://blog.zhilu.site/theme) · [组件示例](https://blog.zhilu.site/previews/example)
@@ -106,6 +155,8 @@
 
 ### 安装依赖
 
+需要 Node.js 22.19+（22.x）、24.11+（24.x）或 26+，推荐使用满足要求的最新 LTS 版本。
+
 ```sh
 pnpm i
 ```
@@ -115,12 +166,17 @@ pnpm i
 ### 初始配置
 
 ```sh
-pnpm init-project # 初始化项目配置
+pnpm init-project # 初始化项目配置，输入 confirm 确认
 ```
 
-- 在启动或部署项目时，你需要移除我的文章、我的个人信息、我的统计/评论配置。
-  - `blog.config.ts` 中的站点信息、Twikoo 评论服务源。
-  - `app.config.ts` 中的页脚导航、出生年份等。
+初始化会删除整个 `content` 目录，重建示例文章与通用友链申请说明，重置 `app/feeds.ts`（仅保留主题作者纸鹿的博客），并清空个人导航及统计/评论配置。请先备份自己的内容；自动化环境可显式执行 `pnpm init-project --yes`，没有确认参数时会退出且不修改文件。
+
+初始化后头像和图标使用 WeAvatar 首字占位头像（无需邮箱或 MD5），站点地址为 `http://localhost:3000/`。上线前请按终端清单修改：
+
+- 站点与个人配置：
+  - `blog.config.ts` 中的站点信息、Umami 站点统计、Cloudflare Insights 统计、Twikoo 评论服务源。
+  - `app/app.config.ts` 中的页脚导航、出生年份等（`birthYear: 0` 隐藏年龄）。
+  - `content/link.md` 中的友链申请方式、`app/feeds.ts` 中的友链列表。
 
 - 为保证开发体验，需要安装 ESLint、Stylelint 等 VS Code 扩展。如果你不喜欢此项目的格式化风格，可以在 `./eslint.config.mjs` 和 `./.vscode/settings.json` 中调整或者不安装 VS Code 扩展。
 
@@ -158,6 +214,9 @@ pnpm preview
 如果直接使用平台提供的“Nuxt”预设部署，则会变成 SSR 模式，此模式每次访问都会等待服务端重新渲染。请参阅 [Nuxt 文档](https://nuxt.com/docs/getting-started/deployment) 和 [Nuxt Content 文档](https://content.nuxt.com/docs/deploy/static) 的“部署”一节。
 
 #### 疑难解答
+
+- 手动清理文章后若 `generate` 报 `Exiting due to prerender errors`，请在完整日志中搜索 `[404]` 和 `Linked from`，修正引用已删除文章的链接。推荐在全新模板上使用初始化命令统一清理。
+- `absolute-site-urls` 表示站内链接使用了绝对 URL，并非 IP 地址无效。Atom / OPML 等订阅信息需要绝对地址；自托管时将 `blog.config.ts` 的 `url` 设为实际访问地址，且协议、主机、端口保持一致。
 
 - 当你发现文章页面 404 问题时，请注意文章 URL 不应尾随 `/`。
 - 如果修改了 API 路径，使用 EdgeOne Makers 部署需要同步修改 `edgeone.json`。
