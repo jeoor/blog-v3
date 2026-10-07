@@ -13,7 +13,7 @@ export function resolveSpringFestivalDate(now: Date): Date | null {
 	if (thisYearDate && today <= thisYearDate) {
 		return thisYearDate
 	}
-	return getSpringFestivalDate(now.getFullYear() + 1) || thisYearDate
+	return getSpringFestivalDate(now.getFullYear() + 1)
 }
 
 export function getCountdownProgress(unit: CountdownUnitKey, now: Date): { remaining: number, percentage: number } {
@@ -37,7 +37,8 @@ function getSpringFestivalDate(year: number): Date | null {
 		offsetDays += getLunarYearDaysCount(current)
 	}
 
-	return new Date(Date.UTC(MIN_YEAR, 0, 31) + offsetDays * 86400000)
+	const date = new Date(Date.UTC(MIN_YEAR, 0, 31) + offsetDays * 86400000)
+	return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
 }
 
 function getLunarYearDaysCount(year: number): number {
@@ -73,9 +74,10 @@ function getMonthProgress(now: Date): { remaining: number, percentage: number } 
 }
 
 function getYearProgress(now: Date): { remaining: number, percentage: number } {
-	const start = new Date(now.getFullYear(), 0, 1)
+	const start = Date.UTC(now.getFullYear(), 0, 1)
+	const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
 	const total = isLeapYear(now.getFullYear()) ? 366 : 365
-	const passed = Math.floor((now.getTime() - start.getTime()) / 86400000)
+	const passed = (today - start) / 86400000
 	return { remaining: total - passed, percentage: (passed / total) * 100 }
 }
 

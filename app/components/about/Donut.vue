@@ -150,7 +150,7 @@ onMounted(() => {
 	justify-content: center;
 	padding: 0.25em;
 	color: var(--c-text-2);
-	transition: color var(--delay);
+	transition: color var(--motion-fade-duration);
 	cursor: pointer;
 
 	&:hover {

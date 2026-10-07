@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { CountdownUnitKey } from '~/utils/countdown'
 import { getCountdownProgress, resolveSpringFestivalDate } from '~/utils/countdown'
 
 const units = [
@@ -12,7 +11,9 @@ const units = [
 const targetName = '春节'
 const initialNow = useState('countdown:now', () => Date.now())
 const mounted = useMounted()
-const rawNow = useNow({ interval: 10 * 60 * 1000 })
+const canHover = useMediaQuery('(hover: hover) and (pointer: fine)')
+const showRemaining = ref(false)
+const rawNow = useNow({ interval: 60 * 1000 })
 const currentDate = computed(() => new Date(mounted.value ? rawNow.value : initialNow.value))
 
 const targetDate = computed(() => resolveSpringFestivalDate(currentDate.value))
@@ -26,7 +27,7 @@ const daysUntil = computed(() => {
 })
 
 const progressRows = computed(() => units.map((item) => {
-	const { remaining, percentage } = getCountdownProgress(item.key as CountdownUnitKey, currentDate.value)
+	const { remaining, percentage } = getCountdownProgress(item.key, currentDate.value)
 	return {
 		...item,
 		remaining,
@@ -46,11 +47,16 @@ const targetDateText = computed(() => {
 	const day = String(target.getDate()).padStart(2, '0')
 	return `${year}-${month}-${day}`
 })
+
+function setHovering(value: boolean) {
+	if (canHover.value)
+		showRemaining.value = value
+}
 </script>
 
 <template>
 <BlogWidget card title="倒计时">
-	<div class="countdown">
+	<div class="countdown" :class="{ 'show-remaining': showRemaining }" @mouseenter="setHovering(true)" @mouseleave="setHovering(false)">
 		<div class="left">
 			<div class="text">
 				距离
@@ -71,11 +77,17 @@ const targetDateText = computed(() => {
 				<div class="row-name">
 					{{ item.text }}
 				</div>
-				<div class="bar-wrap">
-					<div class="bar" :style="item.style" />
-					<span class="percent" :class="{ 'on-bar': item.highlight }">{{ item.percentage.toFixed(2) }}%</span>
-					<span class="remain" :class="{ 'on-bar': item.highlight }">剩余{{ item.remaining }}{{ item.unit }}</span>
-				</div>
+				<button
+					class="bar-wrap"
+					type="button"
+					:aria-label="`${item.text}进度 ${item.percentage.toFixed(2)}%，剩余${item.remaining}${item.unit}，点击切换显示`"
+					:aria-pressed="showRemaining"
+					@click="showRemaining = !showRemaining"
+				>
+					<span class="bar" :style="item.style" aria-hidden="true" />
+					<span class="percent" :class="{ highlight: item.highlight }" aria-hidden="true">{{ item.percentage.toFixed(2) }}%</span>
+					<span class="remain" :class="{ highlight: item.highlight }" aria-hidden="true">剩余{{ item.remaining }}{{ item.unit }}</span>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -162,10 +174,15 @@ const targetDateText = computed(() => {
 }
 
 .bar {
+	display: block;
 	height: 100%;
 	border-radius: 8px;
-	background-color: var(--c-primary);
+	background-color: hsl(var(--hue-theme) 100% 70%);
 	transition: width var(--motion-duration);
+}
+
+.dark .bar {
+	background-color: hsl(var(--hue-theme) 100% 55%);
 }
 
 .percent,
@@ -173,8 +190,8 @@ const targetDateText = computed(() => {
 	position: absolute;
 	inset-block-start: 50%;
 	font-size: 0.8rem;
-	font-weight: 600;
-	color: var(--c-text-2);
+	font-weight: 400;
+	color: var(--c-text-1);
 	transform: translateY(-50%);
 	transition: opacity var(--motion-duration), transform 0.3s;
 }
@@ -189,11 +206,11 @@ const targetDateText = computed(() => {
 	transform: translateY(-50%) translateX(0.625rem);
 }
 
-.on-bar {
-	color: var(--c-text);
+.highlight {
+	font-weight: 600;
 }
 
-.countdown:hover {
+.countdown.show-remaining {
 	.remain {
 		opacity: 1;
 		transform: translateY(-50%) translateX(0);

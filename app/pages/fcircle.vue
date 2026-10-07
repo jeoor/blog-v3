@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { LazyPopoverFriendPosts } from '#components'
 import { getFixedDelay } from '~/utils/anim'
 
 const DATE_SLASH_RE = /\//g
@@ -37,7 +38,7 @@ const { data: fcData, status } = useFetch<FcApiData>(`${API_URL}all.json`, {
 
 const displayCount = ref(PAGE_SIZE)
 const randomArticle = ref<FriendArticle | null>(null)
-const showAvatarPopup = ref(false)
+const modalStore = useModalStore()
 const selectedAuthor = ref('')
 const selectedAuthorAvatar = ref('')
 const selectedArticleLink = ref('')
@@ -68,6 +69,21 @@ const displayedArticles = computed(() => allArticles.value.slice(0, displayCount
 const hasMoreArticles = computed(() => allArticles.value.length > displayCount.value)
 const isError = computed(() => status.value === 'error')
 
+const { open: openAuthorPopup, close: closeAuthorPopup } = modalStore.use(
+	() => h(LazyPopoverFriendPosts, {
+		author: selectedAuthor.value,
+		avatar: selectedAuthorAvatar.value,
+		link: selectedArticleLink.value,
+		articles: articlesByAuthor.value[selectedAuthor.value]?.slice(0, 10).map(article => ({
+			...article,
+			created: formatDate(article.created),
+		})) ?? [],
+	}),
+	{ unique: true },
+)
+
+onBeforeUnmount(closeAuthorPopup)
+
 function formatDate(dateString: string): string {
 	if (!dateString)
 		return ''
@@ -86,14 +102,13 @@ function loadMore(): void {
 }
 
 function showAuthorPosts(author: string, avatar: string, articleLink: string): void {
+	if (!author || !articlesByAuthor.value[author])
+		return
+
 	selectedAuthor.value = author
 	selectedAuthorAvatar.value = avatar
 	selectedArticleLink.value = articleLink
-	showAvatarPopup.value = true
-}
-
-function closeAvatarPopup(): void {
-	showAvatarPopup.value = false
+	openAuthorPopup()
 }
 
 onMounted(() => {
@@ -183,47 +198,6 @@ watch(allArticles, (articles) => {
 			<Icon class="error-container__icon" name="tabler:notes-off" />
 			<p>暂无文章数据</p>
 		</div>
-
-		<Transition name="modal">
-			<div
-				v-if="showAvatarPopup && selectedAuthor && articlesByAuthor[selectedAuthor] != null"
-				id="avatar-popup"
-				class="modal"
-				@click="closeAvatarPopup"
-			>
-				<div class="modal__content" @click.stop>
-					<div class="modal__header">
-						<NuxtImg :src="selectedAuthorAvatar" :alt="selectedAuthor" loading="lazy" class="modal__avatar-img" />
-						<h3>{{ selectedAuthor }}</h3>
-						<a :href="selectedArticleLink" target="_blank" rel="noopener noreferrer" class="modal__author-link">
-							<Icon name="lucide:external-link" />
-						</a>
-					</div>
-					<div class="modal__body">
-						<div class="timeline">
-							<div
-								v-for="(article, index) in articlesByAuthor[selectedAuthor]?.slice(0, 10) ?? []"
-								:key="article.id"
-								class="timeline__item"
-								data-transition-enter
-								:style="getFixedDelay(0.2 + index * 0.1)"
-							>
-								<span class="timeline__date">{{ formatDate(article.created) }}</span>
-								<a
-									:href="article.link" target="_blank" rel="noopener noreferrer" class="timeline__title"
-									@click="closeAvatarPopup"
-								>
-									{{ article.title }}
-								</a>
-							</div>
-						</div>
-					</div>
-					<div class="modal__avatar">
-						<NuxtImg :src="selectedAuthorAvatar" :alt="selectedAuthor" loading="lazy" />
-					</div>
-				</div>
-			</div>
-		</Transition>
 	</div>
 </div>
 </template>
@@ -398,171 +372,6 @@ watch(allArticles, (articles) => {
 	&:hover {
 		color: var(--c-text);
 	}
-}
-
-.modal {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	position: fixed;
-	inset: 0;
-	backdrop-filter: blur(20px);
-	z-index: var(--z-index-popover);
-
-	.modal__content {
-		position: relative;
-		overflow-y: auto;
-		width: 90%;
-		max-width: 500px;
-		max-height: 80vh;
-		max-height: 80dvh;
-		padding: 1.25rem;
-		border-radius: 12px;
-		box-shadow: 0 0 0 1px var(--c-bg-soft);
-		background-color: var(--c-bg-a50);
-
-		.modal__header {
-			display: flex;
-			align-items: center;
-			gap: 15px;
-			margin-bottom: 20px;
-			padding-bottom: 15px;
-			border-bottom: 1px solid var(--c-bg-soft);
-
-			img {
-				width: 50px;
-				height: 50px;
-				border-radius: 50%;
-				object-fit: cover;
-			}
-
-			h3 {
-				flex: 1;
-				margin: 0;
-				font-size: 1.2rem;
-			}
-
-			.modal__author-link {
-				padding: 8px;
-				border-radius: 8px;
-				color: var(--c-text-2);
-				transition: all var(--motion-duration);
-
-				&:hover {
-					background: var(--c-bg-soft);
-					color: var(--c-text);
-				}
-			}
-		}
-
-		.modal__body {
-			.timeline {
-				position: relative;
-
-				&::after {
-					content: "";
-					position: absolute;
-					top: 0.5rem;
-					bottom: 0;
-					left: 0.25rem;
-					width: 2px;
-					background-color: var(--c-bg-soft);
-					transform: translate(-50%);
-				}
-
-				.timeline__item {
-					position: relative;
-					padding: 0 0 1rem 1.25rem;
-					color: var(--c-text-2);
-					animation: float-in var(--motion-duration) var(--motion-easing) var(--delay) backwards;
-
-					&::before {
-						content: "";
-						position: absolute;
-						top: 0.5rem;
-						left: 0.25rem;
-						width: 0.5rem;
-						height: 0.5rem;
-						border-radius: 50%;
-						background-color: var(--c-text-2);
-						transform: translateY(-50%) translate(-50%);
-						transition: transform var(--motion-duration) ease, box-shadow var(--motion-duration) ease;
-						z-index: 1;
-					}
-
-					&:hover::before {
-						box-shadow: 0 0 8px var(--c-text-2);
-						transform: translateY(-50%) translate(-50%) scale(1.5);
-					}
-
-					.timeline__date {
-						display: block;
-						margin-bottom: 0.3rem;
-						font-family: var(--font-monospace);
-						font-size: 0.875rem;
-						color: var(--c-text-3);
-					}
-
-					.timeline__title {
-						line-height: 1.4;
-						color: var(--c-text-2);
-						transition: color var(--motion-duration);
-
-						&:hover {
-							color: var(--c-text);
-						}
-					}
-				}
-			}
-		}
-
-		.modal__avatar {
-			position: absolute;
-			overflow: hidden;
-			opacity: 0.6;
-			right: 1.25rem;
-			bottom: 1.25rem;
-			width: 128px;
-			height: 128px;
-			border-radius: 50%;
-			filter: blur(5px);
-			pointer-events: none;
-			z-index: 1;
-
-			img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-			}
-		}
-	}
-}
-
-.modal-enter-active,
-.modal-enter-active .modal__content,
-.modal-leave-active,
-.modal-leave-active .modal__content {
-	transition: all var(--motion-duration) ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-	opacity: 0;
-}
-
-.modal-enter-from .modal__content,
-.modal-leave-to .modal__content {
-	transform: translateY(-20px);
-}
-
-.modal-enter-to,
-.modal-leave-from {
-	opacity: 1;
-}
-
-.modal-enter-to .modal__content,
-.modal-leave-from .modal__content {
-	transform: translateY(0);
 }
 
 .error-container {

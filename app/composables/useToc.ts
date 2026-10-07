@@ -23,7 +23,7 @@ export function useToc(toc: MaybeRefOrGetter<Toc | undefined>, scrollableEl?: Ma
 
 	const tocOffsets = computedWithControl(
 		[toRef(toc), refDebounced(bodyHeight)],
-		() => document ? flattenToc(toValue(toc)?.links || []).reverse() : [],
+		() => flattenToc(toValue(toc)?.links || []).reverse(),
 	)
 
 	onMounted(() => nextTick(() => tocOffsets.trigger()))

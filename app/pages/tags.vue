@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { LocationQueryValue } from 'vue-router'
 import type { ArticleProps } from '~/types/article'
-import { orderBy } from 'es-toolkit/array'
 import { getFixedDelay } from '~/utils/anim'
 
 const route = useRoute()
@@ -14,12 +13,12 @@ const description = `${appConfig.title}的所有文章标签。`
 useSeoMeta({ title, description })
 
 const { data: listRaw } = await useAsyncData('posts:index', () => queryArticleIndex(), { default: () => [] })
+const { listSorted } = useArticleSort(listRaw, { initialOrder: 'date' })
 
 const articlesByTag = computed(() => {
 	const result: Record<string, ArticleProps[]> = {}
-	const articles = orderBy(listRaw.value, ['date'], ['desc'])
 
-	for (const article of articles) {
+	for (const article of listSorted.value) {
 		if (!article.tags)
 			continue
 
@@ -244,7 +243,7 @@ function clearSelectedTag() {
 	padding: 0 2px;
 	border-radius: 0.2rem;
 	background-color: var(--c-primary);
-	color: white;
+	color: var(--c-bg);
 }
 
 .tag-clear-btn {
