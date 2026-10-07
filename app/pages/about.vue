@@ -30,7 +30,7 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 	<WidgetCountdown />
 </template>
 
-<div class="page-about">
+<div class="page-about" data-transition-enter>
 	<section class="about-author">
 		<NuxtImg class="avatar" :src="author.avatar" :alt="author.name" />
 		<h2 class="text-creative">
@@ -72,10 +72,10 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .page-about {
 	margin: 1rem;
-	animation: float-in 0.2s backwards;
+	animation: float-in var(--motion-fade-duration) var(--motion-easing) backwards;
 }
 
 .about-author {
@@ -141,7 +141,7 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 
 			a {
 				color: var(--c-primary);
-				transition: color 0.2s;
+				transition: color var(--motion-fade-duration);
 
 				&:hover { color: var(--c-text); }
 			}
@@ -185,7 +185,7 @@ const contactLinks = computed(() => footer.iconNav.filter(({ text, url }) => {
 		background-color: var(--c-bg-2);
 		font-size: 0.85rem;
 		color: var(--c-text-2);
-		transition: background-color 0.2s, color 0.2s;
+		transition: background-color var(--motion-fade-duration), color var(--motion-fade-duration);
 
 		&:hover {
 			background-color: var(--c-bg-3);

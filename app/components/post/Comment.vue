@@ -245,7 +245,7 @@ onBeforeUnmount(() => {
 </section>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 #twikoo > p {
 	padding: 2rem;
 	text-align: center;
@@ -316,15 +316,15 @@ onBeforeUnmount(() => {
 	}
 }
 
-// ====== Twikoo 评论区 ======
+/* ====== Twikoo 评论区 ====== */
 :deep(#twikoo) {
-	// 管理面板
+	/* 管理面板 */
 	.tk-admin-container {
 		position: fixed;
 		z-index: calc(var(--z-index-popover) + 1);
 	}
 
-	// 头像
+	/* 头像 */
 	.tk-avatar {
 		overflow: hidden;
 		border-radius: 50%;
@@ -332,13 +332,13 @@ onBeforeUnmount(() => {
 		@supports (corner-shape: squircle) {
 			corner-shape: superellipse(1.2);
 		}
-
-		&.tk-clickable {
-			cursor: auto;
-		}
 	}
 
-	// ====== 提交区布局：输入框 → 信息栏 → 按钮 ======
+	.tk-avatar.tk-clickable {
+		cursor: auto;
+	}
+
+	/* ====== 提交区布局：输入框 → 信息栏 → 按钮 ====== */
 	.tk-submit {
 		display: flex;
 		flex-direction: column;
@@ -357,7 +357,7 @@ onBeforeUnmount(() => {
 
 			&:hover,
 			&:focus {
-				// 覆盖 Twikoo / 浏览器默认 hover/focus 描边，避免出现蓝色边框
+				/* 覆盖 Twikoo / 浏览器默认 hover/focus 描边，避免出现蓝色边框 */
 				border-color: transparent;
 				box-shadow: none;
 				outline: none;
@@ -366,8 +366,8 @@ onBeforeUnmount(() => {
 			}
 
 			&:focus-visible {
-				// 键盘用户保留可见焦点，但不用主色蓝边
-				// outline-offset 外扩：按钮嵌在 flex 容器内，内缩会被相邻元素或背景吞掉
+				/* 键盘用户保留可见焦点，但不用主色蓝边 */
+				/* outline-offset 外扩：按钮嵌在 flex 容器内，内缩会被相邻元素或背景吞掉 */
 				border-color: transparent;
 				box-shadow: none;
 				outline: 2px solid var(--c-text-3);
@@ -418,7 +418,7 @@ onBeforeUnmount(() => {
 		}
 	}
 
-	// 输入框
+	/* 输入框 */
 	.tk-submit .tk-input,
 	.tk-comments-search .el-input {
 		font-family: var(--font-monospace);
@@ -434,7 +434,7 @@ onBeforeUnmount(() => {
 		&:focus { border-color: var(--c-primary); }
 	}
 
-	// 按钮
+	/* 按钮 */
 	.tk-preview, .tk-cancel {
 		border: 1px solid var(--c-bg-soft);
 		border-radius: var(--comment-control-radius);
@@ -456,7 +456,7 @@ onBeforeUnmount(() => {
 		&:hover { opacity: 0.85; }
 	}
 
-	// 表情面板
+	/* 表情面板 */
 	.OwO .OwO-body {
 		overflow: hidden;
 		border: 1px solid var(--c-bg-soft);
@@ -519,23 +519,23 @@ onBeforeUnmount(() => {
 		}
 	}
 
-	// 内容区
+	/* 内容区 */
 	.tk-content {
 		overflow-wrap: anywhere;
 
-		// 防止 a 被 overflow hidden
+		/* 防止 a 被 overflow hidden */
 		margin: -0.2em;
 		padding: 0.2em;
 		font-size: 0.95rem;
 		line-height: 1.6;
 	}
 
-	// 回复折叠
+	/* 回复折叠 */
 	.tk-replies:not(.tk-replies-expand) {
 		mask-image: linear-gradient(black 50%, transparent);
 	}
 
-	// 加载更多
+	/* 加载更多 */
 	.tk-expand {
 		padding: 0.375rem 1rem;
 		border-radius: var(--comment-control-radius);
@@ -558,7 +558,7 @@ onBeforeUnmount(() => {
 	}
 }
 
-// ====== 评论内容富文本 ======
+/* ====== 评论内容富文本 ====== */
 :deep(:where(.tk-preview-container, .tk-content)) {
 	pre {
 		overflow: auto;
@@ -582,14 +582,6 @@ onBeforeUnmount(() => {
 
 	p {
 		margin: 0.2em 0;
-	}
-
-	img:not(.tk-owo-emotion, [alt^=":"][alt$=":"], [title^=":"][title$=":"]) {
-		width: auto;
-		height: auto;
-		max-width: min(100%, 28rem);
-		max-height: 28rem;
-		border-radius: var(--comment-control-radius);
 	}
 
 	.tk-owo-emotion,
@@ -623,6 +615,14 @@ onBeforeUnmount(() => {
 		font-size: 0.9rem;
 		color: var(--c-text-2);
 	}
+}
+
+:deep(:where(.tk-preview-container, .tk-content) img:not(.tk-owo-emotion, [alt^=":"][alt$=":"], [title^=":"][title$=":"])) {
+	width: auto;
+	height: auto;
+	max-width: min(100%, 28rem);
+	max-height: 28rem;
+	border-radius: var(--comment-control-radius);
 }
 
 :deep(.tk-content img:not(.tk-owo-emotion, [alt^=":"][alt$=":"], [title^=":"][title$=":"])) {

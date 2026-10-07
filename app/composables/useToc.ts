@@ -1,5 +1,6 @@
 import type { Toc, TocLink } from '@nuxt/content'
 import type { MaybeComputedElementRef } from '@vueuse/core'
+import { defaultDocument as document, defaultWindow as window } from '@vueuse/core'
 
 interface TocList {
 	id: string
@@ -12,7 +13,8 @@ export function useToc(toc: MaybeRefOrGetter<Toc | undefined>, scrollableEl?: Ma
 
 	function flattenToc(tocTree: TocLink[], tocList: TocList[] = []) {
 		tocTree.forEach(({ id, children }) => {
-			const headingOffset = document?.getElementById(id)?.offsetTop
+			const heading = document?.getElementById(id)
+			const headingOffset = heading ? heading.getBoundingClientRect().top + (window?.scrollY ?? 0) : undefined
 			tocList.push({ id, offsetTop: headingOffset })
 			children && flattenToc(children, tocList)
 		})
@@ -20,9 +22,11 @@ export function useToc(toc: MaybeRefOrGetter<Toc | undefined>, scrollableEl?: Ma
 	}
 
 	const tocOffsets = computedWithControl(
-		refDebounced(bodyHeight),
+		[toRef(toc), refDebounced(bodyHeight)],
 		() => document ? flattenToc(toValue(toc)?.links || []).reverse() : [],
 	)
+
+	onMounted(() => nextTick(() => tocOffsets.trigger()))
 
 	function getActiveHeading() {
 		const scrollMargin = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('scroll-margin-top'))
@@ -32,7 +36,7 @@ export function useToc(toc: MaybeRefOrGetter<Toc | undefined>, scrollableEl?: Ma
 	}
 
 	const activeHeadingId = computedWithControl(
-		refThrottled(scrollY, undefined, true),
+		[refThrottled(scrollY, undefined, true), tocOffsets],
 		() => document && getActiveHeading(),
 	)
 

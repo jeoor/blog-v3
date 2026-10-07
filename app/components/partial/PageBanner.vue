@@ -20,7 +20,7 @@ defineProps<{
 </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .page-banner {
 	position: relative;
 	overflow: hidden;

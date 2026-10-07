@@ -129,7 +129,7 @@ watch(allArticles, (articles) => {
 	</div>
 </ZPageBanner>
 
-<div class="page-fcircle">
+<div class="page-fcircle" data-transition-enter>
 	<div class="fcircle">
 		<div v-if="randomArticle" class="fcircle__random-article">
 			<div class="fcircle__random-title">
@@ -205,6 +205,7 @@ watch(allArticles, (articles) => {
 								v-for="(article, index) in articlesByAuthor[selectedAuthor]?.slice(0, 10) ?? []"
 								:key="article.id"
 								class="timeline__item"
+								data-transition-enter
 								:style="getFixedDelay(0.2 + index * 0.1)"
 							>
 								<span class="timeline__date">{{ formatDate(article.created) }}</span>
@@ -227,10 +228,10 @@ watch(allArticles, (articles) => {
 </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .page-fcircle {
 	margin: 1rem;
-	animation: float-in 0.2s backwards;
+	animation: float-in var(--motion-fade-duration) var(--motion-easing) backwards;
 }
 
 .fcircle-stats {
@@ -297,7 +298,7 @@ watch(allArticles, (articles) => {
 	width: 100%;
 
 	&.article-item--new {
-		animation: float-in 0.2s var(--delay) backwards;
+		animation: float-in var(--motion-fade-duration) var(--motion-easing) var(--delay) backwards;
 	}
 
 	.article-item__image {
@@ -313,7 +314,7 @@ watch(allArticles, (articles) => {
 			opacity: 0.8;
 			width: 100%;
 			height: 100%;
-			transition: all 0.2s;
+			transition: all var(--motion-fade-duration);
 			object-fit: cover;
 		}
 	}
@@ -350,7 +351,7 @@ watch(allArticles, (articles) => {
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			color: var(--c-text-2);
-			transition: color 0.2s;
+			transition: color var(--motion-fade-duration);
 		}
 
 		.article-item__date {
@@ -375,7 +376,7 @@ watch(allArticles, (articles) => {
 	box-shadow: none;
 	background-color: unset;
 	color: var(--c-text-2);
-	transition: all 0.2s ease;
+	transition: all var(--motion-fade-duration) ease;
 	cursor: pointer;
 
 	&:hover {
@@ -406,7 +407,7 @@ watch(allArticles, (articles) => {
 	position: fixed;
 	inset: 0;
 	backdrop-filter: blur(20px);
-	z-index: 100;
+	z-index: var(--z-index-popover);
 
 	.modal__content {
 		position: relative;
@@ -414,6 +415,7 @@ watch(allArticles, (articles) => {
 		width: 90%;
 		max-width: 500px;
 		max-height: 80vh;
+		max-height: 80dvh;
 		padding: 1.25rem;
 		border-radius: 12px;
 		box-shadow: 0 0 0 1px var(--c-bg-soft);
@@ -444,7 +446,7 @@ watch(allArticles, (articles) => {
 				padding: 8px;
 				border-radius: 8px;
 				color: var(--c-text-2);
-				transition: all 0.3s;
+				transition: all var(--motion-duration);
 
 				&:hover {
 					background: var(--c-bg-soft);
@@ -472,7 +474,7 @@ watch(allArticles, (articles) => {
 					position: relative;
 					padding: 0 0 1rem 1.25rem;
 					color: var(--c-text-2);
-					animation: float-in 0.3s var(--delay) backwards;
+					animation: float-in var(--motion-duration) var(--motion-easing) var(--delay) backwards;
 
 					&::before {
 						content: "";
@@ -484,7 +486,7 @@ watch(allArticles, (articles) => {
 						border-radius: 50%;
 						background-color: var(--c-text-2);
 						transform: translateY(-50%) translate(-50%);
-						transition: transform 0.3s ease, box-shadow 0.3s ease;
+						transition: transform var(--motion-duration) ease, box-shadow var(--motion-duration) ease;
 						z-index: 1;
 					}
 
@@ -504,7 +506,7 @@ watch(allArticles, (articles) => {
 					.timeline__title {
 						line-height: 1.4;
 						color: var(--c-text-2);
-						transition: color 0.3s;
+						transition: color var(--motion-duration);
 
 						&:hover {
 							color: var(--c-text);
@@ -540,7 +542,7 @@ watch(allArticles, (articles) => {
 .modal-enter-active .modal__content,
 .modal-leave-active,
 .modal-leave-active .modal__content {
-	transition: all 0.3s ease;
+	transition: all var(--motion-duration) ease;
 }
 
 .modal-enter-from,

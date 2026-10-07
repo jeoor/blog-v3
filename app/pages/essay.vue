@@ -104,11 +104,12 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 
 <ZPageBanner :title :description :image />
 
-<div class="essay-list">
+<div class="essay-list" data-transition-enter>
 	<div
 		v-for="{ essay, index, key, images } in essayList"
 		:key="key"
 		class="essay-item"
+		data-transition-enter
 		:style="getFixedDelay(index * 0.05)"
 	>
 		<div class="essay-meta">
@@ -171,10 +172,10 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 <PostComment />
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .essay-list {
 	margin: 1rem;
-	animation: float-in 0.2s backwards;
+	animation: float-in var(--motion-fade-duration) var(--motion-easing) backwards;
 
 	.essay-item {
 		display: flex;
@@ -184,7 +185,7 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 		padding: 1rem;
 		border-radius: 8px;
 		box-shadow: 0 0 0 1px var(--c-bg-soft);
-		animation: float-in 0.3s backwards;
+		animation: float-in var(--motion-duration) var(--motion-easing) backwards;
 
 		.essay-meta {
 			display: flex;
@@ -226,7 +227,7 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 				padding: 0.1em 0.2em;
 				background: linear-gradient(var(--c-primary-soft), var(--c-primary-soft)) no-repeat center bottom / 100% 0.1em;
 				color: var(--c-primary);
-				transition: all 0.2s;
+				transition: all var(--motion-fade-duration);
 
 				&:hover {
 					border-radius: 0.3em;
@@ -261,7 +262,7 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 				border-radius: 8px;
 
 				:deep(img) {
-					transition: transform 0.3s;
+					transition: transform var(--motion-duration);
 
 					&:hover {
 						transform: scale(1.05);
@@ -320,7 +321,7 @@ function getImageLayoutClass(images?: EssayImage[]): 'images--single' | 'images-
 				padding: 2px 4px;
 				border-radius: 4px;
 				background-color: var(--c-bg-2);
-				transition: all 0.2s;
+				transition: all var(--motion-fade-duration);
 				cursor: pointer;
 
 				&:hover {

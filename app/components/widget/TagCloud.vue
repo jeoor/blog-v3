@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { data: articles } = await useAsyncData('widget-tags', () => getArticleIndexOptions(), { default: () => [] })
+const { data: articles } = await useAsyncData('posts:index', () => queryArticleIndex(), { default: () => [] })
 
 const tagsWithCount = computed(() => {
 	const map = new Map<string, number>()
@@ -40,7 +40,7 @@ const tagsWithCount = computed(() => {
 </BlogWidget>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .tag-cloud {
 	display: flex;
 	flex-wrap: wrap;
@@ -58,7 +58,7 @@ const tagsWithCount = computed(() => {
 	line-height: 1.4;
 	text-decoration: none;
 	color: var(--c-text-2);
-	transition: background-color 0.2s, color 0.2s;
+	transition: background-color var(--motion-fade-duration), color var(--motion-fade-duration);
 
 	&:hover {
 		background-color: var(--c-bg-3);

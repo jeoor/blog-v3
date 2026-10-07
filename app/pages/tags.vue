@@ -6,13 +6,14 @@ import { getFixedDelay } from '~/utils/anim'
 
 const route = useRoute()
 const router = useRouter()
+const tagQuery = useHydratedQuery('tag', useRouteQuery('tag', ''))
 
 const appConfig = useAppConfig()
 const title = '标签'
 const description = `${appConfig.title}的所有文章标签。`
 useSeoMeta({ title, description })
 
-const { data: listRaw } = await useAsyncData('posts:index', () => getArticleIndexOptions(), { default: () => [] })
+const { data: listRaw } = await useAsyncData('posts:index', () => queryArticleIndex(), { default: () => [] })
 
 const articlesByTag = computed(() => {
 	const result: Record<string, ArticleProps[]> = {}
@@ -45,23 +46,26 @@ function normalizeTagQuery(tag: LocationQueryValue | LocationQueryValue[] | unde
 const sortedTags = computed(() => Object.keys(articlesByTag.value)
 	.sort((a, b) => getTagCount(b) - getTagCount(a)))
 
+const tagCountRange = computed(() => {
+	const counts = Object.values(articlesByTag.value).map(articles => articles.length)
+	return counts.length ? { min: Math.min(...counts), max: Math.max(...counts) } : undefined
+})
+
 const selectedTag = computed(() => {
-	const tag = normalizeTagQuery(route.query.tag)
+	const tag = normalizeTagQuery(tagQuery.value)
 	return sortedTags.value.includes(tag) ? tag : ''
 })
 
 function getTagSize(count: number): 'small' | 'medium' | 'large' {
-	const counts = Object.values(articlesByTag.value).map(articles => articles.length)
-	if (!counts.length)
+	if (!tagCountRange.value)
 		return 'medium'
 
-	const maxCount = Math.max(...counts)
-	const minCount = Math.min(...counts)
-	const range = maxCount - minCount
+	const { min, max } = tagCountRange.value
+	const range = max - min
 	if (range === 0)
 		return 'medium'
 
-	const ratio = (count - minCount) / range
+	const ratio = (count - min) / range
 	if (ratio < 0.33)
 		return 'small'
 	if (ratio < 0.66)
@@ -88,7 +92,7 @@ function clearSelectedTag() {
 	<WidgetCountdown />
 </template>
 
-<div class="tags">
+<div class="tags" data-transition-enter>
 	<div v-if="selectedTag" class="tag-selected">
 		<div class="tag-selected-header">
 			<h1 class="tag-selected-title">
@@ -103,17 +107,18 @@ function clearSelectedTag() {
 			共 {{ getTagCount(selectedTag) }} 篇文章
 		</div>
 
-		<menu class="archive-list">
-			<TransitionGroup appear name="float-in">
+		<UtilListTransition v-slot="{ items }" :items="articlesByTag[selectedTag] ?? []">
+			<menu class="archive-list">
 				<PostArchive
-					v-for="article, index in articlesByTag[selectedTag] ?? []"
+					v-for="article, index in items"
 					:key="article.path"
+					:data-list-key="article.path"
 					v-bind="article"
 					:to="article.path"
 					:style="getFixedDelay(index * 0.03)"
 				/>
-			</TransitionGroup>
-		</menu>
+			</menu>
+		</UtilListTransition>
 	</div>
 
 	<div v-else class="tag-cloud">
@@ -141,11 +146,11 @@ function clearSelectedTag() {
 </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .tags {
 	margin: 1rem;
 	padding: 2rem 0;
-	animation: float-in 0.2s backwards;
+	animation: float-in var(--motion-fade-duration) var(--motion-easing) backwards;
 }
 
 .tag-cloud {
@@ -252,7 +257,7 @@ function clearSelectedTag() {
 	border-radius: 50%;
 	background-color: var(--c-bg-2);
 	color: var(--c-text-2);
-	transition: all 0.2s ease;
+	transition: all var(--motion-fade-duration) ease;
 	cursor: pointer;
 
 	&:hover {

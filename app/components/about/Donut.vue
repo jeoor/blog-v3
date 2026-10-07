@@ -114,7 +114,7 @@ onMounted(() => {
 </figure>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .about-donut {
 	margin: 0 0 2.5rem;
 	text-align: center;
@@ -158,13 +158,13 @@ onMounted(() => {
 	}
 }
 
-@media (max-width: $breakpoint-mobile) {
+@media (max-width: 768px) {
 	.donut-frame {
 		font-size: 0.43rem;
 	}
 }
 
-@media (max-width: $breakpoint-phone) {
+@media (max-width: 528px) {
 	.donut-frame {
 		font-size: 0.34rem;
 	}

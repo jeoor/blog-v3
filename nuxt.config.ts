@@ -52,12 +52,12 @@ export default defineNuxtConfig({
 	],
 
 	css: [
-		'@/assets/css/animation.scss',
-		'@/assets/css/article.scss',
-		'@/assets/css/color.scss',
-		'@/assets/css/font.scss',
-		'@/assets/css/main.scss',
-		'@/assets/css/reusable.scss',
+		'@/assets/css/animation.css',
+		'@/assets/css/article.css',
+		'@/assets/css/color.css',
+		'@/assets/css/font.css',
+		'@/assets/css/main.css',
+		'@/assets/css/reusable.css',
 	],
 
 	// @keep-sorted
@@ -107,6 +107,12 @@ export default defineNuxtConfig({
 		},
 	},
 
+	postcss: {
+		plugins: {
+			'postcss-nesting': {},
+		},
+	},
+
 	vite: {
 		build: {
 			rollupOptions: {
@@ -148,13 +154,6 @@ export default defineNuxtConfig({
 				},
 			},
 		},
-		css: {
-			preprocessorOptions: {
-				scss: {
-					additionalData: '@use "@/assets/css/_variable.scss" as *;',
-				},
-			},
-		},
 		define: {
 			/** 在生产环境启用 Vue DevTools */
 			// __VUE_PROD_DEVTOOLS__: 'true',
@@ -175,7 +174,6 @@ export default defineNuxtConfig({
 		'@bikariya/image-viewer',
 		'@bikariya/modals',
 		'@bikariya/shiki',
-		'@nuxt/a11y',
 		'@nuxt/content',
 		'@nuxt/hints',
 		'@nuxt/icon',

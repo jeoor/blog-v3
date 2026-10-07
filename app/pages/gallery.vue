@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import type { GalleryFolder, GalleryImage } from '~/types/gallery'
+import { shuffle } from 'es-toolkit/array'
 import galleryBase from '~/gallery'
-import { getFixedDelay } from '~/utils/anim'
 
-const route = useRoute()
 const router = useRouter()
+const folderQuery = useHydratedQuery('c', useRouteQuery('c', ''))
 
 const title = '相册'
 const description = '用镜头记录生活。'
 const image = '/banners/gallery-banner.webp'
 useSeoMeta({ title, description, ogImage: image })
 
-const hydrated = ref(false)
+const mounted = useMounted()
 
 function getImageUrl(image?: GalleryImage): string {
 	if (!image)
@@ -45,7 +45,7 @@ function resolveFolderId(value?: string | string[]): string {
 	return gallery.some(folder => folder.id === target) ? target : ''
 }
 
-const activeFolderId = computed(() => resolveFolderId(route.query.c as string | string[]))
+const activeFolderId = computed(() => resolveFolderId(folderQuery.value))
 const activeFolder = computed(() => gallery.find(folder => folder.id === activeFolderId.value))
 const showingFolder = computed(() => Boolean(activeFolder.value))
 const shuffledImages = ref<GalleryImage[]>([])
@@ -56,37 +56,14 @@ function getImageAlt(image: GalleryImage, index: number): string {
 	return `${activeFolder.value?.name || '相册'}-${index + 1}`
 }
 
-function shuffleList<T>(items: T[]): T[] {
-	const list = [...items]
-	for (let i = list.length - 1; i > 0; i -= 1) {
-		const randomIndex = Math.floor(Math.random() * (i + 1))
-		const current = list[i]
-		list[i] = list[randomIndex]!
-		list[randomIndex] = current!
-	}
-	return list
-}
-
-function refreshOrder(): void {
-	shuffledImages.value = shuffleList(activeFolder.value?.images || [])
-}
-
 function getFolderPath(id: string): { path: string, query: { c: string } } {
 	return { path: '/gallery', query: { c: id } }
 }
 
-watch(activeFolderId, () => {
-	if (!hydrated.value) {
-		shuffledImages.value = [...(activeFolder.value?.images || [])]
-		return
-	}
-	refreshOrder()
+watch([activeFolderId, mounted], () => {
+	const images = activeFolder.value?.images || []
+	shuffledImages.value = mounted.value ? shuffle(images) : [...images]
 }, { immediate: true })
-
-onMounted(() => {
-	hydrated.value = true
-	refreshOrder()
-})
 
 function backToFolders(): void {
 	router.replace('/gallery')
@@ -103,7 +80,7 @@ function backToFolders(): void {
 
 <ZPageBanner :title :description :image />
 
-<div class="gallery-page">
+<div class="gallery-page" data-transition-enter>
 	<div v-if="!showingFolder" class="folder-panel">
 		<header class="panel-head">
 			<h2>分类</h2>
@@ -112,11 +89,10 @@ function backToFolders(): void {
 
 		<div class="folder-grid">
 			<NuxtLink
-				v-for="(folder, index) in gallery"
+				v-for="folder in gallery"
 				:key="folder.id"
 				class="folder-card"
 				:to="getFolderPath(folder.id)"
-				:style="getFixedDelay(index * 0.05)"
 			>
 				<div class="folder-cover">
 					<NuxtImg
@@ -155,7 +131,6 @@ function backToFolders(): void {
 				v-for="(pic, index) in shuffledImages"
 				:key="`${getImageUrl(pic)}-${index}`"
 				class="image-card"
-				:style="getFixedDelay((index % 12) * 0.04)"
 			>
 				<Pic
 					class="image"
@@ -172,10 +147,10 @@ function backToFolders(): void {
 </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .gallery-page {
 	margin: 1rem;
-	animation: float-in 0.2s backwards;
+	animation: float-in var(--motion-fade-duration) var(--motion-easing) backwards;
 }
 
 .folder-panel,
@@ -208,7 +183,7 @@ function backToFolders(): void {
 	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 	gap: 0.8rem;
 
-	@media (max-width: $breakpoint-mobile) {
+	@media (max-width: 768px) {
 		grid-template-columns: 1fr;
 	}
 }
@@ -221,7 +196,7 @@ function backToFolders(): void {
 	text-align: left;
 	text-decoration: none;
 	color: inherit;
-	transition: transform var(--delay), box-shadow var(--delay);
+	transition: transform var(--motion-fade-duration), box-shadow var(--motion-fade-duration);
 
 	&:hover {
 		transform: translateY(-2px);
@@ -264,7 +239,7 @@ function backToFolders(): void {
 	gap: 0.8rem;
 	margin-bottom: 1rem;
 
-	@media (max-width: $breakpoint-mobile) {
+	@media (max-width: 768px) {
 		flex-wrap: wrap;
 	}
 
@@ -289,7 +264,7 @@ function backToFolders(): void {
 	background-color: var(--c-bg-2);
 	font-size: 0.85rem;
 	color: var(--c-text-2);
-	transition: background-color 0.2s, color 0.2s;
+	transition: background-color var(--motion-fade-duration), color var(--motion-fade-duration);
 
 	&:hover {
 		background-color: var(--c-bg-3);
@@ -301,7 +276,7 @@ function backToFolders(): void {
 	column-count: 3;
 	column-gap: 0.8rem;
 
-	@media (max-width: $breakpoint-mobile) {
+	@media (max-width: 768px) {
 		column-count: 2;
 	}
 }
@@ -311,7 +286,7 @@ function backToFolders(): void {
 	margin-bottom: 0.8rem;
 	border-radius: 0.6rem;
 	box-shadow: 0 0 0 1px var(--c-bg-soft);
-	transition: transform var(--delay), box-shadow var(--delay);
+	transition: transform var(--motion-fade-duration), box-shadow var(--motion-fade-duration);
 	break-inside: avoid;
 
 	&:hover {

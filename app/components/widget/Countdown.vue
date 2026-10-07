@@ -10,8 +10,10 @@ const units = [
 ] as const
 
 const targetName = '春节'
+const initialNow = useState('countdown:now', () => Date.now())
+const mounted = useMounted()
 const rawNow = useNow({ interval: 10 * 60 * 1000 })
-const currentDate = computed(() => new Date(rawNow.value))
+const currentDate = computed(() => new Date(mounted.value ? rawNow.value : initialNow.value))
 
 const targetDate = computed(() => resolveSpringFestivalDate(currentDate.value))
 const daysUntil = computed(() => {
@@ -80,7 +82,7 @@ const targetDateText = computed(() => {
 </BlogWidget>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .countdown {
 	display: flex;
 	gap: 0.8rem;
@@ -163,7 +165,7 @@ const targetDateText = computed(() => {
 	height: 100%;
 	border-radius: 8px;
 	background-color: var(--c-primary);
-	transition: width 0.3s;
+	transition: width var(--motion-duration);
 }
 
 .percent,
@@ -174,7 +176,7 @@ const targetDateText = computed(() => {
 	font-weight: 600;
 	color: var(--c-text-2);
 	transform: translateY(-50%);
-	transition: opacity 0.3s, transform 0.3s;
+	transition: opacity var(--motion-duration), transform 0.3s;
 }
 
 .percent {
@@ -203,7 +205,7 @@ const targetDateText = computed(() => {
 	}
 }
 
-@media (max-width: $breakpoint-mobile) {
+@media (max-width: 768px) {
 	.countdown {
 		flex-direction: column;
 	}
