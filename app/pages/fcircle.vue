@@ -31,8 +31,9 @@ interface FriendArticle {
 const API_URL = 'https://fc.kayro.cn/'
 const PAGE_SIZE = 20
 
-const { data: fcData, status } = useFetch<FcApiData>(`${API_URL}all.json`, {
+const { data: fcData, status, execute } = useFetch<FcApiData>(`${API_URL}all.json`, {
 	default: () => ({ article_data: [] }),
+	immediate: false,
 	server: false,
 })
 
@@ -50,7 +51,7 @@ const allArticles = computed<FriendArticle[]>(() => fcData.value.article_data.ma
 	created: item.created,
 	avatar: item.avatar,
 })))
-const isLoading = computed(() => status.value === 'pending')
+const isLoading = computed(() => status.value === 'idle' || status.value === 'pending')
 const articlesByAuthor = computed(() => allArticles.value.reduce<Record<string, FriendArticle[]>>((acc, article) => {
 	const list = acc[article.author]
 	if (list)
@@ -111,10 +112,7 @@ function showAuthorPosts(author: string, avatar: string, articleLink: string): v
 	openAuthorPopup()
 }
 
-onMounted(() => {
-	if (allArticles.value.length)
-		refreshRandomArticle()
-})
+onMounted(() => execute())
 
 watch(allArticles, (articles) => {
 	if (articles.length && !randomArticle.value)

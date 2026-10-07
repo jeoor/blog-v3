@@ -226,13 +226,4 @@ defineEmits<ModalEmits>()
 .modal-leave-from .modal__content {
 	transform: translateY(0);
 }
-
-@media (prefers-reduced-motion: reduce) {
-	.modal-enter-active,
-	.modal-leave-active,
-	.modal-enter-active .modal__content,
-	.modal-leave-active .modal__content {
-		transition: none;
-	}
-}
 </style>

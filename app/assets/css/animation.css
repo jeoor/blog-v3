@@ -184,7 +184,16 @@
 	.float-in-enter-active,
 	.float-in-leave-active,
 	.float-in-move,
-	[data-transition-enter] {
+	/* 自定义页面与友圈弹层 */
+	.page-about,
+	.essay-list,
+	.essay-list .essay-item,
+	.gallery-page,
+	.tags,
+	.page-fcircle,
+	#avatar-popup,
+	#avatar-popup .modal__content,
+	#avatar-popup .timeline__item {
 		transition: none !important;
 		animation: none !important;
 	}

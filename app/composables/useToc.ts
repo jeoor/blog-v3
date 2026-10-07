@@ -1,6 +1,5 @@
 import type { Toc, TocLink } from '@nuxt/content'
 import type { MaybeComputedElementRef } from '@vueuse/core'
-import { defaultDocument as document, defaultWindow as window } from '@vueuse/core'
 
 interface TocList {
 	id: string
