@@ -1,0 +1,375 @@
+/* ====== Twikoo 评论区 ====== */
+:deep(#twikoo) {
+	/* 管理面板 */
+	.tk-admin-container {
+		position: fixed;
+		z-index: calc(var(--z-index-popover) + 1);
+	}
+
+	/* 头像 */
+	.tk-avatar {
+		overflow: hidden;
+		border-radius: 50%;
+
+		@supports (corner-shape: squircle) {
+			corner-shape: superellipse(1.2);
+		}
+	}
+
+	.tk-avatar.tk-clickable {
+		cursor: auto;
+	}
+
+	/* ====== 提交区布局：输入框 → 信息栏 → 按钮 ====== */
+	.tk-submit {
+		display: flex;
+		flex-direction: column;
+
+		.tk-avatar,
+		a.tk-submit-action-icon.__markdown { display: none; }
+
+		.tk-submit-action-icon {
+			border: 1px solid transparent;
+			border-radius: var(--comment-control-radius);
+			box-shadow: none;
+			outline: none;
+			background-color: transparent;
+			color: var(--c-text-2);
+			transition: background-color var(--motion-fade-duration), color var(--motion-fade-duration);
+
+			&:hover,
+			&:focus {
+				/* 覆盖 Twikoo / 浏览器默认 hover/focus 描边，避免出现蓝色边框 */
+				border-color: transparent;
+				box-shadow: none;
+				outline: none;
+				background-color: var(--c-bg-3);
+				color: var(--c-text);
+			}
+
+			&:focus-visible {
+				/* 键盘用户保留可见焦点，但不用主色蓝边 */
+				/* outline-offset 外扩：按钮嵌在 flex 容器内，内缩会被相邻元素或背景吞掉 */
+				border-color: transparent;
+				box-shadow: none;
+				outline: 2px solid var(--c-text-3);
+				outline-offset: 2px;
+				background-color: var(--c-bg-3);
+				color: var(--c-text);
+			}
+		}
+
+		.tk-preview-container {
+			order: 4;
+			margin: 0.5rem 0;
+			border-color: var(--c-border);
+			border-radius: var(--comment-control-radius);
+		}
+
+		.tk-row.actions {
+			justify-content: flex-end;
+			order: 3;
+			margin: 0 0 0.5rem;
+		}
+
+		.tk-textarea {
+			order: 1;
+			margin-bottom: 0.5rem;
+
+			.tk-textarea__inner { padding: 0.8rem; }
+		}
+
+		.tk-meta-input {
+			order: 2;
+
+			.tk-input--group {
+				border: 1px solid var(--c-border);
+				border-radius: var(--comment-control-radius);
+				background: var(--c-bg-2);
+				transition: border-color var(--motion-fade-duration);
+
+				&:focus-within { border-color: var(--c-primary); }
+			}
+
+			.tk-input__inner {
+				min-width: 0;
+				border: none;
+				border-radius: 0 var(--comment-control-radius) var(--comment-control-radius) 0;
+			}
+
+			.tk-input-group__prepend {
+				border: none;
+				border-radius: var(--comment-control-radius) 0 0 var(--comment-control-radius);
+				background: var(--c-bg-1);
+				color: var(--c-text-2);
+			}
+		}
+	}
+
+	/* 输入框 */
+	.tk-submit .tk-textarea,
+	.tk-comments-search .tk-input {
+		font-family: var(--font-monospace);
+
+		.tk-input__inner { font-family: inherit; }
+	}
+
+	.tk-comments .tk-input__inner {
+		border: 1px solid var(--c-border);
+		border-radius: var(--comment-control-radius);
+		background-color: var(--c-bg-2);
+		transition: border-color var(--motion-fade-duration);
+
+		&:focus { border-color: var(--c-primary); }
+	}
+
+	.tk-comments .tk-input__count {
+		color: var(--c-text-3);
+	}
+
+	/* 公开评论区共用控件；管理面板保留 Twikoo 自带的深色外观。 */
+	.tk-comments .tk-button {
+		border: 1px solid var(--c-bg-soft);
+		border-radius: var(--comment-control-radius);
+		background-color: var(--ld-bg-card);
+		color: var(--c-text-1);
+		transition: background-color var(--motion-fade-duration);
+
+		&:where(:hover, :focus-visible, :active) { background-color: var(--c-bg-2); }
+	}
+
+	.tk-comments .tk-button--primary {
+		border-color: var(--c-primary);
+		background-color: var(--c-primary);
+		color: var(--c-bg);
+
+		&:where(:not(.is-disabled):hover) { opacity: 0.85; }
+	}
+
+	& :is(button, a, [tabindex="0"]):focus-visible {
+		outline: 2px solid var(--c-primary);
+		outline-offset: 2px;
+	}
+
+	/* 排序、点赞、回复和搜索状态跟随站点主题。 */
+	.tk-action-link,
+	.tk-action-icon,
+	.tk-icon.__comments,
+	.tk-sort-item:is(.__active, :focus) {
+		color: var(--c-primary);
+	}
+
+	.tk-sort-item {
+		color: var(--c-text-2);
+	}
+
+	.tk-icon.__comments.__active {
+		box-shadow: 0 0 0 0.2rem var(--c-primary);
+		background: var(--c-primary);
+		color: var(--c-bg);
+	}
+
+	/* 加载遮罩只覆盖所属区域，避免压过博客弹层和管理面板。 */
+	.tk-loading-mask {
+		background: var(--c-bg-a80);
+		z-index: 1;
+	}
+
+	.tk-loading-spinner .path {
+		stroke: var(--c-primary);
+	}
+
+	.tk-loading-spinner__circle,
+	.tk-loading-text {
+		color: var(--c-primary);
+	}
+
+	.tk-error {
+		border-color: var(--c-error);
+		border-radius: var(--comment-control-radius);
+		background: var(--c-error-soft);
+		color: var(--c-error);
+	}
+
+	.tk-pagination-pager {
+		border-radius: var(--comment-control-radius);
+	}
+
+	.tk-pagination-pager.__current {
+		background: var(--c-primary);
+		color: var(--c-bg);
+	}
+
+	/* 表情面板 */
+	.OwO .OwO-body {
+		overflow: hidden;
+		border: 1px solid var(--c-bg-soft);
+		border-radius: var(--comment-control-radius);
+		background-color: var(--ld-bg-card);
+		color: var(--c-text);
+		z-index: var(--z-index-popover);
+
+		.OwO-items { padding: 0.4rem; }
+
+		.OwO-item {
+			transition: transform var(--motion-fade-duration);
+
+			&:hover {
+				transform: scale(1.2);
+			}
+		}
+
+		.OwO-bar {
+			border-top: 1px solid var(--c-border);
+			background-color: var(--c-bg-2);
+		}
+
+		.OwO-packages {
+			padding: 0.25rem;
+
+			li {
+				color: var(--c-text-2);
+
+				&:hover {
+					background-color: var(--c-bg-3);
+					color: var(--c-text);
+				}
+			}
+
+			.OwO-package-active,
+			li[aria-selected="true"] {
+				background-color: var(--c-primary-soft);
+				color: var(--c-text);
+			}
+		}
+	}
+
+	.tk-time {
+		color: var(--c-text-3);
+	}
+
+	.tk-comments-title, .tk-nick {
+		font-family: var(--font-creative);
+	}
+
+	.tk-nick-link { color: var(--c-primary); }
+
+	.tk-comment .tk-main {
+		.tk-meta { margin-bottom: 0.3rem; }
+
+		.tk-extras {
+			margin-top: 0.5rem;
+			font-size: 0.75rem;
+			color: var(--c-text-3);
+		}
+	}
+
+	/* 内容区 */
+	.tk-content {
+		overflow-wrap: anywhere;
+
+		/* 防止 a 被 overflow hidden */
+		margin: -0.2em;
+		padding: 0.2em;
+		font-size: 0.95rem;
+		line-height: 1.6;
+	}
+
+	/* 回复折叠 */
+	.tk-replies:not(.tk-replies-expand) {
+		mask-image: linear-gradient(black 50%, transparent);
+	}
+
+	/* 加载更多 */
+	.tk-expand {
+		padding: 0.375rem 1rem;
+		border-radius: var(--comment-control-radius);
+		background-color: var(--c-bg-2);
+		color: var(--c-text-1);
+		transition: background-color var(--motion-fade-duration);
+
+		&:hover { background-color: var(--c-bg-3); }
+	}
+
+	.tk-footer {
+		font-size: 0.75rem;
+		color: var(--c-text-3);
+	}
+
+	.tippy-svg-arrow > svg {
+		fill: inherit;
+		width: auto;
+		height: auto;
+	}
+}
+
+/* ====== 评论内容富文本 ====== */
+:deep(:where(.tk-preview-container, .tk-content)) {
+	pre {
+		overflow: auto;
+		max-width: 100%;
+		border-radius: var(--comment-control-radius);
+		font-size: 0.875rem;
+	}
+
+	a {
+		margin: -0.1em -0.2em;
+		padding: 0.1em 0.2em;
+		background: linear-gradient(var(--c-primary-soft), var(--c-primary-soft)) no-repeat center bottom / 100% 0.1em;
+		color: var(--c-primary);
+		transition: background-size var(--motion-fade-duration), border-radius var(--motion-fade-duration);
+
+		&:hover {
+			border-radius: calc(var(--comment-control-radius) * 0.6);
+			background-size: 100% 100%;
+		}
+	}
+
+	p {
+		margin: 0.2em 0;
+	}
+
+	.tk-owo-emotion,
+	img[alt^=":"][alt$=":"],
+	img[title^=":"][title$=":"] {
+		display: inline-block;
+		width: 4em;
+		height: auto;
+		vertical-align: middle;
+		cursor: auto;
+	}
+
+	menu, ol, ul {
+		margin: 0.5em 0;
+		padding-inline-start: 1.5em;
+		font-size: 0.9rem;
+		list-style: revert;
+
+		> li {
+			margin: 0.2em 0;
+			&::marker { color: var(--c-primary); }
+		}
+	}
+
+	blockquote {
+		margin: 0.5rem 0 0.8rem;
+		padding: 0.6rem 0.8rem;
+		border-inline-start: 3px solid var(--c-border);
+		border-radius: var(--comment-control-radius);
+		background: var(--c-bg-2);
+		font-size: 0.9rem;
+		color: var(--c-text-2);
+	}
+}
+
+:deep(:where(.tk-preview-container, .tk-content) img:not(.tk-owo-emotion, [alt^=":"][alt$=":"], [title^=":"][title$=":"])) {
+	width: auto;
+	height: auto;
+	max-width: min(100%, 28rem);
+	max-height: 28rem;
+	border-radius: var(--comment-control-radius);
+}
+
+:deep(.tk-content img:not(.tk-owo-emotion, [alt^=":"][alt$=":"], [title^=":"][title$=":"])) {
+	cursor: zoom-in;
+}
