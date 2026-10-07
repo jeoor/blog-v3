@@ -17,22 +17,19 @@ tags: [ai, windows]
 
 ## 大致工作流程
 
-```
-AI 只读扫描 C 盘空间占用与可清理候选项
-  ↓
-生成 Markdown 分析报告
-  ↓
-生成 HTML 清理确认表单
-  ↓
-用户选择项目并导出 Markdown 确认单
-  ↓
-AI 根据确认单生成清理预演
-  ↓
-用户最终确认
-  ↓
-AI 只执行已确认项目
-  ↓
-验证清理结果并生成最终报告
+```mermaid
+flowchart TD
+    scan["AI 只读扫描 C 盘<br/>空间占用与可清理候选项"]
+    report["生成 Markdown 分析报告"]
+    form["生成 HTML 清理确认表单"]
+    selection["用户选择项目<br/>导出 Markdown 确认单"]
+    preview["AI 根据确认单<br/>生成清理预演"]
+    confirmation["用户最终确认"]
+    execute["AI 只执行已确认项目"]
+    verify["验证清理结果<br/>生成最终报告"]
+
+    scan --> report --> form --> selection
+    selection --> preview --> confirmation --> execute --> verify
 ```
 
 ## 完整提示词
