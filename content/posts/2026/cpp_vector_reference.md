@@ -1,8 +1,8 @@
 ---
 title: C++ 学习笔记：vector 不能存引用吗
 description: 记录 vector 不能存引用的原因，以及存值、存指针的区别。
-date: 2026-10-09 16:35:30
-updated: 2026-10-09 20:18:23
+date: 2026-10-09 22:35:30
+updated: 2026-10-09 22:35:30
 image: # 封面图推荐 2:1，不含与标题重复的文字
 permalink: /posts/7d7ab77
 categories: [笔记]
