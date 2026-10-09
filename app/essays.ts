@@ -2,6 +2,18 @@ import type { EssayItem } from '~/types/essay'
 
 const essays: EssayItem[] = [
 	{
+		text: '小小华山',
+		date: '2026-10-09T21:06',
+		images: [
+			{
+				src: 'https://assets.kayro.cn/gallery/华山论剑_1791551149.webp',
+				alt: '华山论剑',
+				height: 240,
+			},
+		],
+		tags: ['分享'],
+	},
+	{
 		text: '今日消费 555 😭😭😭',
 		date: '2026-08-16T19:10',
 		tags: ['生活'],

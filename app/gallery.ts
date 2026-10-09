@@ -33,6 +33,23 @@ export default [
 		],
 	},
 	{
+		id: 'mountain',
+		name: '山水',
+		images: [
+			'https://assets.kayro.cn/gallery/mountain_01_1791551592.webp',
+			'https://assets.kayro.cn/gallery/mountain_02_1791551592.webp',
+			'https://assets.kayro.cn/gallery/mountain_03_1791551592.webp',
+			'https://assets.kayro.cn/gallery/mountain_04_1791551592.webp',
+			'https://assets.kayro.cn/gallery/mountain_05_1791551592.webp',
+			'https://assets.kayro.cn/gallery/mountain_06_1791551592.webp',
+			'https://assets.kayro.cn/gallery/mountain_07_1791551592.webp',
+			'https://assets.kayro.cn/gallery/mountain_08_1791551592.webp',
+			'https://assets.kayro.cn/gallery/mountain_09_1791551592.webp',
+			'https://assets.kayro.cn/gallery/mountain_10_1791551592.webp',
+			'https://assets.kayro.cn/gallery/mountain_11_1791551592.webp',
+		],
+	},
+	{
 		id: 'sky',
 		name: '天地',
 		images: [
