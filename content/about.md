@@ -31,7 +31,7 @@ height: 480
 
 ## 关于网站
 
-网站基于[纸鹿大佬](https://www.zhilu.site/)开源的 [blog-v3](https://github.com/L33Z22L11/blog-v3)，经过我的一番配置后，已经比较符合我对静态博客的设想。
+网站基于[纸鹿大佬](https://www.zhilu.site/)开源的 [blog-v3](https://github.com/L33Z22L11/blog-v3)，点击查看[组件文档](/previews/example)，经过我的一番配置后，已经比较符合我对静态博客的设想。
 
 这个网站也是我折腾的一部分，我会在这里记录自己的折腾日常，也分享生活中我认为有趣的东西。
 
